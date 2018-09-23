@@ -1,0 +1,18 @@
+﻿type Query {
+  nonNullableInteger: Int!
+  nullableInteger: Int
+  nonNullableFloat: Float!
+  nullableFloat: Float
+  nonNullableBoolean: Boolean!
+  nullableBoolean: Boolean
+  nonNullableString: String!
+  nullableString: String
+  listOfNullableStrings: [String]
+  listOfNonNullableString: [String!]
+  listOfNullableIntegers: [Int]
+  listOfNonNullableIntegers: [Int!]
+  nonNullableListOfNullableIntegers: [Int]!
+  nonNullableListOfNonNullableIntegers: [Int!]!
+  nonNullableListOfNullableString: [String]!
+  nonNullableListOfNonNullableString: [String!]!
+}

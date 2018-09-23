@@ -1,0 +1,121 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using GraphQLTypedClient.ClassGenerator.Attributes;
+
+    public class Query
+    {
+        [GraphQLField("nonNullableInteger")]
+        public Int32 NonNullableInteger
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableInteger")]
+        public Int32? NullableInteger
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nonNullableFloat")]
+        public Single NonNullableFloat
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableFloat")]
+        public Single? NullableFloat
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nonNullableBoolean")]
+        public Boolean NonNullableBoolean
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableBoolean")]
+        public Boolean? NullableBoolean
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nonNullableString")]
+        public String NonNullableString
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableString")]
+        public String NullableString
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("listOfNullableStrings")]
+        public IEnumerable<String> ListOfNullableStrings
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("listOfNonNullableString")]
+        public IEnumerable<String> ListOfNonNullableString
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("listOfNullableIntegers")]
+        public IEnumerable<Int32? > ListOfNullableIntegers
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("listOfNonNullableIntegers")]
+        public IEnumerable<Int32> ListOfNonNullableIntegers
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nonNullableListOfNullableIntegers")]
+        public IEnumerable<Int32? > NonNullableListOfNullableIntegers
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nonNullableListOfNonNullableIntegers")]
+        public IEnumerable<Int32> NonNullableListOfNonNullableIntegers
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nonNullableListOfNullableString")]
+        public IEnumerable<String> NonNullableListOfNullableString
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nonNullableListOfNonNullableString")]
+        public IEnumerable<String> NonNullableListOfNonNullableString
+        {
+            get;
+            set;
+        }
+    }
+}

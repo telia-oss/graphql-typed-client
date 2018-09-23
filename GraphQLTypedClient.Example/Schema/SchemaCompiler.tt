@@ -1,0 +1,17 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)/GraphQLTypedClient/bin/debug/GraphQLTypedClient.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="GraphQLTypedClient.ClassGenerator" #>
+<#
+	var config = new GeneratorConfig();
+	config.AddOrReplaceTypeBinding("Date", typeof(DateTime));
+
+	var generator = new Generator(config);
+	var code = generator.Generate(File.ReadAllText(this.Host.ResolvePath("./Schema.graphql")), "GraphQLTypedClient.Example.Schema");
+#>
+<#= code #>

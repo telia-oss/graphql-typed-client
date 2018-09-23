@@ -1,0 +1,34 @@
+﻿enum CharacterRole {
+	Main
+	Side
+}
+
+type Actor {
+	name: String
+	age: Int!
+	characters: [MovieCharacter!]
+}
+
+type MovieCharacter {
+	actor: Actor!
+	name: String!
+	movie: Movie!
+	role: CharacterRole!
+}
+
+type Movie {
+	name: String
+	characters: [MovieCharacter!]
+	released: Date
+}
+
+type Query {
+	actors: [Actor!]
+	actor(ID: String): Actor
+	movies: [Movie!]
+	movie: Movie
+}
+
+schema {
+	query: Query
+}
