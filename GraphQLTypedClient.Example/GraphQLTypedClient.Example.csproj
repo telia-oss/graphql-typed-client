@@ -53,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Schema\Schema.graphql" />
+    <None Include="Schema\Schema.graphql">
+      <Generator>GraphQLSchemaGenerator</Generator>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Schema\SchemaCompiler.tt">

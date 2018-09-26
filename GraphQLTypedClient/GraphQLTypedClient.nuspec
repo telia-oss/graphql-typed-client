@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>GraphQLTypedClient</id>
+    <version>0.3.0.0</version>
+    <title>Strongly typed GraphQL client for .NET</title>
+    <authors>Marek Magdziak</authors>
+    <owners>Marek Magdziak</owners>
+    <licenseUrl>https://github.com/mkmarek/graphql-typed-client/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/mkmarek/graphql-typed-client</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Strongly typed GraphQL client for .NET</description>
+    <copyright>Copyright 2018</copyright>
+    <tags>GraphQL Client</tags>
+  </metadata>
+</package>

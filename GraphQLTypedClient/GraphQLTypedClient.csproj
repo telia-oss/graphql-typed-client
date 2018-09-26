@@ -150,12 +150,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassGenerator\Attributes\GraphQLFieldAttribute.cs" />
-    <Compile Include="ClassGenerator\DefinitionHandlers\EnumTypeDefinitionHandler.cs" />
-    <Compile Include="ClassGenerator\Generator.cs" />
-    <Compile Include="ClassGenerator\DefinitionHandlers\IDefinitionHandler.cs" />
-    <Compile Include="ClassGenerator\DefinitionHandlers\ObjectTypeDefinitionHandler.cs" />
-    <Compile Include="ClassGenerator\GeneratorConfig.cs" />
     <Compile Include="Client\CallChain.cs" />
     <Compile Include="Client\ChainLink.cs" />
     <Compile Include="Client\ChainLinkArgument.cs" />

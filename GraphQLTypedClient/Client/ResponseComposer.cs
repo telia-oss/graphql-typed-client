@@ -69,7 +69,7 @@ namespace GraphQLTypedClient.Client
                 return base.VisitMethodCall(node);
             }
 
-            private NewExpression CreateInitializer(
+            private Expression CreateInitializer(
                 Type elementType,
                 object element,
                 Expression childExpression,
@@ -81,7 +81,7 @@ namespace GraphQLTypedClient.Client
                 var childVisitor = new ResponseComposerVisitor(element as JToken, this.bindings, bindingPrefix);
                 var visited = childVisitor.Visit(childExpression);
                 
-                return ((NewExpression)((LambdaExpression)visited).Body);
+                return ((LambdaExpression)visited).Body;
             }
 
             protected override Expression VisitParameter(ParameterExpression node)
