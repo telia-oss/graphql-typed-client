@@ -6,7 +6,10 @@ A typesafe way how to request data from GraphQL API.
 
 ## First, you generate a model
 
-You can use T4 templates to generate the model in design time. [Example here](./GraphQLTypedClient.Example/Schema/SchemaCompiler.tt)
+You can get this Visual Studio [extension](https://marketplace.visualstudio.com/items?itemName=MarekMagdziak.Mkm-GraphQL-Tooling)
+which automatically generates a cs file out of graphql schema file.
+
+![](media/example.png)
 
 For example this IDL
 
