@@ -78,5 +78,3 @@ var data = client.Query(e => new
 Console.Write(data.a);
 Console.Write(data.b);
 ```
-
-Semi-working example can be found [here](./GraphQLTypedClient.Example)
