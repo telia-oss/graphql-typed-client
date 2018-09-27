@@ -27,7 +27,7 @@ namespace Schema
 {
     using System;
     using System.Collections.Generic;
-    using GraphQLTypedClient.ClassGenerator.Attributes;
+    using Mkm.GraphQL.Client.Attributes;
 
     public class Query
     {
