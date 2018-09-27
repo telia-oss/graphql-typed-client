@@ -1,0 +1,63 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQL.Client.Attributes;
+
+    public class Query
+    {
+        [GraphQLField("singleNullableIntParam")]
+        public Int32? SingleNullableIntParam(Int32? param)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("singleNullableIntParamWithDefaultValue")]
+        public Int32? SingleNullableIntParamWithDefaultValue(Int32? param = 2)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("singleNullableFloatParamWithDefaultValue")]
+        public Single? SingleNullableFloatParamWithDefaultValue(Single? param = 2.0f)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("singleNullableStringParamWithDefaultValue")]
+        public String SingleNullableStringParamWithDefaultValue(String param = "foo")
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("singleNullableOtherParamWithDefaultValue")]
+        public SomeOtherType SingleNullableOtherParamWithDefaultValue(SomeOtherType param = null)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("booleanParamSetToTrue")]
+        public Boolean? BooleanParamSetToTrue(Boolean? param = true)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("booleanParamSetToFalse")]
+        public Boolean? BooleanParamSetToFalse(Boolean? param = false)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("multipleParameters")]
+        public Boolean? MultipleParameters(Int32? param1, Int32 param2, Single? param3, Single param4, String param5, String param6, Boolean? param7, Boolean param8)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("multipleParametersWithDefaultValues")]
+        public Boolean? MultipleParametersWithDefaultValues(Int32? param1 = 1, Int32 param2 = 1, Single? param3 = 1.0f, Single param4 = 1.0f, String param5 = "foo", String param6 = "bar", Boolean? param7 = true, Boolean param8 = false)
+        {
+            throw new InvalidOperationException();
+        }
+    }
+}

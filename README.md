@@ -27,7 +27,7 @@ namespace Schema
 {
     using System;
     using System.Collections.Generic;
-    using Mkm.GraphQL.Client.Attributes;
+    using Telia.GraphQL.Client.Attributes;
 
     public class Query
     {
