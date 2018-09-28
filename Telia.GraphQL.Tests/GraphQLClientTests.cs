@@ -403,6 +403,54 @@ namespace Telia.GraphQL.Tests
             Assert.AreEqual(3, data.test.First().nested.Last().member2);
         }
 
+        [Test]
+        public void Query_RequestWithStringFormatting_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = $"{e.Test}-{e.Test}"
+            });
+
+            Assert.AreEqual("42-42", data.test);
+        }
+
+        [Test]
+        public void Query_RequestWithStringConcattenation_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Test + "-" + e.Test
+            });
+
+            Assert.AreEqual("42-42", data.test);
+        }
+
+        [Test]
+        public void Query_RequestWithBinaryOperationsAndMethodInvocation_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = (e.Test + 12 / 2 * e.Test).ToString()
+            });
+
+            Assert.AreEqual("294", data.test);
+        }
+
         private class TestQuery
         {
             [GraphQLField("test")]

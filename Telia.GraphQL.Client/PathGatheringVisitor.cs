@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL.Client
 {
@@ -124,6 +123,11 @@ namespace Telia.GraphQL.Client
                 }
 
                 var attribute = methodCallExpression.Method.GetCustomAttribute<GraphQLFieldAttribute>();
+
+                if (attribute == null)
+                {
+                    return base.VisitMethodCall(methodCallExpression);
+                }
 
                 chain.Add(new ChainLink(
                     attribute.Name,
