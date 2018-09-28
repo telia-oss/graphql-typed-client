@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Telia.GraphQL.Client</id>
+    <version>0.2.0</version>
+    <title>Strongly typed GraphQL client</title>
+    <authors>Telia Norge AS</authors>
+    <owners>Telia Norge AS</owners>
+    <licenseUrl>https://github.com/telia-oss/graphql-typed-client/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/telia-oss/graphql-typed-client</projectUrl>
+    <iconUrl>https://github.com/telia-oss/graphql-typed-client/raw/master/media/icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Strongly typed client used to communicate with GraphQL apis</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>GraphQL client</tags>
+  </metadata>
+</package>

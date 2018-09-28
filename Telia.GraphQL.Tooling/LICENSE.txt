@@ -1,6 +1,6 @@
 The MIT License
 
-Copyright (c) 2018 Marek Magdziak
+Copyright (c) 2018 Telia Norge AS
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

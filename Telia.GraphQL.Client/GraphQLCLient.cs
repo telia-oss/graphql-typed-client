@@ -10,7 +10,7 @@ namespace Telia.GraphQL
 {
     public abstract class GraphQLCLient<TQueryType>
     {
-        private INetworkClient client;
+        private readonly INetworkClient client;
 
         public GraphQLCLient(string endpoint) : this(new DefaultNetworkClient(endpoint))
         {
