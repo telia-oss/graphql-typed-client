@@ -1,4 +1,9 @@
+![](media/icon.png)
+
 # Strongly typed client for GraphQL in .NET
+
+[![NuGet Badge](https://buildstats.info/nuget/Telia.GraphQL.Client)](https://www.nuget.org/packages/Telia.GraphQL.Client/)
+
 
 > This project is currently work in progress and contains only very basic functionality. Usage in production is discouraged unless you know what you're doing.
 
@@ -6,7 +11,7 @@ A typesafe way how to request data from GraphQL API.
 
 ## First, you generate a model
 
-You can get this Visual Studio [extension](https://marketplace.visualstudio.com/items?itemName=MarekMagdziak.Mkm-GraphQL-Tooling)
+You can get this Visual Studio [extension](https://marketplace.visualstudio.com/items?itemName=MarekMagdziak.Telia-GraphQL-Tooling)
 which automatically generates a cs file out of graphql schema file.
 
 ![](media/example.png)
