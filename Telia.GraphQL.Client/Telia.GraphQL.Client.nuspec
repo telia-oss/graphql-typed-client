@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Telia.GraphQL.Client</id>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
     <title>Strongly typed GraphQL client</title>
     <authors>Telia Norge AS</authors>
     <owners>Telia Norge AS</owners>
@@ -15,4 +15,7 @@
     <copyright>Copyright 2018</copyright>
     <tags>GraphQL client</tags>
   </metadata>
+  <files>
+    <file src="bin\$configuration$\GraphQL-Parser.dll" target="lib\net461" />
+</files>
 </package>
