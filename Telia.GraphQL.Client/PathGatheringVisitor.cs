@@ -151,7 +151,7 @@ namespace Telia.GraphQL.Client
 
             for (var i = 0; i < arguments.Count; i++)
             {
-                var argument = arguments.ElementAt(0);
+                var argument = arguments.ElementAt(i);
 
                 yield return new ChainLinkArgument()
                 {

@@ -126,13 +126,13 @@ namespace Telia.GraphQL.Tests
             {
                 o = e.ComplexWithParams(test1).Test,
                 b = e.ComplexWithParams(test4).Complex.ComplexWithParams(test2).Complex.Test,
-                c = e.ComplexWithParams(test1).ComplexWithParams(test3).Simple.Test
+                c = e.ComplexWithParams(test1).ComplexWithParams2(test3, test4).Simple.Test
             });
 
             Assert.AreEqual(@"{
   field0: complexWithParams(name: ""test1""){
     field0: test
-    field1: complexWithParams(name: ""test3""){
+    field1: complexWithParams2(name: ""test3"", surname: ""test4""){
       field0: simple{
         field0: test
       }
@@ -491,6 +491,9 @@ namespace Telia.GraphQL.Tests
 
             [GraphQLField("complexWithParams")]
             public ComplexObject ComplexWithParams(string name) { throw new InvalidOperationException(); }
+
+            [GraphQLField("complexWithParams2")]
+            public ComplexObject ComplexWithParams2(string name, string surname) { throw new InvalidOperationException(); }
 
             [GraphQLField("complexArray")]
             public IEnumerable<ComplexObject> ComplexArray { get; set; }
