@@ -14,29 +14,14 @@ namespace Telia.GraphQL.Client
             .Where(e => e.Name == "Select")
             .ToArray();
 
-        private List<CallChain> selectionChains;
+		private readonly QueryContext context;
 
-        public PathGatheringVisitor()
+        public PathGatheringVisitor(QueryContext context)
         {
-            this.selectionChains = new List<CallChain>();
+			this.context = context;
         }
 
-        public IEnumerable<CallChain> GetChains()
-        {
-            return this.selectionChains;
-        }
-
-        protected override Expression VisitNew(NewExpression node)
-        {
-            return base.VisitNew(node);
-        }
-
-        public override Expression Visit(Expression node)
-        {
-            return base.Visit(node);
-        }
-
-        protected override Expression VisitMember(MemberExpression node)
+		protected override Expression VisitMember(MemberExpression node)
         {
             var chain = new List<ChainLink>();
             var current = node as Expression;
@@ -45,7 +30,7 @@ namespace Telia.GraphQL.Client
 
             chain.Reverse();
 
-            this.selectionChains.Add(new CallChain(chain, node));
+            this.context.SelectionChains.Add(new CallChain(chain, node));
 
             return node;
         }
@@ -61,7 +46,7 @@ namespace Telia.GraphQL.Client
 
             if (chain.Any())
             {
-                this.selectionChains.Add(new CallChain(chain, node));
+				this.context.SelectionChains.Add(new CallChain(chain, node));
             }
 
             return node;
@@ -85,58 +70,52 @@ namespace Telia.GraphQL.Client
                 return AddToChainFromMethods(chain, current);
             }
 
-            return current;
+			if (current.NodeType == ExpressionType.Parameter)
+			{
+				chain.AddRange(this.context.GetChainPrefixFrom(current as ParameterExpression));
+			}
+
+			return current;
         }
 
         private Expression AddToChainFromMethods(List<ChainLink> chain, Expression current)
         {
             while (current.NodeType == ExpressionType.Call)
-            {
-                var methodCallExpression = current as MethodCallExpression;
+			{
+				var methodCallExpression = current as MethodCallExpression;
 
-                if (methodCallExpression.Method.IsGenericMethod &&
-                    SelectMethods.Contains(methodCallExpression.Method.GetGenericMethodDefinition()))
-                {
-                    var chainPrefix = new List<ChainLink>();
-                    this.AddToChainFromMethods(chainPrefix, methodCallExpression.Arguments[0]);
+				if (IsLinqSelectMethod(methodCallExpression))
+				{
+					var innerLambda = methodCallExpression.Arguments[1] as LambdaExpression;
+					var chainPrefix = GetChainToSelectMethod(methodCallExpression);
 
-                    chainPrefix.Reverse();
+					this.context.SelectionChains.Add(new CallChain(
+						chainPrefix.ToArray().Reverse().ToList(),
+						methodCallExpression.Arguments[0]));
 
-                    this.selectionChains.Add(new CallChain(chainPrefix, methodCallExpression.Arguments[0]));
+					this.context.AddParameterToCallChainBinding(innerLambda.Parameters.First(), chainPrefix);
 
-                    var childVisitor = new PathGatheringVisitor();
-                    childVisitor.Visit(methodCallExpression.Arguments[1]);
+					var childVisitor = new PathGatheringVisitor(this.context);
+					childVisitor.Visit(innerLambda.Body);
 
-                    var chains = childVisitor.GetChains();
+					return methodCallExpression.Arguments[0];
+				}
 
-                    foreach (var childChain in chains)
-                    {
-                        var tmp = chainPrefix.ToList();
-                        tmp.AddRange(childChain.Links);
+				var attribute = methodCallExpression.Method.GetCustomAttribute<GraphQLFieldAttribute>();
 
-                        this.selectionChains.Add(new CallChain(tmp, childChain.Node));
-                    }
+				if (attribute == null)
+				{
+					return base.VisitMethodCall(methodCallExpression);
+				}
 
-                    current = methodCallExpression.Arguments[0];
+				chain.Add(new ChainLink(
+					attribute.Name,
+					this.GetArgumentsFromMethod(methodCallExpression)));
 
-                    return current;
-                }
+				current = methodCallExpression.Object;
+			}
 
-                var attribute = methodCallExpression.Method.GetCustomAttribute<GraphQLFieldAttribute>();
-
-                if (attribute == null)
-                {
-                    return base.VisitMethodCall(methodCallExpression);
-                }
-
-                chain.Add(new ChainLink(
-                    attribute.Name,
-                    this.GetArgumentsFromMethod(methodCallExpression)));
-
-                current = methodCallExpression.Object;
-            }
-
-            if (current.NodeType == ExpressionType.MemberAccess)
+			if (current.NodeType == ExpressionType.MemberAccess)
             {
                 return AddToChainFromMembers(chain, current);
             }
@@ -144,7 +123,22 @@ namespace Telia.GraphQL.Client
             return current;
         }
 
-        private IEnumerable<ChainLinkArgument> GetArgumentsFromMethod(MethodCallExpression methodCallExpression)
+		private List<ChainLink> GetChainToSelectMethod(MethodCallExpression methodCallExpression)
+		{
+			var chainPrefix = new List<ChainLink>();
+
+			this.AddToChainFromMethods(chainPrefix, methodCallExpression.Arguments[0]);
+
+			return chainPrefix;
+		}
+
+		private static bool IsLinqSelectMethod(MethodCallExpression methodCallExpression)
+		{
+			return methodCallExpression.Method.IsGenericMethod &&
+								SelectMethods.Contains(methodCallExpression.Method.GetGenericMethodDefinition());
+		}
+
+		private IEnumerable<ChainLinkArgument> GetArgumentsFromMethod(MethodCallExpression methodCallExpression)
         {
             var methodParameters = methodCallExpression.Method.GetParameters();
             var arguments = methodCallExpression.Arguments;

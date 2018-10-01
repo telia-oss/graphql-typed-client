@@ -24,32 +24,36 @@ namespace Telia.GraphQL
 
         public TReturn Query<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
         {
-            var composer = new ResponseComposer();
-            var bindings = new Dictionary<Expression, string>();
+			var context = new QueryContext();
 
-            var query = this.CreateQuery(selector, bindings);
+			var query = this.CreateQuery(selector, context);
+			var composer = new ResponseComposer<TQueryType, TReturn>(selector, context);
 
-            var response = JsonConvert.DeserializeObject<JObject>(this.client.Send(query));
+			var response = JsonConvert.DeserializeObject<JObject>(this.client.Send(query));
 
-            return composer.Compose(
-                selector,
-                response,
-                bindings);
+			return composer.Compose(response);
         }
 
-        public string CreateQuery<TReturn>(Expression<Func<TQueryType, TReturn>> selector, IDictionary<Expression, string> bindings = null)
+        public string CreateQuery<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
         {
-            var astPrinter = new Printer();
-
-            var grouping = new SelectionChainGrouping();
-            var converter = new SelectionChainConverter();
-            var visitor = new PathGatheringVisitor();
-
-            visitor.Visit(selector);
-
-            var groupedChains = grouping.Group(visitor.GetChains(), bindings);
-
-            return astPrinter.Print(converter.Convert(groupedChains));
+			return this.CreateQuery(selector, new QueryContext());
         }
-    }
+
+		internal string CreateQuery<TReturn>(
+			Expression<Func<TQueryType, TReturn>> selector,
+			QueryContext context)
+		{
+			var astPrinter = new Printer();
+
+			var grouping = new SelectionChainGrouping(context);
+			var converter = new SelectionChainConverter();
+			var visitor = new PathGatheringVisitor(context);
+
+			visitor.Visit(selector);
+
+			var groupedChains = grouping.Group();
+
+			return astPrinter.Print(converter.Convert(groupedChains));
+		}
+	}
 }

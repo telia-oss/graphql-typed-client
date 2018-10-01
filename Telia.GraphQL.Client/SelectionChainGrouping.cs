@@ -1,16 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Telia.GraphQL.Client
 {
-    internal class SelectionChainGrouping
+	internal class SelectionChainGrouping
     {
-        public IEnumerable<ChainLink> Group(IEnumerable<CallChain> chains, IDictionary<Expression, string> bindings)
+		private readonly QueryContext context;
+
+		public SelectionChainGrouping(QueryContext context)
+		{
+			this.context = context;
+		}
+
+		public IEnumerable<ChainLink> Group()
         {
             var rootLinks = new List<ChainLink>();
 
-            foreach (var chain in chains)
+            foreach (var chain in this.context.SelectionChains)
             {
                 var path = "";
                 var groupedLink = rootLinks;
@@ -20,11 +26,8 @@ namespace Telia.GraphQL.Client
                     groupedLink = this.TryGroup(part, groupedLink, ref path);
                 }
 
-                if (bindings != null)
-                {
-                    bindings.Add(chain.Node, path.Substring(1));
-                }
-            }
+				this.context.Bindings.Add(chain.Node, path.Substring(1));
+			}
 
             return rootLinks;
         }

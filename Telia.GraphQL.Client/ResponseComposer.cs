@@ -7,21 +7,28 @@ using System.Reflection;
 
 namespace Telia.GraphQL.Client
 {
-    internal class ResponseComposer
-    {
+    internal class ResponseComposer<TQueryType, TReturn>
+
+	{
         private static MethodInfo[] SelectMethods = typeof(Enumerable)
             .GetMethods()
             .Where(e => e.Name == "Select")
             .ToArray();
 
-        public TResponse Compose<TQueryType, TResponse>(
-            Expression<Func<TQueryType, TResponse>> selector,
-            JObject response,
-            IDictionary<Expression, string> bindings)
-        {
-            var visitor = new ResponseComposerVisitor(response, bindings);
+		private Expression<Func<TQueryType, TReturn>> selector;
+		private QueryContext context;
 
-            var substituted = visitor.Visit(selector) as Expression<Func<TQueryType, TResponse>>;
+		public ResponseComposer(Expression<Func<TQueryType, TReturn>> selector, QueryContext context)
+		{
+			this.selector = selector;
+			this.context = context;
+		}
+
+		public TReturn Compose(JObject response)
+        {
+            var visitor = new ResponseComposerVisitor(response, this.context);
+
+            var substituted = visitor.Visit(selector) as Expression<Func<TQueryType, TReturn>>;
 
             return substituted.Compile()(default(TQueryType));
         }
@@ -29,44 +36,44 @@ namespace Telia.GraphQL.Client
         private class ResponseComposerVisitor : ExpressionVisitor
         {
             private JToken response;
-            private IDictionary<Expression, string> bindings;
-            private string bindingPrefix;
+			private QueryContext context;
+			private string bindingPrefix;
 
             public ResponseComposerVisitor(
                 JToken response,
-                IDictionary<Expression, string> bindings,
+				QueryContext context,
                 string bindingPrefix = "")
             {
                 this.response = response;
-                this.bindings = bindings;
+                this.context = context;
                 this.bindingPrefix = bindingPrefix;
             }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (node.Method.IsGenericMethod &&
-                    SelectMethods.Contains(node.Method.GetGenericMethodDefinition()))
-                {
-                    var binding = this.bindings[node.Arguments[0]];
-                    var model = this.GetValueFrom(binding, typeof(IEnumerable<object>)) as IEnumerable<object>;
-                    var elementType = node.Type.GetGenericArguments()[0];
+				if (node.Method.IsGenericMethod &&
+					SelectMethods.Contains(node.Method.GetGenericMethodDefinition()))
+				{
+					var binding = this.context.Bindings[node.Arguments[0]];
+					var model = this.GetValueFrom(binding, typeof(IEnumerable<object>)) as IEnumerable<object>;
+					var elementType = node.Type.GetGenericArguments()[0];
 
-                    if (model == null)
-                    {
-                        return Expression.Constant(null, node.Type);
-                    }
+					if (model == null)
+					{
+						return Expression.Constant(null, node.Type);
+					}
 
-                    var initializers = model
-                        .Select(e => CreateInitializer(elementType, e, node.Arguments[1], $"{binding}"));
+					var initializers = model
+						.Select(e => CreateInitializer(elementType, e, node.Arguments[1], $"{binding}"));
 
-                    var arrayExpression = Expression.NewArrayInit(
-                        elementType,
-                        initializers);
+					var arrayExpression = Expression.NewArrayInit(
+						elementType,
+						initializers);
 
-                    return arrayExpression;
-                }
+					return arrayExpression;
+				}
 
-                return base.VisitMethodCall(node);
+				return base.VisitMethodCall(node);
             }
 
             private Expression CreateInitializer(
@@ -78,10 +85,10 @@ namespace Telia.GraphQL.Client
                 var ctor = elementType.GetConstructor(new Type[] { });
                 var args = new Expression[] { };
 
-                var childVisitor = new ResponseComposerVisitor(element as JToken, this.bindings, bindingPrefix);
-                var visited = childVisitor.Visit(childExpression);
-                
-                return ((LambdaExpression)visited).Body;
+				var childVisitor = new ResponseComposerVisitor(element as JToken, this.context, bindingPrefix);
+				var visited = childVisitor.Visit(childExpression);
+
+				return ((LambdaExpression)visited).Body;
             }
 
             protected override Expression VisitParameter(ParameterExpression node)
@@ -91,13 +98,13 @@ namespace Telia.GraphQL.Client
 
             protected override Expression VisitMember(MemberExpression node)
             {
-                if (this.bindings.ContainsKey(node))
-                {
-                    return Expression.Convert(
-                        Expression.Constant(this.GetValueFrom(this.bindings[node], node.Type)), node.Type);
-                }
+				if (this.context.Bindings.ContainsKey(node))
+				{
+					return Expression.Convert(
+						Expression.Constant(this.GetValueFrom(this.context.Bindings[node], node.Type)), node.Type);
+				}
 
-                return node;
+				return node;
             }
 
             private object GetValueFrom(string binding, Type returnType)

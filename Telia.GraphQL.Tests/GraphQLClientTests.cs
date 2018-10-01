@@ -200,8 +200,47 @@ namespace Telia.GraphQL.Tests
 }", query);
         }
 
+		[Test]
+		public void CreateQuery_RequestWithSelect_GeneratesCorrectQuery()
+		{
+			var client = new TestClient(null);
 
-        [Test]
+			var query = client.CreateQuery(e => new
+			{
+				o = e.Complex.ComplexArray.Select(x => x.Test)
+			});
+
+			Assert.AreEqual(@"{
+  field0: complex{
+    field0: complexArray{
+      field0: test
+    }
+  }
+}", query);
+		}
+
+		[Test]
+		public void CreateQuery_RequestWithSelectAndVariableOutsideScope_GeneratesCorrectQuery()
+		{
+			var client = new TestClient(null);
+
+			var query = client.CreateQuery(e => new
+			{
+				o = e.Complex.ComplexArray.Select(x => new { a = x.Test, b = e.Test })
+			});
+
+			Assert.AreEqual(@"{
+  field0: complex{
+    field0: complexArray{
+      field0: test
+    }
+  }
+  field1: test
+}", query);
+		}
+
+
+		[Test]
         public void Query_RequestForSimpleScalar_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
@@ -403,7 +442,57 @@ namespace Telia.GraphQL.Tests
             Assert.AreEqual(3, data.test.First().nested.Last().member2);
         }
 
-        [Test]
+		/*
+		 {
+  field0: complex{
+    field0: complexArray{
+      field0: test
+      field1: complexArray{
+        field0: test
+      }
+    }
+  }
+  field1: test
+}
+			 */
+		[Test]
+		public void Query_RequestForObjectArrayNestedOutsideContext_ReturnsCorrectData()
+		{
+			var networkClient = Substitute.For<INetworkClient>();
+			networkClient.Send(Arg.Any<string>()).Returns(@"{
+""field0"": {
+  ""field0"": [
+    { ""field0"": 1, ""field1"": [
+    { ""field0"": 1 }
+  ] }
+  ]
+},
+""field1"": 42
+}");
+
+			var client = new TestClient(networkClient);
+
+			var data = client.Query(e => new
+			{
+				test = e.Complex.ComplexArray.Select(x => new
+				{
+					member = x.Test,
+					member2 = e.Test,
+					nested = x.ComplexArray.Select(y => new
+					{
+						member2 = y.Test,
+						member3 = x.Test,
+						member4 = e.Test,
+					})
+				})
+			});
+
+			Assert.AreEqual(1, data.test.First().member);
+			Assert.AreEqual(2, data.test.First().nested.First().member2);
+			Assert.AreEqual(3, data.test.First().nested.Last().member2);
+		}
+
+		[Test]
         public void Query_RequestWithStringFormatting_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
