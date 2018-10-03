@@ -3,25 +3,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Telia.GraphQL.Client
 {
-    internal class ResponseComposer
-    {
-        private static MethodInfo[] SelectMethods = typeof(Enumerable)
-            .GetMethods()
-            .Where(e => e.Name == "Select")
-            .ToArray();
+	internal class ResponseComposer<TQueryType, TReturn>
+	{
+		private Expression<Func<TQueryType, TReturn>> selector;
+		private QueryContext context;
 
-        public TResponse Compose<TQueryType, TResponse>(
-            Expression<Func<TQueryType, TResponse>> selector,
-            JObject response,
-            IDictionary<Expression, string> bindings)
+		public ResponseComposer(Expression<Func<TQueryType, TReturn>> selector, QueryContext context)
+		{
+			this.selector = selector;
+			this.context = context;
+		}
+
+		public TReturn Compose(JObject response)
         {
-            var visitor = new ResponseComposerVisitor(response, bindings);
+            var visitor = new ResponseComposerVisitor(response, this.context);
 
-            var substituted = visitor.Visit(selector) as Expression<Func<TQueryType, TResponse>>;
+            var substituted = visitor.Visit(selector) as Expression<Func<TQueryType, TReturn>>;
 
             return substituted.Compile()(default(TQueryType));
         }
@@ -29,80 +29,94 @@ namespace Telia.GraphQL.Client
         private class ResponseComposerVisitor : ExpressionVisitor
         {
             private JToken response;
-            private IDictionary<Expression, string> bindings;
-            private string bindingPrefix;
+			private QueryContext context;
+			private ParameterExpression lambdaParameter;
 
-            public ResponseComposerVisitor(
+			public ResponseComposerVisitor(
                 JToken response,
-                IDictionary<Expression, string> bindings,
-                string bindingPrefix = "")
+				QueryContext context)
             {
                 this.response = response;
-                this.bindings = bindings;
-                this.bindingPrefix = bindingPrefix;
+                this.context = context;
             }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (node.Method.IsGenericMethod &&
-                    SelectMethods.Contains(node.Method.GetGenericMethodDefinition()))
-                {
-                    var binding = this.bindings[node.Arguments[0]];
-                    var model = this.GetValueFrom(binding, typeof(IEnumerable<object>)) as IEnumerable<object>;
-                    var elementType = node.Type.GetGenericArguments()[0];
+				if (Utils.IsLinqSelectMethod(node))
+				{
+					var binding = this.context.GetBindingPath(node.Arguments[0]);
+					var argumentModel = this.context.GetModelFor(node.Arguments[0]);
 
-                    if (model == null)
-                    {
-                        return Expression.Constant(null, node.Type);
-                    }
+					var model = this.GetValueFrom(argumentModel, binding, typeof(IEnumerable<object>)) as IEnumerable<object>;
+					var elementType = node.Type.GetGenericArguments()[0];
 
-                    var initializers = model
-                        .Select(e => CreateInitializer(elementType, e, node.Arguments[1], $"{binding}"));
+					if (model == null)
+					{
+						return Expression.Constant(null, node.Type);
+					}
 
-                    var arrayExpression = Expression.NewArrayInit(
-                        elementType,
-                        initializers);
+					var initializers = model
+						.Select(e => CreateInitializer(elementType, e, node.Arguments[1]));
 
-                    return arrayExpression;
-                }
+					var arrayExpression = Expression.NewArrayInit(
+						elementType,
+						initializers);
 
-                return base.VisitMethodCall(node);
+					return arrayExpression;
+				}
+
+				return base.VisitMethodCall(node);
             }
 
             private Expression CreateInitializer(
                 Type elementType,
                 object element,
-                Expression childExpression,
-                string bindingPrefix)
+                Expression childExpression)
             {
                 var ctor = elementType.GetConstructor(new Type[] { });
                 var args = new Expression[] { };
 
-                var childVisitor = new ResponseComposerVisitor(element as JToken, this.bindings, bindingPrefix);
-                var visited = childVisitor.Visit(childExpression);
-                
-                return ((LambdaExpression)visited).Body;
+				var childVisitor = new ResponseComposerVisitor(element as JToken, this.context);
+				var visited = childVisitor.Visit(childExpression);
+
+				return ((LambdaExpression)visited).Body;
             }
 
-            protected override Expression VisitParameter(ParameterExpression node)
+			protected override Expression VisitLambda<T>(Expression<T> node)
+			{
+				if (node.Parameters.Count == 1)
+				{
+					this.lambdaParameter = node.Parameters.First();
+					this.context.AddModelToParameterBinding(this.lambdaParameter, this.response);
+				}
+
+				var lambda = base.VisitLambda(node);
+
+				if (node.Parameters.Count == 1)
+				{
+					this.context.RemoveModelToParameterBinding(node.Parameters.First());
+				}
+
+				return lambda;
+			}
+
+			protected override Expression VisitMember(MemberExpression node)
             {
-                return base.VisitParameter(node);
+				if (this.context.ContainsBinding(node))
+				{
+					var model = this.context.GetModelFor(node);
+
+					return Expression.Convert(
+						Expression.Constant(
+							this.GetValueFrom(model, this.context.GetBindingPath(node), node.Type)), node.Type);
+				}
+
+				return node;
             }
 
-            protected override Expression VisitMember(MemberExpression node)
+            private object GetValueFrom(JToken model, string binding, Type returnType)
             {
-                if (this.bindings.ContainsKey(node))
-                {
-                    return Expression.Convert(
-                        Expression.Constant(this.GetValueFrom(this.bindings[node], node.Type)), node.Type);
-                }
-
-                return node;
-            }
-
-            private object GetValueFrom(string binding, Type returnType)
-            {
-                var token = response.SelectToken(binding.Substring(bindingPrefix.Length));
+                var token = model.SelectToken(binding);
 
                 return GetValueFromToken(returnType, token);
             }
@@ -134,6 +148,11 @@ namespace Telia.GraphQL.Client
 
             private object GetValueFromJObject(Type returnType, JObject token)
             {
+				if (!returnType.IsObject())
+				{
+					return this.GetDefaultValue(returnType);
+				}
+
                 return token.ToObject(returnType);
             }
 
@@ -144,6 +163,11 @@ namespace Telia.GraphQL.Client
 
             private object GetValueFromArray(Type returnType, JArray array)
             {
+				if (!returnType.IsEnumerable())
+				{
+					return this.GetDefaultValue(returnType);
+				}
+
                 var memberType = returnType.GetGenericArguments()[0];
 
                 var listType = typeof(List<>).MakeGenericType(memberType);
@@ -168,7 +192,19 @@ namespace Telia.GraphQL.Client
                     return this.GetDefaultValue(returnType);
                 }
 
-                return Convert.ChangeType(value, returnType);
+				if (returnType.IsEnum && value.GetType() == typeof(string))
+				{
+					return Enum.Parse(returnType, value as string);
+				}
+
+				try
+				{
+					return Convert.ChangeType(value, returnType);
+				}
+				catch
+				{
+					return this.GetDefaultValue(returnType);
+				}
             }
 
             private object GetDefaultValue(Type t)

@@ -75,6 +75,16 @@ namespace Telia.GraphQL.Client
                 };
             }
 
+			var valueType = value.GetType();
+
+			if (valueType.IsEnum)
+			{
+				return new GraphQLScalarValue(ASTNodeKind.EnumValue)
+				{
+					Value = value.ToString()
+				};
+			}
+
             throw new NotImplementedException($"Type {value.GetType()} is not implemented");
         }
     }

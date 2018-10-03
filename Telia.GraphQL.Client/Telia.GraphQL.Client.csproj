@@ -57,10 +57,12 @@
     <Compile Include="ChainLink.cs" />
     <Compile Include="ChainLinkArgument.cs" />
     <Compile Include="DefaultNetworkClient.cs" />
+    <Compile Include="ExtractParameterVisitor.cs" />
     <Compile Include="GraphQLCLient.cs" />
     <Compile Include="INetworkClient.cs" />
     <Compile Include="PathGatheringVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryContext.cs" />
     <Compile Include="ResponseComposer.cs" />
     <Compile Include="SelectionChainConverter.cs" />
     <Compile Include="SelectionChainGrouping.cs" />

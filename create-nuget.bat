@@ -1,0 +1,1 @@
+nuget pack Telia.GraphQL.Client/Telia.GraphQL.Client.csproj -Prop Configuration=Release

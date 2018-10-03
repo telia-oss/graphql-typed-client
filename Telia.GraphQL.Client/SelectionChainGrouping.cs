@@ -1,35 +1,42 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Telia.GraphQL.Client
 {
-    internal class SelectionChainGrouping
+	internal class SelectionChainGrouping
     {
-        public IEnumerable<ChainLink> Group(IEnumerable<CallChain> chains, IDictionary<Expression, string> bindings)
+		private readonly QueryContext context;
+
+		public SelectionChainGrouping(QueryContext context)
+		{
+			this.context = context;
+		}
+
+		public IEnumerable<ChainLink> Group()
         {
             var rootLinks = new List<ChainLink>();
 
-            foreach (var chain in chains)
+            foreach (var chain in this.context.SelectionChains)
             {
                 var path = "";
                 var groupedLink = rootLinks;
+				ChainLink lastLink = null;
 
                 foreach (var part in chain.Links)
                 {
-                    groupedLink = this.TryGroup(part, groupedLink, ref path);
+					lastLink = this.TryGroup(part, groupedLink, ref path);
+					groupedLink = lastLink.Children as List<ChainLink>;
                 }
 
-                if (bindings != null)
-                {
-                    bindings.Add(chain.Node, path.Substring(1));
-                }
-            }
+				lastLink.Node = chain.Node;
+
+				this.context.AddBinding(chain.Node, path.Substring(1));
+			}
 
             return rootLinks;
         }
 
-        private List<ChainLink> TryGroup(ChainLink part, List<ChainLink> groupedLink, ref string path)
+        private ChainLink TryGroup(ChainLink part, List<ChainLink> groupedLink, ref string path)
         {
             var existingLink = groupedLink.SingleOrDefault(e => e.Equals(part));
 
@@ -43,9 +50,9 @@ namespace Telia.GraphQL.Client
                 groupedLink.Add(existingLink);
             }
 
-            path = $"{path}.field{groupedLink.Count - 1}";
+            path = $"{path}.field{groupedLink.IndexOf(existingLink)}";
 
-            return existingLink.Children as List<ChainLink>;
+            return existingLink;
         }
     }
 }

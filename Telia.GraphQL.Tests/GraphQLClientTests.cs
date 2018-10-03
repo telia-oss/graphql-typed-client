@@ -200,8 +200,47 @@ namespace Telia.GraphQL.Tests
 }", query);
         }
 
+		[Test]
+		public void CreateQuery_RequestWithSelect_GeneratesCorrectQuery()
+		{
+			var client = new TestClient(null);
 
-        [Test]
+			var query = client.CreateQuery(e => new
+			{
+				o = e.Complex.ComplexArray.Select(x => x.Test)
+			});
+
+			Assert.AreEqual(@"{
+  field0: complex{
+    field0: complexArray{
+      field0: test
+    }
+  }
+}", query);
+		}
+
+		[Test]
+		public void CreateQuery_RequestWithSelectAndVariableOutsideScope_GeneratesCorrectQuery()
+		{
+			var client = new TestClient(null);
+
+			var query = client.CreateQuery(e => new
+			{
+				o = e.Complex.ComplexArray.Select(x => new { a = x.Test, b = e.Test })
+			});
+
+			Assert.AreEqual(@"{
+  field0: complex{
+    field0: complexArray{
+      field0: test
+    }
+  }
+  field1: test
+}", query);
+		}
+
+
+		[Test]
         public void Query_RequestForSimpleScalar_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
@@ -403,7 +442,48 @@ namespace Telia.GraphQL.Tests
             Assert.AreEqual(3, data.test.First().nested.Last().member2);
         }
 
-        [Test]
+		[Test]
+		public void Query_RequestForObjectArrayNestedOutsideContext_ReturnsCorrectData()
+		{
+			var networkClient = Substitute.For<INetworkClient>();
+			networkClient.Send(Arg.Any<string>()).Returns(@"{
+""field0"": {
+  ""field0"": [
+    { ""field0"": 1, ""field1"": [
+    { ""field0"": 2 }
+  ] }
+  ]
+},
+""field1"": 42
+}");
+
+			var client = new TestClient(networkClient);
+
+			var data = client.Query(e => new
+			{
+				test = e.Complex.ComplexArray.Select(x => new
+				{
+					member = x.Test,
+					member2 = e.Test,
+					nested = x.ComplexArray.Select(y => new
+					{
+						member3 = y.Test,
+						member4 = x.Test,
+						member5 = e.Test,
+					})
+				}),
+				test2 = e.Test
+			});
+
+			Assert.AreEqual(42, data.test2);
+			Assert.AreEqual(1, data.test.First().member);
+			Assert.AreEqual(42, data.test.First().member2);
+			Assert.AreEqual(2, data.test.First().nested.First().member3);
+			Assert.AreEqual(1, data.test.First().nested.First().member4);
+			Assert.AreEqual(42, data.test.First().nested.First().member5);
+		}
+
+		[Test]
         public void Query_RequestWithStringFormatting_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
@@ -451,7 +531,35 @@ namespace Telia.GraphQL.Tests
             Assert.AreEqual("294", data.test);
         }
 
-        private class TestQuery
+		[Test]
+		public void Query_WithNestedSelectOutsideScope_ReturnsCorrectData()
+		{
+			var networkClient = Substitute.For<INetworkClient>();
+			networkClient.Send(Arg.Any<string>()).Returns(@"{
+""field0"": {
+  ""field0"": [
+    { ""field0"": 42 }
+  ]
+}
+}");
+
+			var client = new TestClient(networkClient);
+
+			var data = client.Query(e => new
+			{
+				test = e.Complex.ComplexArray.Select(x => new
+				{
+					nested = e.Complex.ComplexArray.Select(y => new
+					{
+						member3 = y.Test,
+					})
+				})
+			});
+
+			Assert.AreEqual(42, data.test.First().nested.First().member3);
+		}
+
+		private class TestQuery
         {
             [GraphQLField("test")]
             public int Test { get; set; }
