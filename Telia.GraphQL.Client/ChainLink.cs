@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Telia.GraphQL.Client
 {
@@ -8,8 +9,9 @@ namespace Telia.GraphQL.Client
         public string FieldName { get; }
         public IEnumerable<ChainLinkArgument> Arguments { get; }
         public IEnumerable<ChainLink> Children { get; set; }
+		public Expression Node { get; internal set; }
 
-        public ChainLink(string fieldName, IEnumerable<ChainLinkArgument> arguments = null)
+		public ChainLink(string fieldName, IEnumerable<ChainLinkArgument> arguments = null)
         {
             this.FieldName = fieldName;
             this.Arguments = arguments;

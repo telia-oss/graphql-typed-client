@@ -1,14 +1,22 @@
 ﻿namespace Telia.GraphQL.Client
 {
     using System;
-    using System.Linq;
-    using System.Reflection;
+	using System.Collections;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Linq.Expressions;
+	using System.Reflection;
     using System.Text.RegularExpressions;
 
     public static class Utils
     {
-        // Copied from https://stackoverflow.com/a/46095771
-        public static string ToPascalCase(string original)
+		private static MethodInfo[] SelectMethods = typeof(Enumerable)
+			.GetMethods()
+			.Where(e => e.Name == "Select")
+			.ToArray();
+
+		// Copied from https://stackoverflow.com/a/46095771
+		public static string ToPascalCase(string original)
         {
             var invalidCharsRgx = new Regex("[^_a-zA-Z0-9]");
             var whiteSpace = new Regex(@"(?<=\s)");
@@ -43,5 +51,41 @@
 
             throw new NotImplementedException();
         }
-    }
+
+		public static bool IsLinqSelectMethod(MethodCallExpression methodCallExpression)
+		{
+			return methodCallExpression.Method.IsGenericMethod &&
+				SelectMethods.Contains(methodCallExpression.Method.GetGenericMethodDefinition());
+		}
+
+		public static bool IsEnumerable(this Type t)
+		{
+			if (t.IsArray)
+			{
+				return true;
+			}
+
+			if (t.IsAssignableFrom(typeof(IEnumerable)))
+			{
+				return true;
+			}
+
+			if (t.IsGenericType && t.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		public static bool IsObject(this Type t)
+		{
+			if (t.IsClass)
+			{
+				return true;
+			}
+
+			return false;
+		}
+	}
 }

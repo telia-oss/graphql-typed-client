@@ -442,19 +442,6 @@ namespace Telia.GraphQL.Tests
             Assert.AreEqual(3, data.test.First().nested.Last().member2);
         }
 
-		/*
-		 {
-  field0: complex{
-    field0: complexArray{
-      field0: test
-      field1: complexArray{
-        field0: test
-      }
-    }
-  }
-  field1: test
-}
-			 */
 		[Test]
 		public void Query_RequestForObjectArrayNestedOutsideContext_ReturnsCorrectData()
 		{
@@ -463,7 +450,7 @@ namespace Telia.GraphQL.Tests
 ""field0"": {
   ""field0"": [
     { ""field0"": 1, ""field1"": [
-    { ""field0"": 1 }
+    { ""field0"": 2 }
   ] }
   ]
 },
@@ -480,16 +467,20 @@ namespace Telia.GraphQL.Tests
 					member2 = e.Test,
 					nested = x.ComplexArray.Select(y => new
 					{
-						member2 = y.Test,
-						member3 = x.Test,
-						member4 = e.Test,
+						member3 = y.Test,
+						member4 = x.Test,
+						member5 = e.Test,
 					})
-				})
+				}),
+				test2 = e.Test
 			});
 
+			Assert.AreEqual(42, data.test2);
 			Assert.AreEqual(1, data.test.First().member);
-			Assert.AreEqual(2, data.test.First().nested.First().member2);
-			Assert.AreEqual(3, data.test.First().nested.Last().member2);
+			Assert.AreEqual(42, data.test.First().member2);
+			Assert.AreEqual(2, data.test.First().nested.First().member3);
+			Assert.AreEqual(1, data.test.First().nested.First().member4);
+			Assert.AreEqual(42, data.test.First().nested.First().member5);
 		}
 
 		[Test]

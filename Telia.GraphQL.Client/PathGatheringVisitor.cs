@@ -9,11 +9,6 @@ namespace Telia.GraphQL.Client
 {
     internal class PathGatheringVisitor : ExpressionVisitor
     {
-        private static MethodInfo[] SelectMethods = typeof(Enumerable)
-            .GetMethods()
-            .Where(e => e.Name == "Select")
-            .ToArray();
-
 		private readonly QueryContext context;
 
         public PathGatheringVisitor(QueryContext context)
@@ -84,7 +79,7 @@ namespace Telia.GraphQL.Client
 			{
 				var methodCallExpression = current as MethodCallExpression;
 
-				if (IsLinqSelectMethod(methodCallExpression))
+				if (Utils.IsLinqSelectMethod(methodCallExpression))
 				{
 					var innerLambda = methodCallExpression.Arguments[1] as LambdaExpression;
 					var chainPrefix = GetChainToSelectMethod(methodCallExpression);
@@ -130,12 +125,6 @@ namespace Telia.GraphQL.Client
 			this.AddToChainFromMethods(chainPrefix, methodCallExpression.Arguments[0]);
 
 			return chainPrefix;
-		}
-
-		private static bool IsLinqSelectMethod(MethodCallExpression methodCallExpression)
-		{
-			return methodCallExpression.Method.IsGenericMethod &&
-								SelectMethods.Contains(methodCallExpression.Method.GetGenericMethodDefinition());
 		}
 
 		private IEnumerable<ChainLinkArgument> GetArgumentsFromMethod(MethodCallExpression methodCallExpression)

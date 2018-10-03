@@ -3,18 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Telia.GraphQL.Client
 {
-    internal class ResponseComposer<TQueryType, TReturn>
-
+	internal class ResponseComposer<TQueryType, TReturn>
 	{
-        private static MethodInfo[] SelectMethods = typeof(Enumerable)
-            .GetMethods()
-            .Where(e => e.Name == "Select")
-            .ToArray();
-
 		private Expression<Func<TQueryType, TReturn>> selector;
 		private QueryContext context;
 
@@ -37,25 +30,23 @@ namespace Telia.GraphQL.Client
         {
             private JToken response;
 			private QueryContext context;
-			private string bindingPrefix;
+			private ParameterExpression lambdaParameter;
 
-            public ResponseComposerVisitor(
+			public ResponseComposerVisitor(
                 JToken response,
-				QueryContext context,
-                string bindingPrefix = "")
+				QueryContext context)
             {
                 this.response = response;
                 this.context = context;
-                this.bindingPrefix = bindingPrefix;
             }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-				if (node.Method.IsGenericMethod &&
-					SelectMethods.Contains(node.Method.GetGenericMethodDefinition()))
+				if (Utils.IsLinqSelectMethod(node))
 				{
-					var binding = this.context.Bindings[node.Arguments[0]];
-					var model = this.GetValueFrom(binding, typeof(IEnumerable<object>)) as IEnumerable<object>;
+					var binding = this.context.GetBindingPath(node.Arguments[0]);
+
+					var model = this.GetValueFrom(this.response, binding, typeof(IEnumerable<object>)) as IEnumerable<object>;
 					var elementType = node.Type.GetGenericArguments()[0];
 
 					if (model == null)
@@ -64,7 +55,7 @@ namespace Telia.GraphQL.Client
 					}
 
 					var initializers = model
-						.Select(e => CreateInitializer(elementType, e, node.Arguments[1], $"{binding}"));
+						.Select(e => CreateInitializer(elementType, e, node.Arguments[1]));
 
 					var arrayExpression = Expression.NewArrayInit(
 						elementType,
@@ -79,37 +70,52 @@ namespace Telia.GraphQL.Client
             private Expression CreateInitializer(
                 Type elementType,
                 object element,
-                Expression childExpression,
-                string bindingPrefix)
+                Expression childExpression)
             {
                 var ctor = elementType.GetConstructor(new Type[] { });
                 var args = new Expression[] { };
 
-				var childVisitor = new ResponseComposerVisitor(element as JToken, this.context, bindingPrefix);
+				var childVisitor = new ResponseComposerVisitor(element as JToken, this.context);
 				var visited = childVisitor.Visit(childExpression);
 
 				return ((LambdaExpression)visited).Body;
             }
 
-            protected override Expression VisitParameter(ParameterExpression node)
-            {
-                return base.VisitParameter(node);
-            }
-
-            protected override Expression VisitMember(MemberExpression node)
-            {
-				if (this.context.Bindings.ContainsKey(node))
+			protected override Expression VisitLambda<T>(Expression<T> node)
+			{
+				if (node.Parameters.Count == 1)
 				{
+					this.lambdaParameter = node.Parameters.First();
+					this.context.AddModelToParameterBinding(this.lambdaParameter, this.response);
+				}
+
+				var lambda = base.VisitLambda(node);
+
+				if (node.Parameters.Count == 1)
+				{
+					this.context.RemoveModelToParameterBinding(node.Parameters.First());
+				}
+
+				return lambda;
+			}
+
+			protected override Expression VisitMember(MemberExpression node)
+            {
+				if (this.context.ContainsBinding(node))
+				{
+					var model = this.context.GetModelFor(node);
+
 					return Expression.Convert(
-						Expression.Constant(this.GetValueFrom(this.context.Bindings[node], node.Type)), node.Type);
+						Expression.Constant(
+							this.GetValueFrom(model, this.context.GetBindingPath(node), node.Type)), node.Type);
 				}
 
 				return node;
             }
 
-            private object GetValueFrom(string binding, Type returnType)
+            private object GetValueFrom(JToken model, string binding, Type returnType)
             {
-                var token = response.SelectToken(binding.Substring(bindingPrefix.Length));
+                var token = model.SelectToken(binding);
 
                 return GetValueFromToken(returnType, token);
             }
@@ -141,6 +147,11 @@ namespace Telia.GraphQL.Client
 
             private object GetValueFromJObject(Type returnType, JObject token)
             {
+				if (!returnType.IsObject())
+				{
+					return this.GetDefaultValue(returnType);
+				}
+
                 return token.ToObject(returnType);
             }
 
@@ -151,6 +162,11 @@ namespace Telia.GraphQL.Client
 
             private object GetValueFromArray(Type returnType, JArray array)
             {
+				if (!returnType.IsEnumerable())
+				{
+					return this.GetDefaultValue(returnType);
+				}
+
                 var memberType = returnType.GetGenericArguments()[0];
 
                 var listType = typeof(List<>).MakeGenericType(memberType);
@@ -175,7 +191,19 @@ namespace Telia.GraphQL.Client
                     return this.GetDefaultValue(returnType);
                 }
 
-                return Convert.ChangeType(value, returnType);
+				if (returnType.IsEnum && value.GetType() == typeof(string))
+				{
+					return Enum.Parse(returnType, value as string);
+				}
+
+				try
+				{
+					return Convert.ChangeType(value, returnType);
+				}
+				catch
+				{
+					return this.GetDefaultValue(returnType);
+				}
             }
 
             private object GetDefaultValue(Type t)
