@@ -45,8 +45,9 @@ namespace Telia.GraphQL.Client
 				if (Utils.IsLinqSelectMethod(node))
 				{
 					var binding = this.context.GetBindingPath(node.Arguments[0]);
+					var argumentModel = this.context.GetModelFor(node.Arguments[0]);
 
-					var model = this.GetValueFrom(this.response, binding, typeof(IEnumerable<object>)) as IEnumerable<object>;
+					var model = this.GetValueFrom(argumentModel, binding, typeof(IEnumerable<object>)) as IEnumerable<object>;
 					var elementType = node.Type.GetGenericArguments()[0];
 
 					if (model == null)

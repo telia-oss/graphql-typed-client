@@ -531,7 +531,35 @@ namespace Telia.GraphQL.Tests
             Assert.AreEqual("294", data.test);
         }
 
-        private class TestQuery
+		[Test]
+		public void Query_WithNestedSelectOutsideScope_ReturnsCorrectData()
+		{
+			var networkClient = Substitute.For<INetworkClient>();
+			networkClient.Send(Arg.Any<string>()).Returns(@"{
+""field0"": {
+  ""field0"": [
+    { ""field0"": 42 }
+  ]
+}
+}");
+
+			var client = new TestClient(networkClient);
+
+			var data = client.Query(e => new
+			{
+				test = e.Complex.ComplexArray.Select(x => new
+				{
+					nested = e.Complex.ComplexArray.Select(y => new
+					{
+						member3 = y.Test,
+					})
+				})
+			});
+
+			Assert.AreEqual(42, data.test.First().nested.First().member3);
+		}
+
+		private class TestQuery
         {
             [GraphQLField("test")]
             public int Test { get; set; }

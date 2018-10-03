@@ -155,6 +155,22 @@ namespace Telia.GraphQL.Tests
 			Assert.AreEqual(TestEnum.ENUM_2, result.test);
 		}
 
+		[Test]
+		public void Query_NestedEnum_ConvertsValue()
+		{
+			var networkClient = Substitute.For<INetworkClient>();
+			networkClient.Send(Arg.Any<string>()).Returns("{ field0:  { field0: \"ENUM_2\" } }");
+
+			var client = new TestClient(networkClient);
+
+			var result = client.Query(e => new
+			{
+				test = e.TestObject.Enum
+			});
+
+			Assert.AreEqual(TestEnum.ENUM_2, result.test);
+		}
+
 		private enum TestEnum
 		{
 			ENUM_1,

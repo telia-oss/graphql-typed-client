@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C7355B77-4504-4000-A64B-E18CCCB4069A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Telia.GraphQL.Client</RootNamespace>
-    <AssemblyName>Telia.GraphQL.Client</AssemblyName>
+    <ProjectGuid>{250A071A-3F95-4CF9-8B6B-31340F8A87A3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Telia.GraphQL.Client.Example</RootNamespace>
+    <AssemblyName>Telia.GraphQL.Client.Example</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -29,18 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GraphQL-Parser">
-      <HintPath>..\lib\GraphQL-Parser.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,27 +45,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\GraphQLFieldAttribute.cs" />
-    <Compile Include="CallChain.cs" />
-    <Compile Include="ChainLink.cs" />
-    <Compile Include="ChainLinkArgument.cs" />
-    <Compile Include="DefaultNetworkClient.cs" />
-    <Compile Include="ExtractParameterVisitor.cs" />
-    <Compile Include="GraphQLCLient.cs" />
-    <Compile Include="INetworkClient.cs" />
-    <Compile Include="PathGatheringVisitor.cs" />
+    <Compile Include="GraphQLClient.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryContext.cs" />
-    <Compile Include="ResponseComposer.cs" />
-    <Compile Include="SelectionChainConverter.cs" />
-    <Compile Include="SelectionChainGrouping.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="schema.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>schema.graphql</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="schema.graphql">
+      <Generator>GraphQLSchemaGenerator</Generator>
+      <LastGenOutput>schema.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Telia.GraphQL.Client\Telia.GraphQL.Client.csproj">
+      <Project>{c7355b77-4504-4000-a64b-e18cccb4069a}</Project>
+      <Name>Telia.GraphQL.Client</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

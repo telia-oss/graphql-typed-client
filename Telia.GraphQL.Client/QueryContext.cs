@@ -73,7 +73,7 @@ namespace Telia.GraphQL.Client
 			this.parameterToModelBindings.Remove(parameterExpression);
 		}
 
-		internal JToken GetModelFor(MemberExpression node)
+		internal JToken GetModelFor(Expression node)
 		{
 			var param = this.GetParameterFrom(node);
 
