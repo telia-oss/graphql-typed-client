@@ -1,5 +1,6 @@
 ﻿using GraphQLParser.AST;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -84,6 +85,22 @@ namespace Telia.GraphQL.Client
 					Value = value.ToString()
 				};
 			}
+
+            if (valueType.IsEnumerable())
+            {
+                var enumerable = value as IEnumerable;
+                var listValues = new List<GraphQLValue>();
+
+                foreach (var member in enumerable)
+                {
+                    listValues.Add(this.GetGraphQLValueFrom(member));
+                }
+
+                return new GraphQLListValue(ASTNodeKind.ListValue)
+                {
+                    Values = listValues
+                };
+            }
 
             throw new NotImplementedException($"Type {value.GetType()} is not implemented");
         }

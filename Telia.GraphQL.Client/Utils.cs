@@ -65,12 +65,12 @@
 				return true;
 			}
 
-			if (t.IsAssignableFrom(typeof(IEnumerable)))
+			if (typeof(IEnumerable).IsAssignableFrom(t))
 			{
 				return true;
 			}
 
-			if (t.IsGenericType && t.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
+			if (t.IsGenericType && typeof(IEnumerable<>).IsAssignableFrom(t.GetGenericTypeDefinition()))
 			{
 				return true;
 			}

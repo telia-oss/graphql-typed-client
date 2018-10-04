@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GraphQLClassGeneratorTests.cs" />
+    <Compile Include="ParameterTests.cs" />
     <Compile Include="TypeCheckTests.cs" />
     <Compile Include="GraphQLClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
