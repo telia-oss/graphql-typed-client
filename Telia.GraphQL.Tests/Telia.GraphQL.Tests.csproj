@@ -162,13 +162,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GraphQLClassGeneratorTests.cs" />
+    <Compile Include="MutationTests.cs" />
     <Compile Include="ParameterTests.cs" />
     <Compile Include="TypeCheckTests.cs" />
-    <Compile Include="GraphQLClientTests.cs" />
+    <Compile Include="QueryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CodeGenerationCases\NestedInputObjectType_classes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CodeGenerationCases\InputObjectType_classes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CodeGenerationCases\NestedInputObjectType_schema.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="CodeGenerationCases\SingleEnumType_classes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CodeGenerationCases\InputObjectType_schema.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="CodeGenerationCases\SingleEnumType_schema.txt">

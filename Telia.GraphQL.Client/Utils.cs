@@ -49,10 +49,21 @@
                 case MemberTypes.Property: return ((PropertyInfo)info).GetValue(obj);
             }
 
-            throw new NotImplementedException();
+            throw new NotImplementedException($"Utils:GetValue: Unsupported member type {info.MemberType}");
         }
 
-		public static bool IsLinqSelectMethod(MethodCallExpression methodCallExpression)
+        public static void SetValue(this MemberInfo info, object obj, object value)
+        {
+            switch (info.MemberType)
+            {
+                case MemberTypes.Field: ((FieldInfo)info).SetValue(obj, value); break;
+                case MemberTypes.Property: ((PropertyInfo)info).SetValue(obj, value); break;
+
+                default: throw new NotImplementedException($"Utils:SetValue: Unsupported member type {info.MemberType}");
+            }
+        }
+
+        public static bool IsLinqSelectMethod(MethodCallExpression methodCallExpression)
 		{
 			return methodCallExpression.Method.IsGenericMethod &&
 				SelectMethods.Contains(methodCallExpression.Method.GetGenericMethodDefinition());

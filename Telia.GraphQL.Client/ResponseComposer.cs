@@ -65,7 +65,16 @@ namespace Telia.GraphQL.Client
 					return arrayExpression;
 				}
 
-				return base.VisitMethodCall(node);
+                if (this.context.ContainsBinding(node))
+                {
+                    var model = this.context.GetModelFor(node);
+
+                    return Expression.Convert(
+                        Expression.Constant(
+                            this.GetValueFrom(model, this.context.GetBindingPath(node), node.Type)), node.Type);
+                }
+
+                return base.VisitMethodCall(node);
             }
 
             private Expression CreateInitializer(

@@ -8,7 +8,7 @@ using System.Linq;
 namespace Telia.GraphQL.Tests
 {
     [TestFixture]
-    public class GraphQLClientTests
+    public class QueryTests
     {
         [Test]
         public void CreateQuery_RequestForSimpleScalar_GeneratesCorrectQuery()

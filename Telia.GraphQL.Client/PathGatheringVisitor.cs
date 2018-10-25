@@ -150,9 +150,48 @@ namespace Telia.GraphQL.Client
             {
                 case ExpressionType.Constant: return ((ConstantExpression)argument).Value;
                 case ExpressionType.MemberAccess: return this.GetValueFromMemberAccessExpression((MemberExpression)argument);
+                case ExpressionType.MemberInit: return this.GetValueFromMemberInit((MemberInitExpression)argument);
+                case ExpressionType.NewArrayInit: return this.GetValueFromNewArrayInit((NewArrayExpression)argument);
             }
 
-            throw new NotImplementedException();
+            throw new NotImplementedException($"GetValueFromExpression: unknown NodeType: {argument.NodeType}");
+        }
+
+        private object GetValueFromNewArrayInit(NewArrayExpression argument)
+        {
+            var array = Activator.CreateInstance(argument.Type, argument.Expressions.Count) as Array;
+
+            for (var i = 0; i < argument.Expressions.Count; i++)
+            {
+                var value = this.GetValueFromExpression(argument.Expressions[i]);
+
+                array.SetValue(value, i);
+            }
+
+            return array;
+        }
+
+        private object GetValueFromMemberInit(MemberInitExpression argument)
+        {
+            var obj = Activator.CreateInstance(argument.Type);
+
+            foreach (var binding in argument.Bindings)
+            {
+                switch (binding.BindingType)
+                {
+                    case MemberBindingType.Assignment:
+                        {
+                            var assignmentBinding = (MemberAssignment)binding;
+                            var value = this.GetValueFromExpression(assignmentBinding.Expression);
+
+                            binding.Member.SetValue(obj, value);
+                        }
+                        break;
+                    default: throw new NotImplementedException($"GetValueFromMemberInit: Unknown BindingType: {binding.BindingType}");
+                }
+            }
+
+            return obj;
         }
 
         private object GetValueFromMemberAccessExpression(MemberExpression argument)
@@ -170,7 +209,8 @@ namespace Telia.GraphQL.Client
 
             if (constant.NodeType != ExpressionType.Constant)
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException(
+                    $"GetValueFromMemberAccessExpression: Not implemented scenario where constant.NodeType = {constant.NodeType}");
             }
 
             listOfMemberAccess.Reverse();

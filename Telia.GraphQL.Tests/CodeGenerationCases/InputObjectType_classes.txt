@@ -1,0 +1,37 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQL.Client.Attributes;
+
+    public class SomeInputObject
+    {
+        [GraphQLField("foo")]
+        public String Foo
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("bar")]
+        public String Bar
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("faz")]
+        public Int32? Faz
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("zap")]
+        public Int32 Zap
+        {
+            get;
+            set;
+        }
+    }
+}

@@ -45,6 +45,26 @@ namespace Telia.GraphQL.Tests
                 LoadData("./CodeGenerationCases/SingleTypeWithParametersInProps_classes.txt"), code);
         }
 
+        [Test]
+        public void Generate_InputObjectType_GeneratesClass()
+        {
+            var code = this.generator.Generate(
+                LoadData("./CodeGenerationCases/InputObjectType_schema.txt"), "Test");
+
+            Assert.AreEqual(
+                LoadData("./CodeGenerationCases/InputObjectType_classes.txt"), code);
+        }
+
+        [Test]
+        public void Generate_NestedInputObjectType_GeneratesClasses()
+        {
+            var code = this.generator.Generate(
+                LoadData("./CodeGenerationCases/NestedInputObjectType_schema.txt"), "Test");
+
+            Assert.AreEqual(
+                LoadData("./CodeGenerationCases/NestedInputObjectType_classes.txt"), code);
+        }
+
         private static string LoadData(string filename)
         {
             return File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, filename));

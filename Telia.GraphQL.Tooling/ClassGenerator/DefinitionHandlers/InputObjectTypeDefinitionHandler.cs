@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using GraphQLParser.AST;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -9,18 +8,18 @@ using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 {
-    public class ObjectTypeDefinitionHandler : IDefinitionHandler
+    public class InputObjectTypeDefinitionHandler : IDefinitionHandler
     {
         private GeneratorConfig config;
 
-        public ObjectTypeDefinitionHandler(GeneratorConfig config)
+        public InputObjectTypeDefinitionHandler(GeneratorConfig config)
         {
             this.config = config;
         }
 
         public NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
         {
-            var objectTypeDefinition = definition as GraphQLObjectTypeDefinition;
+            var objectTypeDefinition = definition as GraphQLInputObjectTypeDefinition;
 
             var classDeclaration = SyntaxFactory.ClassDeclaration(objectTypeDefinition.Name.Value)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
@@ -31,101 +30,18 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
         }
 
         private ClassDeclarationSyntax CreateProperties(
-            ClassDeclarationSyntax classDeclaration, IEnumerable<GraphQLFieldDefinition> fields)
+            ClassDeclarationSyntax classDeclaration, IEnumerable<GraphQLInputValueDefinition> fields)
         {
             foreach (var field in fields)
             {
-                if (field.Arguments == null || field.Arguments.Count() == 0)
-                {
-                    classDeclaration = GenerateProperty(classDeclaration, field);
-                }
-                else
-                {
-                    classDeclaration = GenerateMethod(classDeclaration, field);
-                }
+                classDeclaration = GenerateProperty(classDeclaration, field);
             }
 
             return classDeclaration;
         }
 
-        private ClassDeclarationSyntax GenerateMethod(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field)
-        {
-            var returnType = this.GetCSharpTypeFromGraphQLType(field.Type);
-            var methodName = Utils.ToPascalCase(field.Name.Value);
-
-            var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-                .AddAttributeLists(GetFieldAttributes(field.Name.Value))
-                .WithParameterList(this.GetParameterList(field.Arguments))
-                .WithBody(this.GetEmptyBody());
-
-            return classDeclaration.AddMembers(method);
-        }
-
-        private BlockSyntax GetEmptyBody()
-        {
-            var throwException = SyntaxFactory.ThrowStatement(
-                    SyntaxFactory.InvocationExpression(
-                        SyntaxFactory.IdentifierName("new InvalidOperationException")));
-
-            return SyntaxFactory.Block(throwException);
-        }
-
-        private ParameterListSyntax GetParameterList(IEnumerable<GraphQLInputValueDefinition> arguments)
-        {
-            var parameterList = SyntaxFactory.ParameterList();
-
-            foreach (var arg in arguments)
-            {
-                var parameterType = this.GetCSharpTypeFromGraphQLType(arg.Type);
-
-                var parameter = SyntaxFactory.Parameter(
-                    SyntaxFactory.Identifier(arg.Name.Value))
-                    .WithType(parameterType);
-
-                if (arg.DefaultValue != null)
-                {
-                    parameter = parameter.WithDefault(this.GetDefault(arg.DefaultValue));
-                }
-
-                parameterList = parameterList.AddParameters(parameter);
-            }
-
-            return parameterList;
-        }
-
-        private EqualsValueClauseSyntax GetDefault(GraphQLValue defaultValue)
-        {
-            switch (defaultValue.Kind)
-            {
-                case ASTNodeKind.IntValue:
-                    return SyntaxFactory.EqualsValueClause(
-                        SyntaxFactory.LiteralExpression(
-                         SyntaxKind.NumericLiteralExpression,
-                         SyntaxFactory.ParseToken(((GraphQLScalarValue)defaultValue).Value)));
-
-                case ASTNodeKind.FloatValue:
-                    return SyntaxFactory.EqualsValueClause(
-                        SyntaxFactory.LiteralExpression(
-                            SyntaxKind.NumericLiteralExpression,
-                            SyntaxFactory.ParseToken($"{((GraphQLScalarValue)defaultValue).Value}f")));
-
-                case ASTNodeKind.StringValue:
-                    return SyntaxFactory.EqualsValueClause(
-                        SyntaxFactory.LiteralExpression(
-                            SyntaxKind.StringLiteralExpression,
-                            SyntaxFactory.ParseToken($"\"{((GraphQLScalarValue)defaultValue).Value}\""))); ;
-
-                case ASTNodeKind.BooleanValue:
-                    return ((GraphQLScalarValue)defaultValue).Value.ToLower() == "true"
-                        ? SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression))
-                        : SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression));
-            };
-
-            return SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
-        }
-
-        private ClassDeclarationSyntax GenerateProperty(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field)
+        private ClassDeclarationSyntax GenerateProperty(
+            ClassDeclarationSyntax classDeclaration, GraphQLInputValueDefinition field)
         {
             var member = SyntaxFactory.PropertyDeclaration(
                 this.GetCSharpTypeFromGraphQLType(field.Type),

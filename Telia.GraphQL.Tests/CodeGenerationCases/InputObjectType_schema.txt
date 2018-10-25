@@ -1,0 +1,6 @@
+﻿input SomeInputObject {
+  foo: String!
+  bar: String
+  faz: Int
+  zap: Int!
+}

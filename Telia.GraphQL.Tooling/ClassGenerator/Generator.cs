@@ -21,7 +21,8 @@ namespace Telia.GraphQL.Tooling.CodeGenerator
             this.handlers = new Dictionary<ASTNodeKind, IDefinitionHandler>
             {
                 { ASTNodeKind.ObjectTypeDefinition, new ObjectTypeDefinitionHandler(config) },
-                { ASTNodeKind.EnumTypeDefinition, new EnumTypeDefinitionHandler() }
+                { ASTNodeKind.EnumTypeDefinition, new EnumTypeDefinitionHandler() },
+                { ASTNodeKind.InputObjectTypeDefinition, new InputObjectTypeDefinitionHandler(config) }
             };
         }
 

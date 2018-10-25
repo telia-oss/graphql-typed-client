@@ -88,7 +88,8 @@ namespace Telia.GraphQL.Client
 
 			if (visitor.UsedParameters.Count > 1)
 			{
-				throw new NotImplementedException();
+				throw new NotImplementedException(
+                    $"QueryContext::GetParameterFrom: Unsupported scenario where visitor.UsedParameters.Count > 1 ({visitor.UsedParameters})");
 			}
 
 			return visitor.UsedParameters.FirstOrDefault();

@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Telia.GraphQL.Client.Attributes;
 
 namespace Telia.GraphQL.Client
 {
@@ -102,7 +104,30 @@ namespace Telia.GraphQL.Client
                 };
             }
 
+            if (valueType.IsClass)
+            {
+                return CreateGraphQLObject(value);
+            }
+
             throw new NotImplementedException($"Type {value.GetType()} is not implemented");
+        }
+
+        private GraphQLValue CreateGraphQLObject(object value)
+        {
+            var valueType = value.GetType();
+            var properties = valueType.GetProperties();
+
+            return new GraphQLObjectValue()
+            {
+                Fields = properties.Select(prop => new GraphQLObjectField
+                {
+                    Name = new GraphQLName
+                    {
+                        Value = prop.GetCustomAttribute<GraphQLFieldAttribute>(true).Name
+                    },
+                    Value = this.GetGraphQLValueFrom(prop.GetValue(value))
+                })
+            };
         }
     }
 }

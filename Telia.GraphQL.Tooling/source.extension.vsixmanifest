@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Telia.GraphQL.Tooling.567fd35c-157b-4e4d-aafd-6c23631927d9" Version="1.0" Language="en-US" Publisher="Marek Magdziak" />
+        <Identity Id="Telia.GraphQL.Tooling.567fd35c-157b-4e4d-aafd-6c23631927d9" Version="1.1" Language="en-US" Publisher="Marek Magdziak" />
         <DisplayName>GraphQL typed client tooling</DisplayName>
         <Description xml:space="preserve">Generates set of classes from GraphQL schema to be used with Telia.GraphQL.Client.</Description>
         <MoreInfo>https://github.com/telia-oss/graphql-typed-client</MoreInfo>

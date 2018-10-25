@@ -1,0 +1,75 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQL.Client.Attributes;
+
+    public class SomeInputObject
+    {
+        [GraphQLField("foo")]
+        public String Foo
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("bar")]
+        public String Bar
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("faz")]
+        public Int32? Faz
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("zap")]
+        public Int32 Zap
+        {
+            get;
+            set;
+        }
+    }
+
+    public class SomeOtherInputObject
+    {
+        [GraphQLField("foo")]
+        public String Foo
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("bar")]
+        public String Bar
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("faz")]
+        public Int32? Faz
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("zap")]
+        public SomeInputObject Zap
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nested")]
+        public SomeOtherInputObject Nested
+        {
+            get;
+            set;
+        }
+    }
+}
