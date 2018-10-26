@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
+using GraphQLParser.AST;
 
 namespace Telia.GraphQL
 {
@@ -25,7 +26,7 @@ namespace Telia.GraphQL
         {
             var context = new QueryContext();
 
-            var query = this.CreateQuery(selector, context);
+            var query = this.CreateOperation(selector, context, OperationType.Query);
             var composer = new ResponseComposer<TQueryType, TReturn>(selector, context);
 
             var response = JsonConvert.DeserializeObject<JObject>(this.client.Send(query));
@@ -35,12 +36,13 @@ namespace Telia.GraphQL
 
         public string CreateQuery<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
         {
-            return this.CreateQuery(selector, new QueryContext());
+            return this.CreateOperation(selector, new QueryContext(), OperationType.Query);
         }
 
-        internal string CreateQuery<TType, TReturn>(
+        internal string CreateOperation<TType, TReturn>(
             Expression<Func<TType, TReturn>> selector,
-            QueryContext context)
+            QueryContext context,
+            OperationType operationType)
         {
             var astPrinter = new Printer();
 
@@ -52,7 +54,11 @@ namespace Telia.GraphQL
 
             var groupedChains = grouping.Group();
 
-            return astPrinter.Print(converter.Convert(groupedChains));
+            return astPrinter.Print(new GraphQLOperationDefinition
+            {
+                Operation = operationType,
+                SelectionSet = converter.Convert(groupedChains)
+            });
         }
     }
 
@@ -68,14 +74,14 @@ namespace Telia.GraphQL
 
         public string CreateMutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
         {
-            return this.CreateQuery(selector, new QueryContext());
+            return this.CreateOperation(selector, new QueryContext(), OperationType.Mutation);
         }
 
         public TReturn Mutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
         {
             var context = new QueryContext();
 
-            var query = this.CreateQuery(selector, context);
+            var query = this.CreateOperation(selector, context, OperationType.Mutation);
             var composer = new ResponseComposer<TMutationType, TReturn>(selector, context);
 
             var response = JsonConvert.DeserializeObject<JObject>(this.client.Send(query));

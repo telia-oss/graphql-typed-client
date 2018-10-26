@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Telia.GraphQL.Client</id>
-    <version>0.3.7</version>
+    <version>0.3.8</version>
     <title>Strongly typed GraphQL client</title>
     <authors>Telia Norge AS</authors>
     <owners>Telia Norge AS</owners>

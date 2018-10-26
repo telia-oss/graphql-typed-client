@@ -40,7 +40,7 @@ namespace Telia.GraphQL.Tests
                 })
             });
 
-            Assert.AreEqual(@"{
+            Assert.AreEqual(@"mutation {
   field0: someMutation(input: {test: 1, testArray: [2, 3, 4], object: null})
 }", mutation);
         }
@@ -65,7 +65,7 @@ namespace Telia.GraphQL.Tests
                 })
             });
 
-            Assert.AreEqual(@"{
+            Assert.AreEqual(@"mutation {
   field0: someMutation(input: {test: 0, testArray: null, object: {test: 0, testArray: null, object: {test: 42, testArray: null, object: null}}})
 }", mutation);
         }
