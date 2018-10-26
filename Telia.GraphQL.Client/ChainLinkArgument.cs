@@ -1,4 +1,5 @@
 ﻿using GraphQLParser.AST;
+using Newtonsoft.Json;
 using System;
 
 namespace Telia.GraphQL.Client
@@ -17,7 +18,12 @@ namespace Telia.GraphQL.Client
 
             var arg = obj as ChainLinkArgument;
 
-            return arg.Name == this.Name && arg.Value == this.Value;
+            return arg.Name == this.Name && this.ValuesAreTheSame(arg);
+        }
+
+        private bool ValuesAreTheSame(ChainLinkArgument arg)
+        {
+            return JsonConvert.SerializeObject(arg.Value) == JsonConvert.SerializeObject(this.Value);
         }
 
         public override int GetHashCode()
