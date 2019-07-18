@@ -36,10 +36,7 @@ namespace Telia.GraphQL
             {
                 using (var streamReader = new StreamReader(responseStream))
                 {
-                    var dataResponse = JsonConvert.DeserializeObject<dynamic>(streamReader.ReadToEnd());
-                    var obj = dataResponse["data"];
-
-                    return JsonConvert.SerializeObject(obj);
+                    return streamReader.ReadToEnd();
                 }
             }
         }

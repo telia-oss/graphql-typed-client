@@ -59,6 +59,7 @@
     <Compile Include="DefaultNetworkClient.cs" />
     <Compile Include="ExtractParameterVisitor.cs" />
     <Compile Include="GraphQLCLient.cs" />
+    <Compile Include="GraphQLResult.cs" />
     <Compile Include="INetworkClient.cs" />
     <Compile Include="PathGatheringVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

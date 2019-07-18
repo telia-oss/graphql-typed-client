@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace Telia.GraphQL.Tests
 {
-	[TestFixture]
+    [TestFixture]
     public class TypeCheckTests
 	{
         [Test]
         public void Query_RequiredIntResultHasTrue_ConvertsValue()
         {
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: true }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: true } }");
 
 			var client = new TestClient(networkClient);
 
@@ -22,14 +22,14 @@ namespace Telia.GraphQL.Tests
                 test = e.Test
             });
 
-            Assert.AreEqual(1, result.test);
+            Assert.AreEqual(1, result.Data.test);
         }
 
 		[Test]
 		public void Query_RequiredIntResultHasFalse_ConvertsValue()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: false }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: false } }");
 
 			var client = new TestClient(networkClient);
 
@@ -38,14 +38,14 @@ namespace Telia.GraphQL.Tests
 				test = e.Test
 			});
 
-			Assert.AreEqual(0, result.test);
+			Assert.AreEqual(0, result.Data.test);
 		}
 
 		[Test]
 		public void Query_RequiredIntResultHasArray_ReturnsDefaultValue()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: [] }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: [] } }");
 
 			var client = new TestClient(networkClient);
 
@@ -54,14 +54,14 @@ namespace Telia.GraphQL.Tests
 				test = e.Test
 			});
 
-			Assert.AreEqual(0, result.test);
+			Assert.AreEqual(0, result.Data.test);
 		}
 
 		[Test]
 		public void Query_RequiredIntResultHasObject_ReturnsDefaultValue()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: {} }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: {} } }");
 
 			var client = new TestClient(networkClient);
 
@@ -70,14 +70,14 @@ namespace Telia.GraphQL.Tests
 				test = e.Test
 			});
 
-			Assert.AreEqual(0, result.test);
+			Assert.AreEqual(0, result.Data.test);
 		}
 
 		[Test]
 		public void Query_RequiredIntResultHasNull_ReturnsDefaultValue()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: null }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: null } }");
 
 			var client = new TestClient(networkClient);
 
@@ -86,14 +86,14 @@ namespace Telia.GraphQL.Tests
 				test = e.Test
 			});
 
-			Assert.AreEqual(0, result.test);
+			Assert.AreEqual(0, result.Data.test);
 		}
 
 		[Test]
 		public void Query_RequiredArrayResultHasInt_ReturnsNull()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: 1 }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 1 } }");
 
 			var client = new TestClient(networkClient);
 
@@ -102,14 +102,14 @@ namespace Telia.GraphQL.Tests
 				test = e.TestArray
 			});
 
-			Assert.AreEqual(null, result.test);
+			Assert.AreEqual(null, result.Data.test);
 		}
 
 		[Test]
 		public void Query_RequiredArrayOfIntsResultHasArrayOfObjects_ReturnsArrayOfDefaults()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: [{}, {}, {}] }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: [{}, {}, {}] } }");
 
 			var client = new TestClient(networkClient);
 
@@ -118,16 +118,16 @@ namespace Telia.GraphQL.Tests
 				test = e.TestArray
 			});
 
-			Assert.AreEqual(0, result.test.ElementAt(0));
-			Assert.AreEqual(0, result.test.ElementAt(1));
-			Assert.AreEqual(0, result.test.ElementAt(2));
+			Assert.AreEqual(0, result.Data.test.ElementAt(0));
+			Assert.AreEqual(0, result.Data.test.ElementAt(1));
+			Assert.AreEqual(0, result.Data.test.ElementAt(2));
 		}
 
 		[Test]
 		public void Query_RequiredObjectResultHasInt_ReturnsNull()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: 1 }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 1 } }");
 
 			var client = new TestClient(networkClient);
 
@@ -136,14 +136,14 @@ namespace Telia.GraphQL.Tests
 				test = e.TestObject
 			});
 
-			Assert.AreEqual(null, result.test);
+			Assert.AreEqual(null, result.Data.test);
 		}
 
 		[Test]
 		public void Query_RequiredEnumResultHasString_ConvertsValue()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: \"ENUM_2\" }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: \"ENUM_2\" } }");
 
 			var client = new TestClient(networkClient);
 
@@ -152,14 +152,14 @@ namespace Telia.GraphQL.Tests
 				test = e.Enum
 			});
 
-			Assert.AreEqual(TestEnum.ENUM_2, result.test);
+			Assert.AreEqual(TestEnum.ENUM_2, result.Data.test);
 		}
 
 		[Test]
 		public void Query_NestedEnum_ConvertsValue()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0:  { field0: \"ENUM_2\" } }");
+			networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0:  { field0: \"ENUM_2\" } } }");
 
 			var client = new TestClient(networkClient);
 
@@ -168,7 +168,7 @@ namespace Telia.GraphQL.Tests
 				test = e.TestObject.Enum
 			});
 
-			Assert.AreEqual(TestEnum.ENUM_2, result.test);
+			Assert.AreEqual(TestEnum.ENUM_2, result.Data.test);
 		}
 
 		private enum TestEnum

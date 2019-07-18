@@ -22,16 +22,25 @@ namespace Telia.GraphQL
             this.client = client;
         }
 
-        public TReturn Query<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
+        public GraphQLResult<TReturn> Query<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
         {
             var context = new QueryContext();
 
             var query = this.CreateOperation(selector, context, OperationType.Query);
             var composer = new ResponseComposer<TQueryType, TReturn>(selector, context);
+            var result = this.client.Send(query);
 
-            var response = JsonConvert.DeserializeObject<JObject>(this.client.Send(query));
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                return new GraphQLResult<TReturn>(default, null);
+            }
 
-            return composer.Compose(response);
+            var response = JsonConvert.DeserializeObject<GraphQLResult>(result);
+            var value = response.Data == null
+                ? default
+                : composer.Compose(response.Data);
+
+            return new GraphQLResult<TReturn>(value, response.Errors);
         }
 
         public string CreateQuery<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
@@ -77,16 +86,25 @@ namespace Telia.GraphQL
             return this.CreateOperation(selector, new QueryContext(), OperationType.Mutation);
         }
 
-        public TReturn Mutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
+        public GraphQLResult<TReturn> Mutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
         {
             var context = new QueryContext();
 
             var query = this.CreateOperation(selector, context, OperationType.Mutation);
             var composer = new ResponseComposer<TMutationType, TReturn>(selector, context);
+            var result = this.client.Send(query);
 
-            var response = JsonConvert.DeserializeObject<JObject>(this.client.Send(query));
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                return new GraphQLResult<TReturn>(default, null);
+            }
 
-            return composer.Compose(response);
+            var response = JsonConvert.DeserializeObject<GraphQLResult>(result);
+            var value = response.Data == null
+                ? default
+                : composer.Compose(response.Data);
+
+            return new GraphQLResult<TReturn>(value, response.Errors);
         }
     }
 }

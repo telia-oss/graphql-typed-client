@@ -23,7 +23,7 @@ namespace Telia.GraphQL.Client
 
             var substituted = visitor.Visit(selector) as Expression<Func<TQueryType, TReturn>>;
 
-            return substituted.Compile()(default(TQueryType));
+            return substituted.Compile()(default);
         }
 
         private class ResponseComposerVisitor : ExpressionVisitor

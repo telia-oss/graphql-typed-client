@@ -244,7 +244,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestForSimpleScalar_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -253,14 +253,14 @@ namespace Telia.GraphQL.Tests
                 test = e.Test
             });
 
-            Assert.AreEqual(42, data.test);
+            Assert.AreEqual(42, data.Data.test);
         }
 
         [Test]
         public void Query_RequestForMultipleSimpleScalars_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -271,16 +271,16 @@ namespace Telia.GraphQL.Tests
                 test3 = e.Test
             });
 
-            Assert.AreEqual(42, data.test);
-            Assert.AreEqual(42, data.test2);
-            Assert.AreEqual(42, data.test3);
+            Assert.AreEqual(42, data.Data.test);
+            Assert.AreEqual(42, data.Data.test2);
+            Assert.AreEqual(42, data.Data.test3);
         }
 
         [Test]
         public void Query_NestedObject_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -297,16 +297,17 @@ namespace Telia.GraphQL.Tests
                 }
             });
 
-            Assert.AreEqual(42, data.test);
-            Assert.AreEqual(42, data.obj.Test);
-            Assert.AreEqual(42, data.obj.obj.Test);
+            Assert.AreEqual(42, data.Data.test);
+            Assert.AreEqual(42, data.Data.obj.Test);
+            Assert.AreEqual(42, data.Data.obj.obj.Test);
         }
 
         [Test]
         public void Query_ComplexObject_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42, field1: { field0: 12, field1: { field0: { field0: 10 } } } }");
+            networkClient.Send(Arg.Any<string>())
+                .Returns("{ data: { field0: 42, field1: { field0: 12, field1: { field0: { field0: 10 } } } } }");
 
             var client = new TestClient(networkClient);
 
@@ -318,17 +319,18 @@ namespace Telia.GraphQL.Tests
                 c = e.Complex.Complex.Complex.Test
             });
 
-            Assert.AreEqual(42, data.test);
-            Assert.AreEqual(12, data.a);
-            Assert.AreEqual(10, data.b);
-            Assert.AreEqual(10, data.c);
+            Assert.AreEqual(42, data.Data.test);
+            Assert.AreEqual(12, data.Data.a);
+            Assert.AreEqual(10, data.Data.b);
+            Assert.AreEqual(10, data.Data.c);
         }
 
         [Test]
         public void Query_ComplexObjectNestedResult_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42, field1: { field0: 12, field1: { field0: { field0: 10 } } } }");
+            networkClient.Send(Arg.Any<string>())
+                .Returns("{ data: { field0: 42, field1: { field0: 12, field1: { field0: { field0: 10 } } } } }");
 
             var client = new TestClient(networkClient);
 
@@ -346,17 +348,17 @@ namespace Telia.GraphQL.Tests
                 }
             });
 
-            Assert.AreEqual(42, data.test);
-            Assert.AreEqual(12, data.a);
-            Assert.AreEqual(10, data.obj.b);
-            Assert.AreEqual(10, data.obj.obj.c);
+            Assert.AreEqual(42, data.Data.test);
+            Assert.AreEqual(12, data.Data.a);
+            Assert.AreEqual(10, data.Data.obj.b);
+            Assert.AreEqual(10, data.Data.obj.obj.c);
         }
 
         [Test]
         public void Query_ComplexObjectNestedResult_HandlesNull()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: null, field1: null }");
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: null, field1: null } }");
 
             var client = new TestClient(networkClient);
 
@@ -374,17 +376,18 @@ namespace Telia.GraphQL.Tests
                 }
             });
 
-            Assert.AreEqual(0, data.test);
-            Assert.AreEqual(0, data.a);
-            Assert.AreEqual(0, data.obj.b);
-            Assert.AreEqual(0, data.obj.obj.c);
+            Assert.AreEqual(0, data.Data.test);
+            Assert.AreEqual(0, data.Data.a);
+            Assert.AreEqual(0, data.Data.obj.b);
+            Assert.AreEqual(0, data.Data.obj.obj.c);
         }
 
         [Test]
         public void Query_RequestForScalarArray_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: { field0: [1, 2, 3] } }");
+            networkClient.Send(Arg.Any<string>())
+                .Returns("{ data: { field0: { field0: [1, 2, 3] } } }");
 
             var client = new TestClient(networkClient);
 
@@ -393,14 +396,15 @@ namespace Telia.GraphQL.Tests
                 test = e.Object.TestArray
             });
 
-            Assert.AreEqual(new int[] { 1, 2, 3 }, data.test);
+            Assert.AreEqual(new int[] { 1, 2, 3 }, data.Data.test);
         }
 
         [Test]
         public void Query_RequestForObjectArray_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: { field0: [{ field0: 1 }, { field0: 2 }] } }");
+            networkClient.Send(Arg.Any<string>())
+                .Returns("{ data: { field0: { field0: [{ field0: 1 }, { field0: 2 }] } } }");
 
             var client = new TestClient(networkClient);
 
@@ -414,14 +418,15 @@ namespace Telia.GraphQL.Tests
 
             Assert.AreEqual(new[]
             { new { member = 1 }, new { member = 2 } },
-            data.test);
+            data.Data.test);
         }
 
         [Test]
         public void Query_RequestForObjectArrayNested_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: { field0: [{ field0: 1, field1: [{ field0: 2 }, { field0: 3 }] }] } }");
+            networkClient.Send(Arg.Any<string>())
+                .Returns("{ data: { field0: { field0: [{ field0: 1, field1: [{ field0: 2 }, { field0: 3 }] }] } } }");
 
             var client = new TestClient(networkClient);
 
@@ -437,16 +442,16 @@ namespace Telia.GraphQL.Tests
                 })
             });
 
-            Assert.AreEqual(1, data.test.First().member);
-            Assert.AreEqual(2, data.test.First().nested.First().member2);
-            Assert.AreEqual(3, data.test.First().nested.Last().member2);
+            Assert.AreEqual(1, data.Data.test.First().member);
+            Assert.AreEqual(2, data.Data.test.First().nested.First().member2);
+            Assert.AreEqual(3, data.Data.test.First().nested.Last().member2);
         }
 
 		[Test]
 		public void Query_RequestForObjectArrayNestedOutsideContext_ReturnsCorrectData()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns(@"{
+			networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
 ""field0"": {
   ""field0"": [
     { ""field0"": 1, ""field1"": [
@@ -455,7 +460,7 @@ namespace Telia.GraphQL.Tests
   ]
 },
 ""field1"": 42
-}");
+} }");
 
 			var client = new TestClient(networkClient);
 
@@ -475,19 +480,19 @@ namespace Telia.GraphQL.Tests
 				test2 = e.Test
 			});
 
-			Assert.AreEqual(42, data.test2);
-			Assert.AreEqual(1, data.test.First().member);
-			Assert.AreEqual(42, data.test.First().member2);
-			Assert.AreEqual(2, data.test.First().nested.First().member3);
-			Assert.AreEqual(1, data.test.First().nested.First().member4);
-			Assert.AreEqual(42, data.test.First().nested.First().member5);
+			Assert.AreEqual(42, data.Data.test2);
+			Assert.AreEqual(1, data.Data.test.First().member);
+			Assert.AreEqual(42, data.Data.test.First().member2);
+			Assert.AreEqual(2, data.Data.test.First().nested.First().member3);
+			Assert.AreEqual(1, data.Data.test.First().nested.First().member4);
+			Assert.AreEqual(42, data.Data.test.First().nested.First().member5);
 		}
 
 		[Test]
         public void Query_RequestWithStringFormatting_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -496,14 +501,14 @@ namespace Telia.GraphQL.Tests
                 test = $"{e.Test}-{e.Test}"
             });
 
-            Assert.AreEqual("42-42", data.test);
+            Assert.AreEqual("42-42", data.Data.test);
         }
 
         [Test]
         public void Query_RequestWithStringConcattenation_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -512,14 +517,14 @@ namespace Telia.GraphQL.Tests
                 test = e.Test + "-" + e.Test
             });
 
-            Assert.AreEqual("42-42", data.test);
+            Assert.AreEqual("42-42", data.Data.test);
         }
 
         [Test]
         public void Query_RequestWithBinaryOperationsAndMethodInvocation_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 42 }");
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -528,20 +533,20 @@ namespace Telia.GraphQL.Tests
                 test = (e.Test + 12 / 2 * e.Test).ToString()
             });
 
-            Assert.AreEqual("294", data.test);
+            Assert.AreEqual("294", data.Data.test);
         }
 
 		[Test]
 		public void Query_WithNestedSelectOutsideScope_ReturnsCorrectData()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns(@"{
+			networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
 ""field0"": {
   ""field0"": [
     { ""field0"": 42 }
   ]
 }
-}");
+} }");
 
 			var client = new TestClient(networkClient);
 
@@ -556,10 +561,73 @@ namespace Telia.GraphQL.Tests
 				})
 			});
 
-			Assert.AreEqual(42, data.test.First().nested.First().member3);
+			Assert.AreEqual(42, data.Data.test.First().nested.First().member3);
 		}
 
-		private class TestQuery
+        [Test]
+        public void Query_WithDataAndError_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>())
+                .Returns(@"{
+data: { field0: 42 },
+errors: [
+    {
+        ""message"": ""something happened"",
+        ""locations"": [{ ""line"": 2, ""column"": 4 }],
+        ""path"": [ ""foo"", ""bar"", 1, ""faa"" ]
+    }
+]
+}");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new { a = e.Test });
+
+            Assert.AreEqual(42, data.Data.a);
+            Assert.AreEqual("something happened", data.Errors.First().Message);
+            Assert.AreEqual(2, data.Errors.First().Locations.First().Line);
+            Assert.AreEqual(4, data.Errors.First().Locations.First().Column);
+
+            Assert.AreEqual("foo", data.Errors.First().Path.ElementAt(0));
+            Assert.AreEqual("bar", data.Errors.First().Path.ElementAt(1));
+            Assert.AreEqual(1, data.Errors.First().Path.ElementAt(2));
+            Assert.AreEqual("faa", data.Errors.First().Path.ElementAt(3));
+        }
+
+        [Test]
+        public void Query_WithError_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>())
+                .Returns(@"{
+data: null,
+errors: [
+    {
+        ""message"": ""something happened"",
+        ""locations"": [{ ""line"": 2, ""column"": 4 }],
+        ""path"": [ ""foo"", ""bar"", 1, ""faa"" ]
+    }
+]
+}");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new { a = e.Test });
+
+            Assert.AreEqual(null, data.Data);
+
+            Assert.AreEqual("something happened", data.Errors.First().Message);
+            Assert.AreEqual(2, data.Errors.First().Locations.First().Line);
+            Assert.AreEqual(4, data.Errors.First().Locations.First().Column);
+
+            Assert.AreEqual("foo", data.Errors.First().Path.ElementAt(0));
+            Assert.AreEqual("bar", data.Errors.First().Path.ElementAt(1));
+            Assert.AreEqual(1, data.Errors.First().Path.ElementAt(2));
+            Assert.AreEqual("faa", data.Errors.First().Path.ElementAt(3));
+        }
+
+        private class TestQuery
         {
             [GraphQLField("test")]
             public int Test { get; set; }

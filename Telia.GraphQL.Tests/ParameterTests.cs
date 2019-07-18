@@ -2,12 +2,11 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using NSubstitute;
-using System.Linq;
 using System;
 
 namespace Telia.GraphQL.Tests
 {
-	[TestFixture]
+    [TestFixture]
     public class ParameterTests
 	{
         [Test]
