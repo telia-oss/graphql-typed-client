@@ -1,0 +1,121 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQL.Client.Attributes;
+
+    public class Query
+    {
+        [GraphQLField("date")]
+        public DateTime Date
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableDate")]
+        public DateTime? NullableDate
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("time")]
+        public TimeSpan Time
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableTime")]
+        public TimeSpan? NullableTime
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("timestamp")]
+        public Int32 Timestamp
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableTimestamp")]
+        public Int32? NullableTimestamp
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("email")]
+        public String Email
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableEmail")]
+        public String NullableEmail
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("json")]
+        public String Json
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableJson")]
+        public String NullableJson
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("url")]
+        public String Url
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableUrl")]
+        public String NullableUrl
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("phone")]
+        public String Phone
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullablePhone")]
+        public String NullablePhone
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("ipAddress")]
+        public String IpAddress
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableIPAddress")]
+        public String NullableIpAddress
+        {
+            get;
+            set;
+        }
+    }
+}

@@ -65,6 +65,16 @@ namespace Telia.GraphQL.Tests
                 LoadData("./CodeGenerationCases/NestedInputObjectType_classes.txt"), code);
         }
 
+        [Test]
+        public void Generate_SingleTypeWithAWSTypes_GeneratesClasses()
+        {
+            var code = this.generator.Generate(
+                LoadData("./CodeGenerationCases/SingleTypeWithAWSTypes_schema.txt"), "Test");
+
+            Assert.AreEqual(
+                LoadData("./CodeGenerationCases/SingleTypeWithAWSTypes_classes.txt"), code);
+        }
+
         private static string LoadData(string filename)
         {
             return File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, filename));

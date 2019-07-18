@@ -21,7 +21,15 @@ namespace Telia.GraphQL.Tooling.CodeGenerator
             this.graphQLToCSharpTypeBindings.Add("Int", typeof(Int32));
             this.graphQLToCSharpTypeBindings.Add("Float", typeof(Single));
             this.graphQLToCSharpTypeBindings.Add("String", typeof(String));
-            this.graphQLToCSharpTypeBindings.Add("Boolean", typeof(Boolean));
+            this.graphQLToCSharpTypeBindings.Add("AWSDate", typeof(DateTime));
+            this.graphQLToCSharpTypeBindings.Add("AWSTime", typeof(TimeSpan));
+            this.graphQLToCSharpTypeBindings.Add("AWSDateTime", typeof(DateTime));
+            this.graphQLToCSharpTypeBindings.Add("AWSTimestamp", typeof(Int32));
+            this.graphQLToCSharpTypeBindings.Add("AWSEmail", typeof(string));
+            this.graphQLToCSharpTypeBindings.Add("AWSJSON", typeof(string));
+            this.graphQLToCSharpTypeBindings.Add("AWSURL", typeof(string));
+            this.graphQLToCSharpTypeBindings.Add("AWSPhone", typeof(string));
+            this.graphQLToCSharpTypeBindings.Add("AWSIPAddress", typeof(string));
         }
 
         public void AddOrReplaceTypeBinding(string graphQLType, Type cSharpType)

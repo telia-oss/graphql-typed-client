@@ -193,7 +193,13 @@
     <Content Include="CodeGenerationCases\SingleTypeWithParametersInProps_schema.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="CodeGenerationCases\SingleTypeWithAWSTypes_classes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="CodeGenerationCases\SingleTypeWithScalarProps_classes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CodeGenerationCases\SingleTypeWithAWSTypes_schema.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="CodeGenerationCases\SingleTypeWithScalarProps_schema.txt">

@@ -206,7 +206,13 @@ namespace Telia.GraphQL.Client
 					return Enum.Parse(returnType, value as string);
 				}
 
-				try
+                if (returnType == typeof(TimeSpan) && value.GetType() == typeof(string))
+                {
+                    var date = (DateTime)Convert.ChangeType(value, typeof(DateTime));
+                    return date.ToUniversalTime() - DateTime.UtcNow.Date;
+                }
+
+                try
 				{
 					return Convert.ChangeType(value, returnType);
 				}

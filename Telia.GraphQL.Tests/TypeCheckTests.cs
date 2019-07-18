@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using NSubstitute;
 using System.Linq;
+using System;
 
 namespace Telia.GraphQL.Tests
 {
@@ -171,7 +172,55 @@ namespace Telia.GraphQL.Tests
 			Assert.AreEqual(TestEnum.ENUM_2, result.Data.test);
 		}
 
-		private enum TestEnum
+        [Test]
+        public void Query_TimeSpan_ConvertsValue()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: \"12:30Z\" } }");
+
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Time
+            });
+
+            Assert.AreEqual(TimeSpan.Parse("12:30"), result.Data.test);
+        }
+
+        [Test]
+        public void Query_TimeSpan2_ConvertsValue()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: \"12:30:24-07:00\" } }");
+
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Time
+            });
+
+            Assert.AreEqual(TimeSpan.Parse("19:30:24"), result.Data.test);
+        }
+
+        [Test]
+        public void Query_TimeSpan3_ConvertsValue()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: \"12:30:24.500+05:30\" } }");
+
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Time
+            });
+
+            Assert.AreEqual(TimeSpan.Parse("07:00:24.500"), result.Data.test);
+        }
+
+        private enum TestEnum
 		{
 			ENUM_1,
 			ENUM_2
@@ -190,6 +239,9 @@ namespace Telia.GraphQL.Tests
 
 			[GraphQLField("enum")]
 			public TestEnum Enum { get; set; }
+
+            [GraphQLField("time")]
+            public TimeSpan Time { get; set; }
 		}
 
         private class TestClient : GraphQLCLient<TestQuery>
