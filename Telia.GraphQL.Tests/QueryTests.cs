@@ -21,7 +21,7 @@ namespace Telia.GraphQL.Tests
                 test2 = e.Object.TestWithParams(0.5f)
             });
 
-            Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: test
   field1: object{
     field0: testWithParams(x: 0.5)
@@ -42,7 +42,7 @@ namespace Telia.GraphQL.Tests
                 }
             });
 
-            Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: object{
     field0: test
   }
@@ -61,7 +61,7 @@ namespace Telia.GraphQL.Tests
                 c = e.Complex.Complex.Simple.Test
             });
 
-            Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: complex{
     field0: test
     field1: complex{
@@ -88,7 +88,7 @@ namespace Telia.GraphQL.Tests
                 c = e.ComplexWithParams("test1").ComplexWithParams("test3").Simple.Test
             });
 
-            Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: complexWithParams(name: null){
     field0: test
   }
@@ -129,7 +129,7 @@ namespace Telia.GraphQL.Tests
                 c = e.ComplexWithParams(test1).ComplexWithParams2(test3, test4).Simple.Test
             });
 
-            Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: complexWithParams(name: ""test1""){
     field0: test
     field1: complexWithParams2(name: ""test3"", surname: ""test4""){
@@ -179,7 +179,7 @@ namespace Telia.GraphQL.Tests
                 c = e.ComplexWithParams(input.test1).ComplexWithParams(input.others.others.test3).Simple.Test
             });
 
-            Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: complexWithParams(name: ""test1""){
     field0: test
     field1: complexWithParams(name: ""test3""){
@@ -210,7 +210,7 @@ namespace Telia.GraphQL.Tests
 				o = e.Complex.ComplexArray.Select(x => x.Test)
 			});
 
-			Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: complex{
     field0: complexArray{
       field0: test
@@ -229,7 +229,7 @@ namespace Telia.GraphQL.Tests
 				o = e.Complex.ComplexArray.Select(x => new { a = x.Test, b = e.Test })
 			});
 
-			Assert.AreEqual(@"{
+			AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: complex{
     field0: complexArray{
       field0: test

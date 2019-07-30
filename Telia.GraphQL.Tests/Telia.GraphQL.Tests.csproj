@@ -161,6 +161,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssertUtils.cs" />
     <Compile Include="GraphQLClassGeneratorTests.cs" />
     <Compile Include="MutationTests.cs" />
     <Compile Include="ParameterTests.cs" />

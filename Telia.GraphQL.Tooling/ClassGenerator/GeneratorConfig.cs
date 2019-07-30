@@ -20,6 +20,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator
 
             this.graphQLToCSharpTypeBindings.Add("Int", typeof(Int32));
             this.graphQLToCSharpTypeBindings.Add("Float", typeof(Single));
+            this.graphQLToCSharpTypeBindings.Add("Boolean", typeof(Boolean));
             this.graphQLToCSharpTypeBindings.Add("String", typeof(String));
             this.graphQLToCSharpTypeBindings.Add("AWSDate", typeof(DateTime));
             this.graphQLToCSharpTypeBindings.Add("AWSTime", typeof(TimeSpan));

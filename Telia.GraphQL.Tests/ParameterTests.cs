@@ -23,7 +23,7 @@ namespace Telia.GraphQL.Tests
                 test = e.ArrayAsParameter(param)
             });
 
-            Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: test(arr: [1, 2, 3])
 }", query);
         }
@@ -42,7 +42,7 @@ namespace Telia.GraphQL.Tests
                 test = e.ArrayAsParameter(param)
             });
 
-            Assert.AreEqual(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: test(arr: [1, 2, 3])
 }", query);
         }

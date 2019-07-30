@@ -21,7 +21,7 @@ namespace Telia.GraphQL.Tests
             var code = this.generator.Generate(
                 LoadData("./CodeGenerationCases/SingleTypeWithScalarProps_schema.txt"), "Test");
 
-            Assert.AreEqual(
+            AssertUtils.AreEqualIgnoreLineBreaks(
                 LoadData("./CodeGenerationCases/SingleTypeWithScalarProps_classes.txt"), code);
         }
 
@@ -31,7 +31,7 @@ namespace Telia.GraphQL.Tests
             var code = this.generator.Generate(
                 LoadData("CodeGenerationCases/SingleEnumType_schema.txt"), "Test");
 
-            Assert.AreEqual(
+            AssertUtils.AreEqualIgnoreLineBreaks(
                 LoadData("CodeGenerationCases/SingleEnumType_classes.txt"), code);
         }
 
@@ -41,7 +41,7 @@ namespace Telia.GraphQL.Tests
             var code = this.generator.Generate(
                 LoadData("./CodeGenerationCases/SingleTypeWithParametersInProps_schema.txt"), "Test");
 
-            Assert.AreEqual(
+            AssertUtils.AreEqualIgnoreLineBreaks(
                 LoadData("./CodeGenerationCases/SingleTypeWithParametersInProps_classes.txt"), code);
         }
 
@@ -51,7 +51,7 @@ namespace Telia.GraphQL.Tests
             var code = this.generator.Generate(
                 LoadData("./CodeGenerationCases/InputObjectType_schema.txt"), "Test");
 
-            Assert.AreEqual(
+            AssertUtils.AreEqualIgnoreLineBreaks(
                 LoadData("./CodeGenerationCases/InputObjectType_classes.txt"), code);
         }
 
@@ -61,7 +61,7 @@ namespace Telia.GraphQL.Tests
             var code = this.generator.Generate(
                 LoadData("./CodeGenerationCases/NestedInputObjectType_schema.txt"), "Test");
 
-            Assert.AreEqual(
+            AssertUtils.AreEqualIgnoreLineBreaks(
                 LoadData("./CodeGenerationCases/NestedInputObjectType_classes.txt"), code);
         }
 
@@ -71,7 +71,7 @@ namespace Telia.GraphQL.Tests
             var code = this.generator.Generate(
                 LoadData("./CodeGenerationCases/SingleTypeWithAWSTypes_schema.txt"), "Test");
 
-            Assert.AreEqual(
+            AssertUtils.AreEqualIgnoreLineBreaks(
                 LoadData("./CodeGenerationCases/SingleTypeWithAWSTypes_classes.txt"), code);
         }
 
