@@ -1,0 +1,1 @@
+To use this extension just use `GraphQLSchemaGenerator` in the `Custom tool` property on your `.graphql` file

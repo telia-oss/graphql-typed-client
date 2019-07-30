@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json.schemastore.org/vsix-publish",
+    "categories": [ "Tools", "Scaffolding", "Coding" ],
+    "identity": {
+      "internalName": "Telia-GraphQL-Tooling"
+    },
+    "overview": "README.md",
+    "priceCategory": "free",
+    "publisher": "MarekMagdziak",
+    "private": false,
+    "qna": true,
+    "repo": "https://github.com/telia-oss/graphql-typed-client"
+  }
