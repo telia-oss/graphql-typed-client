@@ -1,52 +1,33 @@
-# version format
-version: 0.3.{build}
-
-branches:
-  only:
-    - master
-
-# Do not build feature branch with open Pull Requests
-skip_branch_with_pr: true
-
-# Maximum number of concurrent jobs for the project
-max_jobs: 1
-
-#---------------------------------#
-#    environment configuration    #
-#---------------------------------#
-
-# Build worker image (VM template)
-image: Visual Studio 2017
-
-# scripts that run after cloning repository
-install:
-  - nuget restore
-
-# enable patching of AssemblyInfo.* files
+version: 1.1.{build}
+image: Visual Studio 2019
+configuration: Release
 assembly_info:
   patch: true
-  file: AssemblyInfo.*
-  assembly_version: "0.3.{build}"
-  assembly_file_version: "{version}"
-  assembly_informational_version: "{version}"
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+environment:
+  marketplacepublishtoken:
+    secure: xCM8+dV2BwpXo0fYuON1ag2n5dLZHLrC7ak5wPWTor4dG7DQi89/ya0woibcu1FV3bkJkBpvbgfbfqG3ezy1pA==
+  matrix:
+  - {}
+before_build:
+- ps: >-
+    nuget restore
 
-
-# Automatically register private account and/or project AppVeyor NuGet feeds.
-nuget:
-  account_feed: true
-  project_feed: true
-  disable_publish_on_pr: true     # disable publishing of .nupkg artifacts to
-                                  # account/project feeds for pull request builds
-
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
-
-platform: Any CPU
-
-configuration: Release
-
+    .\tools\update-vsixversion.ps1 $($env:appveyor_build_version)
 build:
-  parallel: true
-  project: Telia.GraphQL.Client/Telia.GraphQL.Client.csproj
+  project: Telia.GraphQL.sln
   publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
+  verbosity: minimal
+deploy:
+- provider: NuGet
+  api_key:
+    secure: JJqRZ9VeHydrhH6UroXmGo0RaZsTvDs6txFts2F+bnEVVVbir6iPVHyIsHaos1BL
+  on:
+    branch: master
+after_deploy:
+- ps: .\tools\publish-vsix.ps1

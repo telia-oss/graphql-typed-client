@@ -3,7 +3,7 @@
 # Strongly typed client for GraphQL in .NET
 
 [![NuGet Badge](https://buildstats.info/nuget/Telia.GraphQL.Client)](https://www.nuget.org/packages/Telia.GraphQL.Client/)
-
+[![Build status](https://ci.appveyor.com/api/projects/status/ftujm98p9t848uh8/branch/master?svg=true)](https://ci.appveyor.com/project/mkmarek/graphql-typed-client/branch/master)
 
 > This project is currently work in progress and contains only very basic functionality. Usage in production is discouraged unless you know what you're doing.
 
