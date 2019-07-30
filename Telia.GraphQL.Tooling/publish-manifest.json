@@ -1,6 +1,6 @@
 {
     "$schema": "http://json.schemastore.org/vsix-publish",
-    "categories": [ "Tools", "Scaffolding", "Coding" ],
+    "categories": [ "Scaffolding", "Coding" ],
     "identity": {
       "internalName": "Telia-GraphQL-Tooling"
     },
