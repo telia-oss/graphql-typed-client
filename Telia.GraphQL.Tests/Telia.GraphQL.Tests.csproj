@@ -170,6 +170,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CodeGenerationCases\InterfaceWithImplementation_classes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CodeGenerationCases\InterfaceWithImplementation_schema.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="CodeGenerationCases\NestedInputObjectType_classes.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

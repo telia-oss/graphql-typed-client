@@ -70,7 +70,9 @@
     <Compile Include="ClassGenerator\DefinitionHandlers\EnumTypeDefinitionHandler.cs" />
     <Compile Include="ClassGenerator\DefinitionHandlers\IDefinitionHandler.cs" />
     <Compile Include="ClassGenerator\DefinitionHandlers\InputObjectTypeDefinitionHandler.cs" />
+    <Compile Include="ClassGenerator\DefinitionHandlers\InterfaceDefinitionHandler.cs" />
     <Compile Include="ClassGenerator\DefinitionHandlers\ObjectTypeDefinitionHandler.cs" />
+    <Compile Include="ClassGenerator\DefinitionHandlers\TypeDefinitionHandlerBase.cs" />
     <Compile Include="ClassGenerator\Generator.cs" />
     <Compile Include="ClassGenerator\GeneratorConfig.cs" />
     <Compile Include="GraphQLSchemaGenerator.cs" />

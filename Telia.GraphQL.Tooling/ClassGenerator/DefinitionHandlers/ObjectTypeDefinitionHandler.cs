@@ -9,21 +9,30 @@ using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 {
-    public class ObjectTypeDefinitionHandler : IDefinitionHandler
+    public class ObjectTypeDefinitionHandler : TypeDefinitionHandlerBase
     {
-        private GeneratorConfig config;
-
-        public ObjectTypeDefinitionHandler(GeneratorConfig config)
+        public ObjectTypeDefinitionHandler(GeneratorConfig config) : base(config)
         {
-            this.config = config;
         }
 
-        public NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
+        public override NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
         {
             var objectTypeDefinition = definition as GraphQLObjectTypeDefinition;
 
             var classDeclaration = SyntaxFactory.ClassDeclaration(objectTypeDefinition.Name.Value)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+
+            if (objectTypeDefinition.Interfaces != null && objectTypeDefinition.Interfaces.Any())
+            {
+                var baseList = SyntaxFactory.BaseList();
+                foreach (var interfaceImplementation in objectTypeDefinition.Interfaces)
+                {
+                    baseList = baseList.AddTypes(SyntaxFactory.SimpleBaseType(
+                        SyntaxFactory.ParseTypeName(interfaceImplementation.Name.Value)));
+                }
+
+                classDeclaration = classDeclaration.WithBaseList(baseList);
+            }
 
             classDeclaration = this.CreateProperties(classDeclaration, objectTypeDefinition.Fields);
 
@@ -71,60 +80,6 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return SyntaxFactory.Block(throwException);
         }
 
-        private ParameterListSyntax GetParameterList(IEnumerable<GraphQLInputValueDefinition> arguments)
-        {
-            var parameterList = SyntaxFactory.ParameterList();
-
-            foreach (var arg in arguments)
-            {
-                var parameterType = this.GetCSharpTypeFromGraphQLType(arg.Type);
-
-                var parameter = SyntaxFactory.Parameter(
-                    SyntaxFactory.Identifier(arg.Name.Value))
-                    .WithType(parameterType);
-
-                if (arg.DefaultValue != null)
-                {
-                    parameter = parameter.WithDefault(this.GetDefault(arg.DefaultValue));
-                }
-
-                parameterList = parameterList.AddParameters(parameter);
-            }
-
-            return parameterList;
-        }
-
-        private EqualsValueClauseSyntax GetDefault(GraphQLValue defaultValue)
-        {
-            switch (defaultValue.Kind)
-            {
-                case ASTNodeKind.IntValue:
-                    return SyntaxFactory.EqualsValueClause(
-                        SyntaxFactory.LiteralExpression(
-                         SyntaxKind.NumericLiteralExpression,
-                         SyntaxFactory.ParseToken(((GraphQLScalarValue)defaultValue).Value)));
-
-                case ASTNodeKind.FloatValue:
-                    return SyntaxFactory.EqualsValueClause(
-                        SyntaxFactory.LiteralExpression(
-                            SyntaxKind.NumericLiteralExpression,
-                            SyntaxFactory.ParseToken($"{((GraphQLScalarValue)defaultValue).Value}f")));
-
-                case ASTNodeKind.StringValue:
-                    return SyntaxFactory.EqualsValueClause(
-                        SyntaxFactory.LiteralExpression(
-                            SyntaxKind.StringLiteralExpression,
-                            SyntaxFactory.ParseToken($"\"{((GraphQLScalarValue)defaultValue).Value}\""))); ;
-
-                case ASTNodeKind.BooleanValue:
-                    return ((GraphQLScalarValue)defaultValue).Value.ToLower() == "true"
-                        ? SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression))
-                        : SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression));
-            };
-
-            return SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
-        }
-
         private ClassDeclarationSyntax GenerateProperty(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field)
         {
             var member = SyntaxFactory.PropertyDeclaration(
@@ -139,65 +94,6 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
 
             return classDeclaration.AddMembers(member);
-        }
-
-        private AttributeListSyntax GetFieldAttributes(string fieldName)
-        {
-            var attributeArguments = SyntaxFactory.SingletonSeparatedList(
-                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{fieldName}\"")));
-
-            var attribute = SyntaxFactory.Attribute(
-                SyntaxFactory.ParseName("GraphQLField"),
-                SyntaxFactory.AttributeArgumentList(attributeArguments));
-
-            return SyntaxFactory.AttributeList(
-                SyntaxFactory.SingletonSeparatedList(attribute));
-        }
-
-        private TypeSyntax GetCSharpTypeFromGraphQLType(GraphQLType type)
-        {
-            switch (type.Kind)
-            {
-                case ASTNodeKind.NamedType: return this.GetCSharpTypeFromGraphQLNamedType((GraphQLNamedType)type);
-                case ASTNodeKind.NonNullType: return this.GetCSharpTypeFromGraphQLNonNullType((GraphQLNonNullType)type);
-                case ASTNodeKind.ListType: return this.GetCSharpTypeFromGraphQLListType((GraphQLListType)type);
-            }
-
-            throw new NotImplementedException($"GetCSharpTypeFromGraphQLType: Unknown type.Kind: {type.Kind}");
-        }
-
-        private TypeSyntax GetCSharpTypeFromGraphQLListType(GraphQLListType type)
-        {
-            var underlyingType = this.GetCSharpTypeFromGraphQLType(type.Type);
-
-            var argumentList = SyntaxFactory.TypeArgumentList(
-                SyntaxFactory.SeparatedList<TypeSyntax>()
-                    .Add(underlyingType));
-
-            return SyntaxFactory.GenericName(SyntaxFactory.Identifier(typeof(IEnumerable).Name), argumentList);
-        }
-
-        private TypeSyntax GetCSharpTypeFromGraphQLNonNullType(GraphQLNonNullType type)
-        {
-            switch (type.Type.Kind)
-            {
-                case ASTNodeKind.NamedType: return this.GetCSharpTypeFromGraphQLNamedType((GraphQLNamedType)type.Type, false);
-                case ASTNodeKind.ListType: return this.GetCSharpTypeFromGraphQLListType((GraphQLListType)type.Type);
-            }
-
-            throw new NotImplementedException($"GetCSharpTypeFromGraphQLNonNullType: Unknown type.Kind: {type.Type.Kind}");
-        }
-
-        private TypeSyntax GetCSharpTypeFromGraphQLNamedType(GraphQLNamedType type, bool nullable = true)
-        {
-            var cSharpType = this.config.GetCSharpTypeFromGraphQLType(type.Name.Value, nullable);
-
-            if (cSharpType == null)
-            {
-                return SyntaxFactory.ParseTypeName(type.Name.Value);
-            }
-
-            return cSharpType;
         }
     }
 }
