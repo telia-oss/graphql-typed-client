@@ -154,7 +154,24 @@ namespace Telia.GraphQL.Client
                 case ExpressionType.NewArrayInit: return this.GetValueFromNewArrayInit((NewArrayExpression)argument);
             }
 
+            if (argument is UnaryExpression)
+            {
+                return GetValueFromUnaryExpression((UnaryExpression)argument);
+            }
+
             throw new NotImplementedException($"GetValueFromExpression: unknown NodeType: {argument.NodeType}");
+        }
+
+        private object GetValueFromUnaryExpression(UnaryExpression argument)
+        {
+            var value = this.GetValueFromExpression(argument.Operand);
+
+            if (argument.Method != null)
+            {
+                return argument.Method.Invoke(value, new object[] { });
+            }
+
+            return value;
         }
 
         private object GetValueFromNewArrayInit(NewArrayExpression argument)
