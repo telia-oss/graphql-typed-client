@@ -55,6 +55,11 @@ namespace Telia.GraphQL.Client
 
                 var attribute = memberExpression.Member.GetCustomAttribute<GraphQLFieldAttribute>();
 
+                if (attribute == null)
+                {
+                    return base.VisitMember(memberExpression);
+                }
+
                 chain.Add(new ChainLink(attribute.Name));
 
                 current = memberExpression.Expression;

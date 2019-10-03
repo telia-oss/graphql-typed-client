@@ -1,4 +1,4 @@
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +120,7 @@ namespace Telia.GraphQL.Client
 							this.GetValueFrom(model, this.context.GetBindingPath(node), node.Type)), node.Type);
 				}
 
-				return node;
+				return base.VisitMember(node);
             }
 
             private object GetValueFrom(JToken model, string binding, Type returnType)

@@ -28,9 +28,11 @@ namespace Telia.GraphQL.Client
 					groupedLink = lastLink.Children as List<ChainLink>;
                 }
 
-				lastLink.Node = chain.Node;
-
-				this.context.AddBinding(chain.Node, path.Substring(1));
+                if (lastLink != null)
+                {
+                    lastLink.Node = chain.Node;
+                    this.context.AddBinding(chain.Node, path.Substring(1));
+                }
 			}
 
             return rootLinks;

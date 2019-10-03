@@ -681,6 +681,43 @@ errors: [
             Assert.AreEqual(DateTime.Parse("2019-09-01T22:00:08.000Z").ToUniversalTime(), data.Data.test);
         }
 
+        [Test]
+        public void Query_WithTernaryOperator_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+""field0"": ""2019-09-01T22:00:08.000Z""
+} }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Date.HasValue ? true : false,
+            });
+
+            Assert.AreEqual(true, data.Data.test);
+        }
+
+        [Test]
+        public void Query_WithMoreComplicatedTernaryOperator_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+""field0"": { ""field0"": { ""field0"": { ""field0"": { ""field0"": 1 }, ""field1"": { ""field0"": { ""field0"": ""2019-09-01T22:00:08.000Z"" } } } } } } }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Complex.Complex.ComplexWithParams("test").Simple.Test == 1
+                    ? e.Complex.Complex.ComplexWithParams("test").Complex.Simple.Date.Value
+                    : DateTime.MinValue,
+            });
+
+            Assert.AreEqual(DateTime.Parse("2019-09-01T22:00:08.000Z").ToUniversalTime(), data.Data.test);
+        }
+
         private enum TestEnum
         {
             TEST1,
@@ -712,6 +749,9 @@ errors: [
         {
             [GraphQLField("test")]
             public int Test { get; set; }
+
+            [GraphQLField("date")]
+            public DateTime? Date { get; set; }
 
             [GraphQLField("testEnum")]
             public TestEnum TestEnum { get; set; }
