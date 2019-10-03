@@ -627,10 +627,76 @@ errors: [
             Assert.AreEqual("faa", data.Errors.First().Path.ElementAt(3));
         }
 
+        [Test]
+        public void Query_WithEnum_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+""field0"": ""TEST2""
+} }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.TestEnum,
+            });
+
+            Assert.AreEqual(TestEnum.TEST2, data.Data.test);
+        }
+
+        [Test]
+        public void Query_WithNestedEnum_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+""field0"": { ""field0"": ""TEST2"" }
+} }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Object.TestEnum,
+            });
+
+            Assert.AreEqual(TestEnum.TEST2, data.Data.test);
+        }
+
+        [Test]
+        public void Query_WithDate_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+""field0"": ""2019-09-01T22:00:08.000Z""
+} }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Date,
+            });
+
+            Assert.AreEqual(DateTime.Parse("2019-09-01T22:00:08.000Z").ToUniversalTime(), data.Data.test);
+        }
+
+        private enum TestEnum
+        {
+            TEST1,
+            TEST2
+        }
+
         private class TestQuery
         {
+            [GraphQLField("testEnum")]
+            public TestEnum TestEnum { get; set; }
+
             [GraphQLField("test")]
             public int Test { get; set; }
+
+            [GraphQLField("date")]
+            public DateTime? Date { get; set; }
 
             [GraphQLField("object")]
             public SimpleObject Object { get; set; }
@@ -646,6 +712,9 @@ errors: [
         {
             [GraphQLField("test")]
             public int Test { get; set; }
+
+            [GraphQLField("testEnum")]
+            public TestEnum TestEnum { get; set; }
 
             [GraphQLField("testWithParams")]
             public int TestWithParams(float x) { throw new InvalidOperationException(); }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -210,6 +210,11 @@ namespace Telia.GraphQL.Client
                 {
                     var date = (DateTime)Convert.ChangeType(value, typeof(DateTime));
                     return date.ToUniversalTime() - DateTime.UtcNow.Date;
+                }
+
+                if (value.GetType() == Nullable.GetUnderlyingType(returnType))
+                {
+                    return value;
                 }
 
                 try
