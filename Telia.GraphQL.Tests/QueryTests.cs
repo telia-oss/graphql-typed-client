@@ -682,6 +682,42 @@ errors: [
         }
 
         [Test]
+        public void Query_WithOnlyDate_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+""field0"": ""2019-09-01""
+} }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Date,
+            });
+
+            Assert.AreEqual(DateTime.Parse("2019-09-01").ToUniversalTime(), data.Data.test);
+        }
+
+        [Test]
+        public void Query_WithDateAsNull_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+""field0"": null
+} }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Date,
+            });
+
+            Assert.AreEqual(null, data.Data.test);
+        }
+
+        [Test]
         public void Query_WithTernaryOperator_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();

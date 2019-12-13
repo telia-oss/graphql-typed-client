@@ -201,20 +201,36 @@ namespace Telia.GraphQL.Client
                     return this.GetDefaultValue(returnType);
                 }
 
-				if (returnType.IsEnum && value.GetType() == typeof(string))
+				if (returnType.IsEnum && value is string enumString)
 				{
-					return Enum.Parse(returnType, value as string);
+					return Enum.Parse(returnType, enumString);
 				}
 
-                if (returnType == typeof(TimeSpan) && value.GetType() == typeof(string))
+                if (returnType == typeof(TimeSpan) && value is string)
                 {
                     var date = (DateTime)Convert.ChangeType(value, typeof(DateTime));
                     return date.ToUniversalTime() - DateTime.UtcNow.Date;
                 }
 
+                if (returnType == typeof(DateTime) && value is string)
+                {
+                    try
+                    {
+                        return ((DateTime) Convert.ChangeType(value, typeof(DateTime))).ToUniversalTime();
+                    }
+                    catch
+                    {
+                        return this.GetDefaultValue(returnType);
+                    }
+                }
+
                 if (value.GetType() == Nullable.GetUnderlyingType(returnType))
                 {
                     return value;
+                }
+                else if (Nullable.GetUnderlyingType(returnType) != null)
+                {
+                    return GetValueFromJValue(Nullable.GetUnderlyingType(returnType), token);
                 }
 
                 try
