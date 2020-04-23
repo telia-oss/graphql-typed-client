@@ -33,9 +33,9 @@ namespace Telia.GraphQL.Client
                             Value = arg.Name
                         },
                         Value = GetGraphQLValueFrom(arg.Value)
-                    }),
+                    }).ToList(),
                     SelectionSet = this.Convert(e.Children)
-                })
+                }).Cast<ASTNode>().ToList()
             };
         }
 
@@ -126,7 +126,7 @@ namespace Telia.GraphQL.Client
                         Value = prop.GetCustomAttribute<GraphQLFieldAttribute>(true).Name
                     },
                     Value = this.GetGraphQLValueFrom(prop.GetValue(value))
-                })
+                }).ToList()
             };
         }
     }

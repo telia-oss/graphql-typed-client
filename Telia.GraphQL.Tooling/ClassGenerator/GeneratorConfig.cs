@@ -31,6 +31,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator
             this.graphQLToCSharpTypeBindings.Add("AWSURL", typeof(string));
             this.graphQLToCSharpTypeBindings.Add("AWSPhone", typeof(string));
             this.graphQLToCSharpTypeBindings.Add("AWSIPAddress", typeof(string));
+            this.graphQLToCSharpTypeBindings.Add("ID", typeof(string));
         }
 
         public void AddOrReplaceTypeBinding(string graphQLType, Type cSharpType)

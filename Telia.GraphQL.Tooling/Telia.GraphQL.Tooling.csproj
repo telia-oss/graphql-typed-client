@@ -104,9 +104,8 @@
     <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="GraphQL-Parser">
-      <HintPath>..\lib\GraphQL-Parser.dll</HintPath>
-      <ForceIncludeInVSIX>true</ForceIncludeInVSIX>
+    <Reference Include="GraphQLParser">
+      <HintPath>..\lib\GraphQLParser.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=2.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.9.0\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>

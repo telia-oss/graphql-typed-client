@@ -39,12 +39,29 @@ namespace Telia.GraphQL.Client
 
             chain.Reverse();
 
-            if (chain.Any())
-            {
-				this.context.SelectionChains.Add(new CallChain(chain, node));
-            }
+            this.context.SelectionChains.Add(new CallChain(chain, node));
 
             return node;
+        }
+
+        private Expression AddToChainFromExpression(List<ChainLink> chain, Expression current)
+        {
+            if (current.NodeType == ExpressionType.MemberAccess)
+            {
+                return AddToChainFromMembers(chain, current);
+            }
+
+            if (current.NodeType == ExpressionType.Call)
+            {
+                return AddToChainFromMethods(chain, current);
+            }
+
+            if (current.NodeType == ExpressionType.Parameter)
+            {
+                chain.AddRange(this.context.GetChainPrefixFrom(current as ParameterExpression));
+            }
+
+            return current;
         }
 
         private Expression AddToChainFromMembers(List<ChainLink> chain, Expression current)
@@ -65,17 +82,7 @@ namespace Telia.GraphQL.Client
                 current = memberExpression.Expression;
             }
 
-            if (current.NodeType == ExpressionType.Call)
-            {
-                return AddToChainFromMethods(chain, current);
-            }
-
-			if (current.NodeType == ExpressionType.Parameter)
-			{
-				chain.AddRange(this.context.GetChainPrefixFrom(current as ParameterExpression));
-			}
-
-			return current;
+            return AddToChainFromExpression(chain, current);
         }
 
         private Expression AddToChainFromMethods(List<ChainLink> chain, Expression current)
@@ -115,12 +122,7 @@ namespace Telia.GraphQL.Client
 				current = methodCallExpression.Object;
 			}
 
-			if (current.NodeType == ExpressionType.MemberAccess)
-            {
-                return AddToChainFromMembers(chain, current);
-            }
-
-            return current;
+            return AddToChainFromExpression(chain, current);
         }
 
 		private List<ChainLink> GetChainToSelectMethod(MethodCallExpression methodCallExpression)

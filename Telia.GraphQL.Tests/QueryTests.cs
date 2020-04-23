@@ -754,6 +754,38 @@ errors: [
             Assert.AreEqual(DateTime.Parse("2019-09-01T22:00:08.000Z").ToUniversalTime(), data.Data.test);
         }
 
+        [Test]
+        public void Query_WithNestedSelects_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [{ ""field0"": [ { ""field0"": 42 } ] }] } } }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Complex.ComplexArray.Select(x => x.ComplexArray.Select(y => y.Test))
+            });
+
+            Assert.AreEqual(42, data.Data.test.Single().Single());
+        }
+
+        [Test]
+        public void Query_WithNestedSelectsWithParams_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [{ ""field0"": [ { ""field0"": 42 } ] }] } } }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Complex.ComplexArray.Select(x => x.ComplexArrayWithParams("test").Select(y => y.Test))
+            });
+
+            Assert.AreEqual(42, data.Data.test.Single().Single());
+        }
+
         private enum TestEnum
         {
             TEST1,
@@ -818,6 +850,9 @@ errors: [
 
             [GraphQLField("complexArray")]
             public IEnumerable<ComplexObject> ComplexArray { get; set; }
+
+            [GraphQLField("complexArrayWithparams")]
+            public IEnumerable<ComplexObject> ComplexArrayWithParams(string param) { throw new InvalidOperationException(); }
         }
 
         private class TestClient : GraphQLCLient<TestQuery>

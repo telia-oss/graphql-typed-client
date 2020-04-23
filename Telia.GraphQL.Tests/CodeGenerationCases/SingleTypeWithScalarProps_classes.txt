@@ -20,6 +20,20 @@
             set;
         }
 
+        [GraphQLField("nonNullableId")]
+        public String NonNullableId
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("nullableId")]
+        public String NullableId
+        {
+            get;
+            set;
+        }
+
         [GraphQLField("nonNullableFloat")]
         public Single NonNullableFloat
         {
