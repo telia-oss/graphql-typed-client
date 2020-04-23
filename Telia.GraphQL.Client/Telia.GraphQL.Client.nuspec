@@ -16,6 +16,6 @@
     <tags>GraphQL client</tags>
   </metadata>
   <files>
-    <file src="bin\$configuration$\GraphQL-Parser.dll" target="lib\net461" />
+    <file src="bin\$configuration$\GraphQLParser.dll" target="lib\net461" />
 </files>
 </package>
