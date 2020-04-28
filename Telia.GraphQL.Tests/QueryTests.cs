@@ -1102,6 +1102,165 @@ errors: [
             Assert.AreEqual(new[] { 7, 8, 9 }, result.Data.test.SimpleArray.ElementAt(1).TestArray);
         }
 
+        [Test]
+        public void Query_WithSimpleObjectArrayAndSelectMethod_ShouldExpandSelectionListToFields()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.ObjectArray.Select(o => o)
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: objectArray{
+    test
+    date
+    testEnum
+    testArray
+    __typename
+  }
+  __typename
+}", query);
+        }
+
+        [Test]
+        public void Query_WithSimpleObjectArrayAndNestedSelectMethod_ShouldExpandSelectionListToFields()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.Complex.ComplexArray.Select(o => o.SimpleArray)
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: complex{
+    field0: complexArray{
+      field0: simpleArray{
+        test
+        date
+        testEnum
+        testArray
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+  __typename
+}", query);
+        }
+
+        [Test]
+        public void Query_WithSimpleObjectArrayAndMultipleNestedSelectMethod_ShouldExpandSelectionListToFields()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.Complex.ComplexArray.Select(o => new
+                {
+                    arr = o.SimpleArray,
+                    arr2 = o.ComplexArray
+                })
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: complex{
+    field0: complexArray{
+      field0: simpleArray{
+        test
+        date
+        testEnum
+        testArray
+        __typename
+      }
+      field1: complexArray{
+        simpleInterface{
+          test
+          __typename
+        }
+        test
+        simple{
+          test
+          date
+          testEnum
+          testArray
+          __typename
+        }
+        simpleArray{
+          test
+          date
+          testEnum
+          testArray
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+  __typename
+}", query);
+        }
+
+        [Test]
+        public void Query_WithSimpleObjectArrayAndMultipleNestedSelectMethod_ShouldParseDataCorrectly()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+  ""field0"": {
+    ""field0"": [{
+      ""field0"": [{
+        ""test"": 42,
+        ""date"": ""11-11-2020"",
+        ""testEnum"": ""TEST2"",
+        ""testArray"": [1, 2, 3],
+      }],
+      ""field1"": [{
+        ""simpleInterface"": {
+          ""test"": 43,
+          ""__typename"": ""SimpleObject""
+        },
+        ""test"": 11,
+        ""simple"": {
+          ""test"": 42,
+          ""date"": ""11-11-2020"",
+          ""testEnum"": ""TEST2"",
+          ""testArray"": [1, 2, 3],
+        },
+        ""simpleArray"": [{
+          ""test"": 42,
+          ""date"": ""11-11-2020"",
+          ""testEnum"": ""TEST2"",
+          ""testArray"": [1, 2, 3],
+        }]
+      }]
+    }]
+  }
+}}");
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Complex.ComplexArray.Select(o => new
+                {
+                    arr = o.SimpleArray,
+                    arr2 = o.ComplexArray
+                })
+            });
+
+            Assert.IsNotNull(result.Data);
+            Assert.IsNotNull(result.Data.test);
+            Assert.IsNotNull(result.Data.test.Single().arr);
+            Assert.IsNotNull(result.Data.test.Single().arr2);
+        }
+
         [GraphQLType("TestEnum")]
         private enum TestEnum
         {

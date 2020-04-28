@@ -30,6 +30,16 @@ namespace Telia.GraphQL.Client
             return node;
         }
 
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            var chain = new CallChain(this.context.GetChainPrefixFrom(node).ToList(), node, true);
+
+            if (chain.Links.Any())
+                this.context.SelectionChains.Add(chain);
+
+            return base.VisitParameter(node);
+        }
+
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             var chain = new List<ChainLink>();
@@ -39,7 +49,8 @@ namespace Telia.GraphQL.Client
 
             chain.Reverse();
 
-            this.context.SelectionChains.Add(new CallChain(chain, node, true));
+            if (chain.Count > 0)
+                this.context.SelectionChains.Add(new CallChain(chain, node, true));
 
             return node;
         }
