@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\GraphQLTypeAttribute.cs" />
     <Compile Include="Attributes\GraphQLFieldAttribute.cs" />
     <Compile Include="CallChain.cs" />
     <Compile Include="ChainLink.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="DefaultNetworkClient.cs" />
     <Compile Include="ExtractParameterVisitor.cs" />
     <Compile Include="GraphQLCLient.cs" />
+    <Compile Include="GraphQLInterfaceConverter.cs" />
     <Compile Include="GraphQLResult.cs" />
     <Compile Include="INetworkClient.cs" />
     <Compile Include="PathGatheringVisitor.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="QueryContext.cs" />
     <Compile Include="ResponseComposer.cs" />
     <Compile Include="SelectionChainConverter.cs" />
+    <Compile Include="SelectionChainExpander.cs" />
     <Compile Include="SelectionChainGrouping.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>

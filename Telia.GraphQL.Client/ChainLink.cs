@@ -7,21 +7,24 @@ namespace Telia.GraphQL.Client
     internal class ChainLink
     {
         public string FieldName { get; }
+        public bool UseAlias { get; }
         public string Fragment { get; set; }
         public IEnumerable<ChainLinkArgument> Arguments { get; }
         public IEnumerable<ChainLink> Children { get; set; }
 		public Expression Node { get; internal set; }
 
-		public ChainLink(string fieldName, IEnumerable<ChainLinkArgument> arguments = null)
+		public ChainLink(string fieldName, bool useAlias, IEnumerable<ChainLinkArgument> arguments = null)
         {
             this.FieldName = fieldName;
             this.Arguments = arguments;
+            this.UseAlias = useAlias;
         }
 
         public ChainLink(
             string fieldName,
+            bool useAlias,
             IEnumerable<ChainLinkArgument> arguments,
-            IEnumerable<ChainLink> children): this(fieldName, arguments)
+            IEnumerable<ChainLink> children): this(fieldName, useAlias, arguments)
         {
             this.Children = children;
         }

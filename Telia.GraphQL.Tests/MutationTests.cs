@@ -44,6 +44,7 @@ namespace Telia.GraphQL.Tests
 
             AssertUtils.AreEqualIgnoreLineBreaks(@"mutation {
   field0: someMutation(input: {test: 1, stringTest: null, testArray: [2, 3, 4], object: null})
+  __typename
 }", mutation);
         }
 
@@ -69,6 +70,7 @@ namespace Telia.GraphQL.Tests
 
             AssertUtils.AreEqualIgnoreLineBreaks(@"mutation {
   field0: someMutation(input: {test: 0, stringTest: null, testArray: null, object: {test: 0, stringTest: null, testArray: null, object: {test: 42, stringTest: null, testArray: null, object: null}}})
+  __typename
 }", mutation);
         }
 

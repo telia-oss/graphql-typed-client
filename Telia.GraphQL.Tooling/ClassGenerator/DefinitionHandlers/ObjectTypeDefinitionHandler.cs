@@ -20,7 +20,8 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             var objectTypeDefinition = definition as GraphQLObjectTypeDefinition;
 
             var classDeclaration = SyntaxFactory.ClassDeclaration(objectTypeDefinition.Name.Value)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddAttributeLists(GetTypeAttributes(objectTypeDefinition.Name.Value));
 
             if (objectTypeDefinition.Interfaces != null && objectTypeDefinition.Interfaces.Any())
             {

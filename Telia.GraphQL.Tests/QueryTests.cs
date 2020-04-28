@@ -25,7 +25,9 @@ namespace Telia.GraphQL.Tests
   field0: test
   field1: object{
     field0: testWithParams(x: 0.5)
+    __typename
   }
+  __typename
 }", query);
         }
 
@@ -45,7 +47,9 @@ namespace Telia.GraphQL.Tests
             AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: object{
     field0: test
+    __typename
   }
+  __typename
 }", query);
         }
 
@@ -67,12 +71,17 @@ namespace Telia.GraphQL.Tests
     field1: complex{
       field0: complex{
         field0: test
+        __typename
       }
       field1: simple{
         field0: test
+        __typename
       }
+      __typename
     }
+    __typename
   }
+  __typename
 }", query);
         }
 
@@ -91,23 +100,32 @@ namespace Telia.GraphQL.Tests
             AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: complexWithParams(name: null){
     field0: test
+    __typename
   }
   field1: complexWithParams(name: ""test4""){
     field0: complex{
       field0: complexWithParams(name: ""test2""){
         field0: complex{
           field0: test
+          __typename
         }
+        __typename
       }
+      __typename
     }
+    __typename
   }
   field2: complexWithParams(name: ""test1""){
     field0: complexWithParams(name: ""test3""){
       field0: simple{
         field0: test
+        __typename
       }
+      __typename
     }
+    __typename
   }
+  __typename
 }", query);
         }
 
@@ -135,18 +153,26 @@ namespace Telia.GraphQL.Tests
     field1: complexWithParams2(name: ""test3"", surname: ""test4""){
       field0: simple{
         field0: test
+        __typename
       }
+      __typename
     }
+    __typename
   }
   field1: complexWithParams(name: ""test4""){
     field0: complex{
       field0: complexWithParams(name: ""test2""){
         field0: complex{
           field0: test
+          __typename
         }
+        __typename
       }
+      __typename
     }
+    __typename
   }
+  __typename
 }", query);
         }
 
@@ -185,18 +211,26 @@ namespace Telia.GraphQL.Tests
     field1: complexWithParams(name: ""test3""){
       field0: simple{
         field0: test
+        __typename
       }
+      __typename
     }
+    __typename
   }
   field1: complexWithParams(name: ""test4""){
     field0: complex{
       field0: complexWithParams(name: ""test2""){
         field0: complex{
           field0: test
+          __typename
         }
+        __typename
       }
+      __typename
     }
+    __typename
   }
+  __typename
 }", query);
         }
 
@@ -214,8 +248,11 @@ namespace Telia.GraphQL.Tests
   field0: complex{
     field0: complexArray{
       field0: test
+      __typename
     }
+    __typename
   }
+  __typename
 }", query);
 		}
 
@@ -233,9 +270,12 @@ namespace Telia.GraphQL.Tests
   field0: complex{
     field0: complexArray{
       field0: test
+      __typename
     }
+    __typename
   }
   field1: test
+  __typename
 }", query);
 		}
 
@@ -801,8 +841,11 @@ errors: [
   field0: simpleInterface{
     ... on SimpleObject {
       field0: testEnum
+      __typename
     }
+    __typename
   }
+  __typename
 }", query);
         }
 
@@ -823,10 +866,15 @@ errors: [
       field0: simpleInterface{
         ... on SimpleObject {
           field0: testEnum
+          __typename
         }
+        __typename
       }
+      __typename
     }
+    __typename
   }
+  __typename
 }", query);
         }
 
@@ -866,18 +914,209 @@ errors: [
             Assert.AreEqual(new[] { 1, 2, 3 }, data.Data.testArray.First());
         }
 
+        [Test]
+        public void Query_WithSimpleObject_ShouldExpandSelectionListToFields()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.Object
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: object{
+    test
+    date
+    testEnum
+    testArray
+    __typename
+  }
+  __typename
+}", query);
+        }
+
+        [Test]
+        public void Query_WithSimpleObjectArray_ShouldExpandSelectionListToFields()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.ObjectArray
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: objectArray{
+    test
+    date
+    testEnum
+    testArray
+    __typename
+  }
+  __typename
+}", query);
+        }
+
+        [Test]
+        public void Query_WithSimpleObject_ShouldGetCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { 
+  ""test"": 42,
+  ""date"": ""11-11-2006"",
+  ""testEnum"": ""TEST2"",
+  ""testArray"": [1, 2, 3]
+} } }");
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Object
+            });
+
+            Assert.AreEqual(42, result.Data.test.Test);
+            Assert.AreEqual(DateTime.Parse("11-11-2006"), result.Data.test.Date);
+            Assert.AreEqual(TestEnum.TEST2, result.Data.test.TestEnum);
+            Assert.AreEqual(new [] { 1, 2, 3 }, result.Data.test.TestArray);
+        }
+
+        [Test]
+        public void Query_WithSimpleObjectArray_ShouldGetCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": [{ 
+  ""test"": 42,
+  ""date"": ""11-11-2006"",
+  ""testEnum"": ""TEST2"",
+  ""testArray"": [1, 2, 3]
+}] } }");
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.ObjectArray
+            });
+
+            Assert.AreEqual(42, result.Data.test.Single().Test);
+            Assert.AreEqual(DateTime.Parse("11-11-2006"), result.Data.test.Single().Date);
+            Assert.AreEqual(TestEnum.TEST2, result.Data.test.Single().TestEnum);
+            Assert.AreEqual(new[] { 1, 2, 3 }, result.Data.test.Single().TestArray);
+        }
+
+        [Test]
+        public void Query_WithComplexObject_ShouldExpandSelectionListToFields()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.Complex
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: complex{
+    simpleInterface{
+      test
+      __typename
+    }
+    test
+    simple{
+      test
+      date
+      testEnum
+      testArray
+      __typename
+    }
+    simpleArray{
+      test
+      date
+      testEnum
+      testArray
+      __typename
+    }
+    __typename
+  }
+  __typename
+}", query);
+        }
+
+        [Test]
+        public void Query_WithComplexObject_ShouldReturnCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+  ""field0"": {
+    ""simpleInterface"": {
+      ""__typename"": ""SimpleObject"",
+      ""test"": 41
+    },
+    ""test"": 42,
+    ""simple"": {
+      ""test"": 43,
+      ""date"": ""11-11-2010"",
+      ""testEnum"": ""TEST2"",
+      ""testArray"": [1, 2, 3]
+    },
+    ""simpleArray"": [
+        {
+          ""test"": 44,
+          ""date"": ""11-11-2012"",
+          ""testEnum"": ""TEST2"",
+          ""testArray"": [4, 5, 6]
+        },
+        {
+          ""test"": 45,
+          ""date"": ""11-11-2014"",
+          ""testEnum"": ""TEST1"",
+          ""testArray"": [7, 8, 9]
+        }
+    ]
+  }
+} }");
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Complex
+            });
+
+            Assert.AreEqual(41, result.Data.test.SimpleInterface.Test);
+            Assert.AreEqual(42, result.Data.test.Test);
+            Assert.AreEqual(43, result.Data.test.Simple.Test);
+            Assert.AreEqual(DateTime.Parse("11-11-2010"), result.Data.test.Simple.Date);
+            Assert.AreEqual(TestEnum.TEST2, result.Data.test.Simple.TestEnum);
+            Assert.AreEqual(new [] { 1, 2, 3 }, result.Data.test.Simple.TestArray);
+
+            Assert.AreEqual(44, result.Data.test.SimpleArray.ElementAt(0).Test);
+            Assert.AreEqual(DateTime.Parse("11-11-2012"), result.Data.test.SimpleArray.ElementAt(0).Date);
+            Assert.AreEqual(TestEnum.TEST2, result.Data.test.SimpleArray.ElementAt(0).TestEnum);
+            Assert.AreEqual(new[] { 4, 5, 6 }, result.Data.test.SimpleArray.ElementAt(0).TestArray);
+
+            Assert.AreEqual(45, result.Data.test.SimpleArray.ElementAt(1).Test);
+            Assert.AreEqual(DateTime.Parse("11-11-2014"), result.Data.test.SimpleArray.ElementAt(1).Date);
+            Assert.AreEqual(TestEnum.TEST1, result.Data.test.SimpleArray.ElementAt(1).TestEnum);
+            Assert.AreEqual(new[] { 7, 8, 9 }, result.Data.test.SimpleArray.ElementAt(1).TestArray);
+        }
+
+        [GraphQLType("TestEnum")]
         private enum TestEnum
         {
             TEST1,
             TEST2
         }
 
+        [GraphQLType("SimpleInterface")]
         private interface SimpleInterface
         {
             [GraphQLField("test")]
             int Test { get; set; }
         }
 
+        [GraphQLType("TestQuery")]
         private class TestQuery
         {
             [GraphQLField("simpleInterface")]
@@ -895,6 +1134,9 @@ errors: [
             [GraphQLField("object")]
             public SimpleObject Object { get; set; }
 
+            [GraphQLField("objectArray")]
+            public IEnumerable<SimpleObject> ObjectArray { get; set; }
+
             [GraphQLField("complex")]
             public ComplexObject Complex { get; set; }
 
@@ -902,6 +1144,7 @@ errors: [
             public ComplexObject ComplexWithParams(string name) { throw new InvalidOperationException(); }
         }
 
+        [GraphQLType("SimpleObject")]
         private class SimpleObject : SimpleInterface
         {
             [GraphQLField("test")]
@@ -920,6 +1163,7 @@ errors: [
             public IEnumerable<int> TestArray { get; set; }
         }
 
+        [GraphQLType("ComplexObject")]
         private class ComplexObject
         {
             [GraphQLField("simpleInterface")]
@@ -930,6 +1174,9 @@ errors: [
 
             [GraphQLField("simple")]
             public SimpleObject Simple { get; set; }
+
+            [GraphQLField("simpleArray")]
+            public IEnumerable<SimpleObject> SimpleArray { get; set; }
 
             [GraphQLField("complex")]
             public ComplexObject Complex { get; set; }

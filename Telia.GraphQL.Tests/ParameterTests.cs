@@ -25,6 +25,7 @@ namespace Telia.GraphQL.Tests
 
             AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: test(arr: [1, 2, 3])
+  __typename
 }", query);
         }
 
@@ -44,6 +45,7 @@ namespace Telia.GraphQL.Tests
 
             AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: test(arr: [1, 2, 3])
+  __typename
 }", query);
         }
 
@@ -62,6 +64,7 @@ namespace Telia.GraphQL.Tests
 
             AssertUtils.AreEqualIgnoreLineBreaks(@"{
   field0: test(arr: 1)
+  __typename
 }", query);
         }
 

@@ -3,17 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using Newtonsoft.Json;
+using Telia.GraphQL.Client.Attributes;
 
 namespace Telia.GraphQL.Client
 {
 	internal class ResponseComposer<TQueryType, TReturn>
 	{
-		private Expression<Func<TQueryType, TReturn>> selector;
+        private Expression<Func<TQueryType, TReturn>> selector;
 		private QueryContext context;
 
 		public ResponseComposer(Expression<Func<TQueryType, TReturn>> selector, QueryContext context)
-		{
-			this.selector = selector;
+        {
+            this.selector = selector;
 			this.context = context;
 		}
 
@@ -162,9 +165,15 @@ namespace Telia.GraphQL.Client
 					return this.GetDefaultValue(returnType);
 				}
 
-                return token.ToObject(returnType);
+                return token.ToObject(returnType, JsonSerializer.Create(new JsonSerializerSettings()
+                {
+                    Converters = new List<JsonConverter>()
+                    {
+                        new GraphQLInterfaceConverter(typeof(TQueryType))
+                    }
+                }));
             }
-
+            
             private object GetValueFromProperty(Type returnType, JProperty token)
             {
                 return this.GetValueFromToken(returnType, new JObject(token));

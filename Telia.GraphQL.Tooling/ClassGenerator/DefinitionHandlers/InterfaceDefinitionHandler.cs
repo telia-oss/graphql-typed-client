@@ -21,7 +21,8 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             var objectTypeDefinition = definition as GraphQLInterfaceTypeDefinition;
 
             var interfaceDeclaration = SyntaxFactory.InterfaceDeclaration(objectTypeDefinition.Name.Value)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddAttributeLists(GetTypeAttributes(objectTypeDefinition.Name.Value));
 
             interfaceDeclaration = this.CreateProperties(interfaceDeclaration, objectTypeDefinition.Fields);
 

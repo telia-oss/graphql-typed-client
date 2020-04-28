@@ -62,6 +62,19 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 SyntaxFactory.SingletonSeparatedList(attribute));
         }
 
+        protected AttributeListSyntax GetTypeAttributes(string typeName)
+        {
+            var attributeArguments = SyntaxFactory.SingletonSeparatedList(
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{typeName}\"")));
+
+            var attribute = SyntaxFactory.Attribute(
+                SyntaxFactory.ParseName("GraphQLType"),
+                SyntaxFactory.AttributeArgumentList(attributeArguments));
+
+            return SyntaxFactory.AttributeList(
+                SyntaxFactory.SingletonSeparatedList(attribute));
+        }
+
         protected TypeSyntax GetCSharpTypeFromGraphQLType(GraphQLType type)
         {
             switch (type.Kind)

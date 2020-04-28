@@ -7,14 +7,17 @@ namespace Telia.GraphQL.Client
     {
         private readonly List<ChainLink> links;
         private readonly Expression node;
+        private readonly bool isTerminal;
 
         public IEnumerable<ChainLink> Links => this.links;
         public Expression Node => this.node;
+        public bool IsTerminal => this.isTerminal;
 
-        public CallChain(List<ChainLink> links, Expression node)
+        public CallChain(List<ChainLink> links, Expression node, bool isTerminal)
         {
             this.links = links;
             this.node = node;
+            this.isTerminal = isTerminal;
         }
     }
 }

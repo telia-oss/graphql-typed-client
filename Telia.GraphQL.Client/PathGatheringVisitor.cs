@@ -25,7 +25,7 @@ namespace Telia.GraphQL.Client
 
             chain.Reverse();
 
-            this.context.SelectionChains.Add(new CallChain(chain, node));
+            this.context.SelectionChains.Add(new CallChain(chain, node, true));
 
             return node;
         }
@@ -39,7 +39,7 @@ namespace Telia.GraphQL.Client
 
             chain.Reverse();
 
-            this.context.SelectionChains.Add(new CallChain(chain, node));
+            this.context.SelectionChains.Add(new CallChain(chain, node, true));
 
             return node;
         }
@@ -65,7 +65,7 @@ namespace Telia.GraphQL.Client
             {
                 var unaryExpression = (UnaryExpression) current;
 
-                chain.Add(new ChainLink(null)
+                chain.Add(new ChainLink(null, false)
                 {
                     Fragment = unaryExpression.Type.Name
                 });
@@ -89,7 +89,7 @@ namespace Telia.GraphQL.Client
                     return base.VisitMember(memberExpression);
                 }
 
-                chain.Add(new ChainLink(attribute.Name));
+                chain.Add(new ChainLink(attribute.Name, true));
 
                 current = memberExpression.Expression;
             }
@@ -110,7 +110,8 @@ namespace Telia.GraphQL.Client
 
 					this.context.SelectionChains.Add(new CallChain(
 						chainPrefix.ToArray().Reverse().ToList(),
-						methodCallExpression.Arguments[0]));
+						methodCallExpression.Arguments[0],
+                        false));
 
 					this.context.AddParameterToCallChainBinding(innerLambda.Parameters.First(), chainPrefix);
 
@@ -129,6 +130,7 @@ namespace Telia.GraphQL.Client
 
 				chain.Add(new ChainLink(
 					attribute.Name,
+                    true,
 					this.GetArgumentsFromMethod(methodCallExpression)));
 
 				current = methodCallExpression.Object;

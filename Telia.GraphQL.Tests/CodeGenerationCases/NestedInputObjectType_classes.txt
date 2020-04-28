@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Telia.GraphQL.Client.Attributes;
 
+    [GraphQLType("SomeInputObject")]
     public class SomeInputObject
     {
         [GraphQLField("foo")]
@@ -35,6 +36,7 @@
         }
     }
 
+    [GraphQLType("SomeOtherInputObject")]
     public class SomeOtherInputObject
     {
         [GraphQLField("foo")]

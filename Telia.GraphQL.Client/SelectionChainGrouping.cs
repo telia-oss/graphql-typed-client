@@ -46,6 +46,7 @@ namespace Telia.GraphQL.Client
             {
                 existingLink = new ChainLink(
                     part.FieldName,
+                    part.UseAlias,
                     part.Arguments,
                     new List<ChainLink>());
 

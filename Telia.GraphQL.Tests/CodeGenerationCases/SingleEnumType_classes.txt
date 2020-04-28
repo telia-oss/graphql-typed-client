@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Telia.GraphQL.Client.Attributes;
 
+    [GraphQLType("SomeEnumType")]
     public enum SomeEnumType
     {
         Value1,

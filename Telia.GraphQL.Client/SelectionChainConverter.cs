@@ -16,6 +16,7 @@ namespace Telia.GraphQL.Client
 
             var selections = new List<ASTNode>();
 
+
             var index = 0;
             foreach (var link in links)
             {
@@ -27,10 +28,9 @@ namespace Telia.GraphQL.Client
                         {
                             Value = link.FieldName
                         },
-                        Alias = new GraphQLName()
-                        {
-                            Value = $"field{index++}"
-                        },
+                        Alias = link.UseAlias
+                            ? new GraphQLName { Value = $"field{index++}" }
+                            : null,
                         Arguments = link.Arguments?.Select(arg => new GraphQLArgument()
                         {
                             Name = new GraphQLName()
@@ -56,6 +56,14 @@ namespace Telia.GraphQL.Client
                         SelectionSet = this.Convert(link.Children)
                     });
                 }
+            }
+
+            if (selections.Any())
+            {
+                selections.Add(new GraphQLFieldSelection()
+                {
+                    Name = new GraphQLName { Value = "__typename" },
+                });
             }
 
             return new GraphQLSelectionSet()

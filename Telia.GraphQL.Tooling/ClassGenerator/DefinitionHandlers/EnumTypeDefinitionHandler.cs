@@ -4,14 +4,19 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 {
-    public class EnumTypeDefinitionHandler : IDefinitionHandler
+    public class EnumTypeDefinitionHandler : TypeDefinitionHandlerBase
     {
-        public NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
+        public EnumTypeDefinitionHandler() : base(null)
+        {
+        }
+
+        public override NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
         {
             var enumTypeDefinition = definition as GraphQLEnumTypeDefinition;
 
             var enumDeclaration = SyntaxFactory.EnumDeclaration(enumTypeDefinition.Name.Value)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddAttributeLists(GetTypeAttributes(enumTypeDefinition.Name.Value));
 
             foreach (var value in enumTypeDefinition.Values)
             {

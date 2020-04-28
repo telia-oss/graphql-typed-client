@@ -8,21 +8,22 @@ using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 {
-    public class InputObjectTypeDefinitionHandler : IDefinitionHandler
+    public class InputObjectTypeDefinitionHandler : TypeDefinitionHandlerBase
     {
         private GeneratorConfig config;
 
-        public InputObjectTypeDefinitionHandler(GeneratorConfig config)
+        public InputObjectTypeDefinitionHandler(GeneratorConfig config) : base(config)
         {
             this.config = config;
         }
 
-        public NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
+        public override NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
         {
             var objectTypeDefinition = definition as GraphQLInputObjectTypeDefinition;
 
             var classDeclaration = SyntaxFactory.ClassDeclaration(objectTypeDefinition.Name.Value)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddAttributeLists(GetTypeAttributes(objectTypeDefinition.Name.Value));
 
             classDeclaration = this.CreateProperties(classDeclaration, objectTypeDefinition.Fields);
 

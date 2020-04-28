@@ -29,7 +29,8 @@ namespace Telia.GraphQL.Client
 
 		internal void AddBinding(Expression node, string bindingPath)
 		{
-			this.bindings.Add(node, bindingPath);
+			if (node != null)
+			    this.bindings.Add(node, bindingPath);
 		}
 
 		internal IEnumerable<ChainLink> GetChainPrefixFrom(ParameterExpression parameterExpression)

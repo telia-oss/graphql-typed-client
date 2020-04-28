@@ -58,8 +58,12 @@ namespace Telia.GraphQL
             var grouping = new SelectionChainGrouping(context);
             var converter = new SelectionChainConverter();
             var visitor = new PathGatheringVisitor(context);
+            var expander = new SelectionChainExpander(context);
 
             visitor.Visit(selector);
+            var expanded = expander.Expand();
+
+            context.SelectionChains.AddRange(expanded);
 
             var groupedChains = grouping.Group();
 
