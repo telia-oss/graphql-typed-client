@@ -7,6 +7,7 @@ namespace Telia.GraphQL.Client
     internal class ChainLink
     {
         public string FieldName { get; }
+        public string Fragment { get; set; }
         public IEnumerable<ChainLinkArgument> Arguments { get; }
         public IEnumerable<ChainLink> Children { get; set; }
 		public Expression Node { get; internal set; }
@@ -40,6 +41,11 @@ namespace Telia.GraphQL.Client
             }
 
             if (link.Arguments?.Count() != this.Arguments?.Count())
+            {
+                return false;
+            }
+
+            if (link.Fragment != this.Fragment)
             {
                 return false;
             }

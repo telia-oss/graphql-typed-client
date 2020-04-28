@@ -14,28 +14,53 @@ namespace Telia.GraphQL.Client
         {
             if (links == null) return null;
 
+            var selections = new List<ASTNode>();
+
+            var index = 0;
+            foreach (var link in links)
+            {
+                if (string.IsNullOrWhiteSpace(link.Fragment))
+                {
+                    selections.Add(new GraphQLFieldSelection()
+                    {
+                        Name = new GraphQLName
+                        {
+                            Value = link.FieldName
+                        },
+                        Alias = new GraphQLName()
+                        {
+                            Value = $"field{index++}"
+                        },
+                        Arguments = link.Arguments?.Select(arg => new GraphQLArgument()
+                        {
+                            Name = new GraphQLName()
+                            {
+                                Value = arg.Name
+                            },
+                            Value = GetGraphQLValueFrom(arg.Value)
+                        }).ToList(),
+                        SelectionSet = this.Convert(link.Children)
+                    });
+                }
+                else
+                {
+                    selections.Add(new GraphQLInlineFragment
+                    {
+                        TypeCondition = new GraphQLNamedType()
+                        {
+                            Name = new GraphQLName()
+                            {
+                                Value = link.Fragment
+                            }
+                        },
+                        SelectionSet = this.Convert(link.Children)
+                    });
+                }
+            }
+
             return new GraphQLSelectionSet()
             {
-                Selections = links.Select((e, index) => new GraphQLFieldSelection()
-                {
-                    Name = new GraphQLName
-                    {
-                        Value = e.FieldName
-                    },
-                    Alias = new GraphQLName()
-                    {
-                        Value = $"field{index}"
-                    },
-                    Arguments = e.Arguments?.Select(arg => new GraphQLArgument()
-                    {
-                        Name = new GraphQLName()
-                        {
-                            Value = arg.Name
-                        },
-                        Value = GetGraphQLValueFrom(arg.Value)
-                    }).ToList(),
-                    SelectionSet = this.Convert(e.Children)
-                }).Cast<ASTNode>().ToList()
+                Selections = selections
             };
         }
 

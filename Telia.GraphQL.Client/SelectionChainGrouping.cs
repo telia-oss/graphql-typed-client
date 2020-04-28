@@ -49,10 +49,15 @@ namespace Telia.GraphQL.Client
                     part.Arguments,
                     new List<ChainLink>());
 
+                existingLink.Fragment = part.Fragment;
+
                 groupedLink.Add(existingLink);
             }
 
-            path = $"{path}.field{groupedLink.IndexOf(existingLink)}";
+            if (string.IsNullOrWhiteSpace(existingLink.Fragment))
+            {
+                path = $"{path}.field{groupedLink.IndexOf(existingLink)}";
+            }
 
             return existingLink;
         }

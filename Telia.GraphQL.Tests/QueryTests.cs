@@ -786,14 +786,103 @@ errors: [
             Assert.AreEqual(42, data.Data.test.Single().Single());
         }
 
+        [Test]
+        public void Query_WithFragment_CreatesCorrectQuery()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = (e.SimpleInterface as SimpleObject).TestEnum
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: simpleInterface{
+    ... on SimpleObject {
+      field0: testEnum
+    }
+  }
+}", query);
+        }
+
+        [Test]
+        public void Query_WithFragmentInsideSelect_CreatesCorrectQuery()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.Complex.ComplexArray.Select(a => (a.SimpleInterface as SimpleObject).TestEnum)
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: complex{
+    field0: complexArray{
+      field0: simpleInterface{
+        ... on SimpleObject {
+          field0: testEnum
+        }
+      }
+    }
+  }
+}", query);
+        }
+
+        [Test]
+        public void Query_WithFragment_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": ""TEST2"" } } }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = (e.SimpleInterface as SimpleObject).TestEnum
+            });
+
+            Assert.AreEqual(TestEnum.TEST2, data.Data.test);
+        }
+
+        [Test]
+        public void Query_WithFragmentInsideSelect_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [ { ""field0"": { ""field0"": ""TEST2"",  ""field1"": ""42"",  ""field2"":  [1, 2, 3] } } ] } } }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                testEnum = e.Complex.ComplexArray.Select(a => (a.SimpleInterface as SimpleObject).TestEnum),
+                test = e.Complex.ComplexArray.Select(a => (a.SimpleInterface as SimpleObject).Test),
+                testArray = e.Complex.ComplexArray.Select(a => (a.SimpleInterface as SimpleObject).TestArray)
+            });
+
+            Assert.AreEqual(TestEnum.TEST2, data.Data.testEnum.First());
+            Assert.AreEqual(42, data.Data.test.First());
+            Assert.AreEqual(new[] { 1, 2, 3 }, data.Data.testArray.First());
+        }
+
         private enum TestEnum
         {
             TEST1,
             TEST2
         }
 
+        private interface SimpleInterface
+        {
+            [GraphQLField("test")]
+            int Test { get; set; }
+        }
+
         private class TestQuery
         {
+            [GraphQLField("simpleInterface")]
+            public SimpleInterface SimpleInterface { get; set; }
+
             [GraphQLField("testEnum")]
             public TestEnum TestEnum { get; set; }
 
@@ -813,7 +902,7 @@ errors: [
             public ComplexObject ComplexWithParams(string name) { throw new InvalidOperationException(); }
         }
 
-        private class SimpleObject
+        private class SimpleObject : SimpleInterface
         {
             [GraphQLField("test")]
             public int Test { get; set; }
@@ -833,6 +922,9 @@ errors: [
 
         private class ComplexObject
         {
+            [GraphQLField("simpleInterface")]
+            public SimpleInterface SimpleInterface { get; set; }
+
             [GraphQLField("test")]
             public int Test { get; set; }
 

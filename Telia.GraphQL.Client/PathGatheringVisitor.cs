@@ -61,6 +61,18 @@ namespace Telia.GraphQL.Client
                 chain.AddRange(this.context.GetChainPrefixFrom(current as ParameterExpression));
             }
 
+            if (current.NodeType == ExpressionType.TypeAs && chain.Count > 0)
+            {
+                var unaryExpression = (UnaryExpression) current;
+
+                chain.Add(new ChainLink(null)
+                {
+                    Fragment = unaryExpression.Type.Name
+                });
+
+                return AddToChainFromExpression(chain, unaryExpression.Operand);
+            }
+
             return current;
         }
 
