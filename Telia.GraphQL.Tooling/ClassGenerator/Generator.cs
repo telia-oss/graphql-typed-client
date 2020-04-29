@@ -51,7 +51,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator
             {
                 if (handlers.ContainsKey(definition.Kind))
                 {
-                    @namespace = handlers[definition.Kind].Handle(definition, @namespace);
+                    @namespace = handlers[definition.Kind].Handle(definition, @namespace, definitions);
                 }
             }
 

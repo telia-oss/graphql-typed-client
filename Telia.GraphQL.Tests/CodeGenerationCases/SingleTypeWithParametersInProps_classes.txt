@@ -4,6 +4,14 @@
     using System.Collections.Generic;
     using Telia.GraphQL.Client.Attributes;
 
+    [GraphQLType("TestEnum")]
+    public enum TestEnum
+    {
+        Value1,
+        Value2,
+        Value3
+    }
+
     [GraphQLType("Query")]
     public class Query
     {
@@ -49,14 +57,26 @@
             throw new InvalidOperationException();
         }
 
+        [GraphQLField("singleNullableEnumValue")]
+        public TestEnum? SingleNullableEnumValue(TestEnum? param)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("singleNonNullableEnumValue")]
+        public TestEnum SingleNonNullableEnumValue(TestEnum param)
+        {
+            throw new InvalidOperationException();
+        }
+
         [GraphQLField("multipleParameters")]
-        public Boolean? MultipleParameters(Int32? param1, Int32 param2, Single? param3, Single param4, String param5, String param6, Boolean? param7, Boolean param8)
+        public Boolean? MultipleParameters(Int32? param1, Int32 param2, Single? param3, Single param4, String param5, String param6, Boolean? param7, Boolean param8, TestEnum? param9, TestEnum param10)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("multipleParametersWithDefaultValues")]
-        public Boolean? MultipleParametersWithDefaultValues(Int32? param1 = 1, Int32 param2 = 1, Single? param3 = 1.0f, Single param4 = 1.0f, String param5 = "foo", String param6 = "bar", Boolean? param7 = true, Boolean param8 = false)
+        public Boolean? MultipleParametersWithDefaultValues(Int32? param1 = 1, Int32 param2 = 1, Single? param3 = 1.0f, Single param4 = 1.0f, String param5 = "foo", String param6 = "bar", Boolean? param7 = true, Boolean param8 = false, TestEnum? param9 = null, TestEnum param10 = TestEnum.Value3)
         {
             throw new InvalidOperationException();
         }

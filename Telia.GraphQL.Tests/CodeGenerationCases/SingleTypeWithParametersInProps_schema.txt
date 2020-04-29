@@ -1,4 +1,10 @@
-﻿type Query {
+﻿enum TestEnum {
+	Value1
+	Value2
+	Value3
+}
+
+type Query {
   singleNullableIntParam(param: Int): Int
   singleNullableIntParamWithDefaultValue(param: Int = 2): Int
   singleNullableFloatParamWithDefaultValue(param: Float = 2.0): Float
@@ -6,6 +12,8 @@
   singleNullableOtherParamWithDefaultValue(param: SomeOtherType = { stuff: "here"}): SomeOtherType
   booleanParamSetToTrue(param: Boolean = true): Boolean
   booleanParamSetToFalse(param: Boolean = false): Boolean
+  singleNullableEnumValue(param: TestEnum): TestEnum
+  singleNonNullableEnumValue(param: TestEnum!): TestEnum!
 
   multipleParameters(
 	param1: Int,
@@ -16,6 +24,8 @@
 	param6: String!,
 	param7: Boolean,
 	param8: Boolean!
+	param9: TestEnum,
+	param10: TestEnum!
   ): Boolean
 
 
@@ -28,5 +38,7 @@
 	param6: String! = "bar",
 	param7: Boolean = true,
 	param8: Boolean! = false
+	param9: TestEnum = null,
+	param10: TestEnum! = Value3,
   ): Boolean
 }

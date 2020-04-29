@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 {
@@ -16,9 +17,9 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             this.config = config;
         }
 
-        public abstract NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace);
+        public abstract NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace, IEnumerable<ASTNode> allDefinitions);
 
-        protected EqualsValueClauseSyntax GetDefault(GraphQLValue defaultValue)
+        protected EqualsValueClauseSyntax GetDefault(GraphQLValue defaultValue, TypeSyntax type)
         {
             switch (defaultValue.Kind)
             {
@@ -44,6 +45,14 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                     return ((GraphQLScalarValue)defaultValue).Value.ToLower() == "true"
                         ? SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression))
                         : SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression));
+
+                case ASTNodeKind.EnumValue:
+                    return SyntaxFactory.EqualsValueClause(SyntaxFactory.MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        type.Kind() == SyntaxKind.NullableType
+                            ? ((NullableTypeSyntax)type).ElementType
+                            : type,
+                        SyntaxFactory.IdentifierName(((GraphQLScalarValue) defaultValue).Value)));
             };
 
             return SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
@@ -75,21 +84,21 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 SyntaxFactory.SingletonSeparatedList(attribute));
         }
 
-        protected TypeSyntax GetCSharpTypeFromGraphQLType(GraphQLType type)
+        protected TypeSyntax GetCSharpTypeFromGraphQLType(GraphQLType type, IEnumerable<ASTNode> allDefinitions)
         {
             switch (type.Kind)
             {
-                case ASTNodeKind.NamedType: return this.GetCSharpTypeFromGraphQLNamedType((GraphQLNamedType)type);
-                case ASTNodeKind.NonNullType: return this.GetCSharpTypeFromGraphQLNonNullType((GraphQLNonNullType)type);
-                case ASTNodeKind.ListType: return this.GetCSharpTypeFromGraphQLListType((GraphQLListType)type);
+                case ASTNodeKind.NamedType: return this.GetCSharpTypeFromGraphQLNamedType((GraphQLNamedType)type, allDefinitions);
+                case ASTNodeKind.NonNullType: return this.GetCSharpTypeFromGraphQLNonNullType((GraphQLNonNullType)type, allDefinitions);
+                case ASTNodeKind.ListType: return this.GetCSharpTypeFromGraphQLListType((GraphQLListType)type, allDefinitions);
             }
 
             throw new NotImplementedException($"GetCSharpTypeFromGraphQLType: Unknown type.Kind: {type.Kind}");
         }
 
-        protected TypeSyntax GetCSharpTypeFromGraphQLListType(GraphQLListType type)
+        protected TypeSyntax GetCSharpTypeFromGraphQLListType(GraphQLListType type, IEnumerable<ASTNode> allDefinitions)
         {
-            var underlyingType = this.GetCSharpTypeFromGraphQLType(type.Type);
+            var underlyingType = this.GetCSharpTypeFromGraphQLType(type.Type, allDefinitions);
 
             var argumentList = SyntaxFactory.TypeArgumentList(
                 SyntaxFactory.SeparatedList<TypeSyntax>()
@@ -98,36 +107,48 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return SyntaxFactory.GenericName(SyntaxFactory.Identifier(typeof(IEnumerable).Name), argumentList);
         }
 
-        protected TypeSyntax GetCSharpTypeFromGraphQLNonNullType(GraphQLNonNullType type)
+        protected TypeSyntax GetCSharpTypeFromGraphQLNonNullType(GraphQLNonNullType type, IEnumerable<ASTNode> allDefinitions)
         {
             switch (type.Type.Kind)
             {
-                case ASTNodeKind.NamedType: return this.GetCSharpTypeFromGraphQLNamedType((GraphQLNamedType)type.Type, false);
-                case ASTNodeKind.ListType: return this.GetCSharpTypeFromGraphQLListType((GraphQLListType)type.Type);
+                case ASTNodeKind.NamedType: return this.GetCSharpTypeFromGraphQLNamedType((GraphQLNamedType)type.Type, allDefinitions, false);
+                case ASTNodeKind.ListType: return this.GetCSharpTypeFromGraphQLListType((GraphQLListType)type.Type, allDefinitions);
             }
 
             throw new NotImplementedException($"GetCSharpTypeFromGraphQLNonNullType: Unknown type.Kind: {type.Type.Kind}");
         }
 
-        protected TypeSyntax GetCSharpTypeFromGraphQLNamedType(GraphQLNamedType type, bool nullable = true)
+        protected TypeSyntax GetCSharpTypeFromGraphQLNamedType(GraphQLNamedType type, IEnumerable<ASTNode> allDefinitions, bool nullable = true)
         {
             var cSharpType = this.config.GetCSharpTypeFromGraphQLType(type.Name.Value, nullable);
 
-            if (cSharpType == null)
+            if (cSharpType != null)
             {
-                return SyntaxFactory.ParseTypeName(type.Name.Value);
+                return cSharpType;
             }
 
-            return cSharpType;
+            var enumTypeFromSchema = allDefinitions
+                .Where(e => e.Kind == ASTNodeKind.EnumTypeDefinition)
+                .Cast<GraphQLEnumTypeDefinition>()
+                .SingleOrDefault(e => e.Name.Value == type.Name.Value);
+
+            if (enumTypeFromSchema != null)
+            {
+                return nullable
+                    ? SyntaxFactory.NullableType(SyntaxFactory.ParseTypeName(type.Name.Value))
+                    : SyntaxFactory.ParseTypeName(type.Name.Value);
+            }
+
+            return SyntaxFactory.ParseTypeName(type.Name.Value);
         }
 
-        protected ParameterListSyntax GetParameterList(IEnumerable<GraphQLInputValueDefinition> arguments)
+        protected ParameterListSyntax GetParameterList(IEnumerable<GraphQLInputValueDefinition> arguments, IEnumerable<ASTNode> allDefinitions)
         {
             var parameterList = SyntaxFactory.ParameterList();
 
             foreach (var arg in arguments)
             {
-                var parameterType = this.GetCSharpTypeFromGraphQLType(arg.Type);
+                var parameterType = this.GetCSharpTypeFromGraphQLType(arg.Type, allDefinitions);
 
                 var parameter = SyntaxFactory.Parameter(
                     SyntaxFactory.Identifier(arg.Name.Value))
@@ -135,7 +156,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 
                 if (arg.DefaultValue != null)
                 {
-                    parameter = parameter.WithDefault(this.GetDefault(arg.DefaultValue));
+                    parameter = parameter.WithDefault(this.GetDefault(arg.DefaultValue, parameterType));
                 }
 
                 parameterList = parameterList.AddParameters(parameter);

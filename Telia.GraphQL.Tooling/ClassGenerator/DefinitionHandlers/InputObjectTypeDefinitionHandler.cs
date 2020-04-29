@@ -17,7 +17,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             this.config = config;
         }
 
-        public override NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
+        public override NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace, IEnumerable<ASTNode> allDefinitions)
         {
             var objectTypeDefinition = definition as GraphQLInputObjectTypeDefinition;
 

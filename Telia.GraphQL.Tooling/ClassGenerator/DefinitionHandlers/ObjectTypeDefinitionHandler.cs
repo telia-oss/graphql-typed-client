@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GraphQLParser.AST;
 using Microsoft.CodeAnalysis.CSharp;
@@ -15,7 +13,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
         {
         }
 
-        public override NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace)
+        public override NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace, IEnumerable<ASTNode> allDefinitions)
         {
             var objectTypeDefinition = definition as GraphQLObjectTypeDefinition;
 
@@ -35,38 +33,38 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 classDeclaration = classDeclaration.WithBaseList(baseList);
             }
 
-            classDeclaration = this.CreateProperties(classDeclaration, objectTypeDefinition.Fields);
+            classDeclaration = this.CreateProperties(classDeclaration, objectTypeDefinition.Fields, allDefinitions);
 
             return @namespace.AddMembers(classDeclaration);
         }
 
         private ClassDeclarationSyntax CreateProperties(
-            ClassDeclarationSyntax classDeclaration, IEnumerable<GraphQLFieldDefinition> fields)
+            ClassDeclarationSyntax classDeclaration, IEnumerable<GraphQLFieldDefinition> fields, IEnumerable<ASTNode> allDefinitions)
         {
             foreach (var field in fields)
             {
                 if (field.Arguments == null || field.Arguments.Count() == 0)
                 {
-                    classDeclaration = GenerateProperty(classDeclaration, field);
+                    classDeclaration = GenerateProperty(classDeclaration, field, allDefinitions);
                 }
                 else
                 {
-                    classDeclaration = GenerateMethod(classDeclaration, field);
+                    classDeclaration = GenerateMethod(classDeclaration, field, allDefinitions);
                 }
             }
 
             return classDeclaration;
         }
 
-        private ClassDeclarationSyntax GenerateMethod(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field)
+        private ClassDeclarationSyntax GenerateMethod(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
         {
-            var returnType = this.GetCSharpTypeFromGraphQLType(field.Type);
+            var returnType = this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions);
             var methodName = Utils.ToPascalCase(field.Name.Value);
 
             var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
-                .WithParameterList(this.GetParameterList(field.Arguments))
+                .WithParameterList(this.GetParameterList(field.Arguments, allDefinitions))
                 .WithBody(this.GetEmptyBody());
 
             return classDeclaration.AddMembers(method);
@@ -81,10 +79,10 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return SyntaxFactory.Block(throwException);
         }
 
-        private ClassDeclarationSyntax GenerateProperty(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field)
+        private ClassDeclarationSyntax GenerateProperty(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
         {
             var member = SyntaxFactory.PropertyDeclaration(
-                this.GetCSharpTypeFromGraphQLType(field.Type),
+                this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions),
                 Utils.ToPascalCase(field.Name.Value))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
