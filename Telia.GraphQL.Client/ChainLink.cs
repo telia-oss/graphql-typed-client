@@ -11,13 +11,14 @@ namespace Telia.GraphQL.Client
         public string Fragment { get; set; }
         public IEnumerable<ChainLinkArgument> Arguments { get; }
         public IEnumerable<ChainLink> Children { get; set; }
-		public Expression Node { get; internal set; }
+		public List<Expression> Nodes { get; internal set; }
 
 		public ChainLink(string fieldName, bool useAlias, IEnumerable<ChainLinkArgument> arguments = null)
         {
             this.FieldName = fieldName;
             this.Arguments = arguments;
             this.UseAlias = useAlias;
+            this.Nodes = new List<Expression>();
         }
 
         public ChainLink(

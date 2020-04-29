@@ -10,27 +10,56 @@ namespace Telia.GraphQL.Client
 {
     internal class SelectionChainConverter
     {
+        private readonly QueryContext _context;
+
+        public SelectionChainConverter(QueryContext context)
+        {
+            _context = context;
+        }
+
         public GraphQLSelectionSet Convert(IEnumerable<ChainLink> links)
+        {
+            var index = 0;
+
+            return Convert(links, string.Empty, ref index);
+        }
+
+        public GraphQLSelectionSet Convert(IEnumerable<ChainLink> links, string path)
+        {
+            var index = 0;
+
+            return Convert(links, path, ref index);
+        }
+
+        public GraphQLSelectionSet Convert(IEnumerable<ChainLink> links, string path, ref int index)
         {
             if (links == null) return null;
 
             var selections = new List<ASTNode>();
 
-
-            var index = 0;
             foreach (var link in links)
             {
                 if (string.IsNullOrWhiteSpace(link.Fragment))
                 {
+                    var alias = link.UseAlias
+                        ? new GraphQLName {Value = $"field{index++}"}
+                        : null;
+
+                    if (alias != null)
+                    {
+                        foreach (var node in link.Nodes)
+                        {
+                            _context.AddBinding(node, $"{path}.{alias.Value}".Substring(1));
+                        }
+                    }
+
                     selections.Add(new GraphQLFieldSelection()
                     {
                         Name = new GraphQLName
                         {
                             Value = link.FieldName
                         },
-                        Alias = link.UseAlias
-                            ? new GraphQLName { Value = $"field{index++}" }
-                            : null,
+                        Alias = alias,
                         Arguments = link.Arguments?.Select(arg => new GraphQLArgument()
                         {
                             Name = new GraphQLName()
@@ -39,7 +68,7 @@ namespace Telia.GraphQL.Client
                             },
                             Value = GetGraphQLValueFrom(arg.Value)
                         }).ToList(),
-                        SelectionSet = this.Convert(link.Children)
+                        SelectionSet = this.Convert(link.Children, alias == null ? path : $"{path}.{alias.Value}")
                     });
                 }
                 else
@@ -53,7 +82,7 @@ namespace Telia.GraphQL.Client
                                 Value = link.Fragment
                             }
                         },
-                        SelectionSet = this.Convert(link.Children)
+                        SelectionSet = this.Convert(link.Children, path, ref index)
                     });
                 }
             }

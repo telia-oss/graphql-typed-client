@@ -879,6 +879,76 @@ errors: [
         }
 
         [Test]
+        public void Query_WithFragmentInsideSelectAndMultipleProperties_CreatesCorrectQueryThatDoesntCollideWithPropertyNames()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.Complex.ComplexArray.Select(a => new {
+                    test1 = a.SimpleInterface.Test,
+                    test2 = (a.SimpleInterface as SimpleObject).TestEnum
+                })
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: complex{
+    field0: complexArray{
+      field0: simpleInterface{
+        field0: test
+        ... on SimpleObject {
+          field1: testEnum
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+  __typename
+}", query);
+        }
+
+        [Test]
+        public void Query_WithFragmentInsideSelectAndMultipleProperties_ReturnsCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+  ""field0"": {
+    ""field0"": [{
+      ""field0"": {
+        ""field0"": 44,
+        ""field1"": ""TEST2"",
+        ""field2"": 44,
+        ""field3"": [1, 2, 3],
+        ""__typename"": ""SimpleObject""
+      }
+    }]
+  }
+} }");
+            var client = new TestClient(networkClient);
+
+            var response = client.Query(e => new
+            {
+                test = e.Complex.ComplexArray.Select(a => new {
+                    test1 = a.SimpleInterface.Test,
+                    test2 = (a.SimpleInterface as SimpleObject).TestEnum,
+                    test3 = (a.SimpleInterface as SimpleObject).Test,
+                    test4 = a.SimpleInterface.Test,
+                    test5 = a.SimpleInterface.TestArray
+                })
+            });
+
+            Assert.AreEqual(44, response.Data.test.FirstOrDefault().test1);
+            Assert.AreEqual(TestEnum.TEST2, response.Data.test.FirstOrDefault().test2);
+            Assert.AreEqual(44, response.Data.test.FirstOrDefault().test3);
+            Assert.AreEqual(44, response.Data.test.FirstOrDefault().test4);
+            Assert.AreEqual(new [] {1, 2, 3}, response.Data.test.FirstOrDefault().test5);
+        }
+
+        [Test]
         public void Query_WithFragment_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
@@ -1021,6 +1091,7 @@ errors: [
   field0: complex{
     simpleInterface{
       test
+      testArray
       __typename
     }
     test
@@ -1182,6 +1253,7 @@ errors: [
       field1: complexArray{
         simpleInterface{
           test
+          testArray
           __typename
         }
         test
@@ -1273,6 +1345,9 @@ errors: [
         {
             [GraphQLField("test")]
             int Test { get; set; }
+
+            [GraphQLField("testArray")]
+            IEnumerable<int> TestArray { get; set; }
         }
 
         [GraphQLType("TestQuery")]

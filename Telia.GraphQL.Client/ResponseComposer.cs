@@ -85,10 +85,7 @@ namespace Telia.GraphQL.Client
                 object element,
                 Expression childExpression)
             {
-                var ctor = elementType.GetConstructor(new Type[] { });
-                var args = new Expression[] { };
-
-				var childVisitor = new ResponseComposerVisitor(element as JToken, this.context);
+                var childVisitor = new ResponseComposerVisitor(element as JToken, this.context);
 				var visited = childVisitor.Visit(childExpression);
 
 				return ((LambdaExpression)visited).Body;

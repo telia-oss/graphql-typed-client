@@ -56,7 +56,7 @@ namespace Telia.GraphQL
             var astPrinter = new Printer();
 
             var grouping = new SelectionChainGrouping(context);
-            var converter = new SelectionChainConverter();
+            var converter = new SelectionChainConverter(context);
             var visitor = new PathGatheringVisitor(context);
             var expander = new SelectionChainExpander(context);
 

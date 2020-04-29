@@ -18,27 +18,22 @@ namespace Telia.GraphQL.Client
 
             foreach (var chain in this.context.SelectionChains)
             {
-                var path = "";
                 var groupedLink = rootLinks;
 				ChainLink lastLink = null;
 
                 foreach (var part in chain.Links)
                 {
-					lastLink = this.TryGroup(part, groupedLink, ref path);
+					lastLink = this.TryGroup(part, groupedLink);
 					groupedLink = lastLink.Children as List<ChainLink>;
                 }
 
-                if (lastLink != null)
-                {
-                    lastLink.Node = chain.Node;
-                    this.context.AddBinding(chain.Node, path.Substring(1));
-                }
-			}
+                lastLink?.Nodes.Add(chain.Node);
+            }
 
             return rootLinks;
         }
 
-        private ChainLink TryGroup(ChainLink part, List<ChainLink> groupedLink, ref string path)
+        private ChainLink TryGroup(ChainLink part, List<ChainLink> groupedLink)
         {
             var existingLink = groupedLink.SingleOrDefault(e => e.Equals(part));
 
@@ -54,12 +49,7 @@ namespace Telia.GraphQL.Client
 
                 groupedLink.Add(existingLink);
             }
-
-            if (string.IsNullOrWhiteSpace(existingLink.Fragment))
-            {
-                path = $"{path}.field{groupedLink.IndexOf(existingLink)}";
-            }
-
+            
             return existingLink;
         }
     }
