@@ -48,6 +48,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 this.GetCSharpTypeFromGraphQLType(field.Type),
                 Utils.ToPascalCase(field.Name.Value))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
                 .AddAccessorListAccessors(
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)

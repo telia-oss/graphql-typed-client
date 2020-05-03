@@ -16,67 +16,67 @@
     public class Query
     {
         [GraphQLField("singleNullableIntParam")]
-        public Int32? SingleNullableIntParam(Int32? param)
+        public virtual Int32? SingleNullableIntParam(Int32? param)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("singleNullableIntParamWithDefaultValue")]
-        public Int32? SingleNullableIntParamWithDefaultValue(Int32? param = 2)
+        public virtual Int32? SingleNullableIntParamWithDefaultValue(Int32? param = 2)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("singleNullableFloatParamWithDefaultValue")]
-        public Single? SingleNullableFloatParamWithDefaultValue(Single? param = 2.0f)
+        public virtual Single? SingleNullableFloatParamWithDefaultValue(Single? param = 2.0f)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("singleNullableStringParamWithDefaultValue")]
-        public String SingleNullableStringParamWithDefaultValue(String param = "foo")
+        public virtual String SingleNullableStringParamWithDefaultValue(String param = "foo")
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("singleNullableOtherParamWithDefaultValue")]
-        public SomeOtherType SingleNullableOtherParamWithDefaultValue(SomeOtherType param = null)
+        public virtual SomeOtherType SingleNullableOtherParamWithDefaultValue(SomeOtherType param = null)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("booleanParamSetToTrue")]
-        public Boolean? BooleanParamSetToTrue(Boolean? param = true)
+        public virtual Boolean? BooleanParamSetToTrue(Boolean? param = true)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("booleanParamSetToFalse")]
-        public Boolean? BooleanParamSetToFalse(Boolean? param = false)
+        public virtual Boolean? BooleanParamSetToFalse(Boolean? param = false)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("singleNullableEnumValue")]
-        public TestEnum? SingleNullableEnumValue(TestEnum? param)
+        public virtual TestEnum? SingleNullableEnumValue(TestEnum? param)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("singleNonNullableEnumValue")]
-        public TestEnum SingleNonNullableEnumValue(TestEnum param)
+        public virtual TestEnum SingleNonNullableEnumValue(TestEnum param)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("multipleParameters")]
-        public Boolean? MultipleParameters(Int32? param1, Int32 param2, Single? param3, Single param4, String param5, String param6, Boolean? param7, Boolean param8, TestEnum? param9, TestEnum param10)
+        public virtual Boolean? MultipleParameters(Int32? param1, Int32 param2, Single? param3, Single param4, String param5, String param6, Boolean? param7, Boolean param8, TestEnum? param9, TestEnum param10)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("multipleParametersWithDefaultValues")]
-        public Boolean? MultipleParametersWithDefaultValues(Int32? param1 = 1, Int32 param2 = 1, Single? param3 = 1.0f, Single param4 = 1.0f, String param5 = "foo", String param6 = "bar", Boolean? param7 = true, Boolean param8 = false, TestEnum? param9 = null, TestEnum param10 = TestEnum.Value3)
+        public virtual Boolean? MultipleParametersWithDefaultValues(Int32? param1 = 1, Int32 param2 = 1, Single? param3 = 1.0f, Single param4 = 1.0f, String param5 = "foo", String param6 = "bar", Boolean? param7 = true, Boolean param8 = false, TestEnum? param9 = null, TestEnum param10 = TestEnum.Value3)
         {
             throw new InvalidOperationException();
         }

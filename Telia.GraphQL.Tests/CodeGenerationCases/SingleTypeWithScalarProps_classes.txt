@@ -8,126 +8,126 @@
     public class Query
     {
         [GraphQLField("nonNullableInteger")]
-        public Int32 NonNullableInteger
+        public virtual Int32 NonNullableInteger
         {
             get;
             set;
         }
 
         [GraphQLField("nullableInteger")]
-        public Int32? NullableInteger
+        public virtual Int32? NullableInteger
         {
             get;
             set;
         }
 
         [GraphQLField("nonNullableId")]
-        public String NonNullableId
+        public virtual String NonNullableId
         {
             get;
             set;
         }
 
         [GraphQLField("nullableId")]
-        public String NullableId
+        public virtual String NullableId
         {
             get;
             set;
         }
 
         [GraphQLField("nonNullableFloat")]
-        public Single NonNullableFloat
+        public virtual Single NonNullableFloat
         {
             get;
             set;
         }
 
         [GraphQLField("nullableFloat")]
-        public Single? NullableFloat
+        public virtual Single? NullableFloat
         {
             get;
             set;
         }
 
         [GraphQLField("nonNullableBoolean")]
-        public Boolean NonNullableBoolean
+        public virtual Boolean NonNullableBoolean
         {
             get;
             set;
         }
 
         [GraphQLField("nullableBoolean")]
-        public Boolean? NullableBoolean
+        public virtual Boolean? NullableBoolean
         {
             get;
             set;
         }
 
         [GraphQLField("nonNullableString")]
-        public String NonNullableString
+        public virtual String NonNullableString
         {
             get;
             set;
         }
 
         [GraphQLField("nullableString")]
-        public String NullableString
+        public virtual String NullableString
         {
             get;
             set;
         }
 
         [GraphQLField("listOfNullableStrings")]
-        public IEnumerable<String> ListOfNullableStrings
+        public virtual IEnumerable<String> ListOfNullableStrings
         {
             get;
             set;
         }
 
         [GraphQLField("listOfNonNullableString")]
-        public IEnumerable<String> ListOfNonNullableString
+        public virtual IEnumerable<String> ListOfNonNullableString
         {
             get;
             set;
         }
 
         [GraphQLField("listOfNullableIntegers")]
-        public IEnumerable<Int32? > ListOfNullableIntegers
+        public virtual IEnumerable<Int32? > ListOfNullableIntegers
         {
             get;
             set;
         }
 
         [GraphQLField("listOfNonNullableIntegers")]
-        public IEnumerable<Int32> ListOfNonNullableIntegers
+        public virtual IEnumerable<Int32> ListOfNonNullableIntegers
         {
             get;
             set;
         }
 
         [GraphQLField("nonNullableListOfNullableIntegers")]
-        public IEnumerable<Int32? > NonNullableListOfNullableIntegers
+        public virtual IEnumerable<Int32? > NonNullableListOfNullableIntegers
         {
             get;
             set;
         }
 
         [GraphQLField("nonNullableListOfNonNullableIntegers")]
-        public IEnumerable<Int32> NonNullableListOfNonNullableIntegers
+        public virtual IEnumerable<Int32> NonNullableListOfNonNullableIntegers
         {
             get;
             set;
         }
 
         [GraphQLField("nonNullableListOfNullableString")]
-        public IEnumerable<String> NonNullableListOfNullableString
+        public virtual IEnumerable<String> NonNullableListOfNullableString
         {
             get;
             set;
         }
 
         [GraphQLField("nonNullableListOfNonNullableString")]
-        public IEnumerable<String> NonNullableListOfNonNullableString
+        public virtual IEnumerable<String> NonNullableListOfNonNullableString
         {
             get;
             set;

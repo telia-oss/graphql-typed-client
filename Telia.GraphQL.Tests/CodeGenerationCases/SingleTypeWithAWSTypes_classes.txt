@@ -8,112 +8,112 @@
     public class Query
     {
         [GraphQLField("date")]
-        public DateTime Date
+        public virtual DateTime Date
         {
             get;
             set;
         }
 
         [GraphQLField("nullableDate")]
-        public DateTime? NullableDate
+        public virtual DateTime? NullableDate
         {
             get;
             set;
         }
 
         [GraphQLField("time")]
-        public TimeSpan Time
+        public virtual TimeSpan Time
         {
             get;
             set;
         }
 
         [GraphQLField("nullableTime")]
-        public TimeSpan? NullableTime
+        public virtual TimeSpan? NullableTime
         {
             get;
             set;
         }
 
         [GraphQLField("timestamp")]
-        public Int32 Timestamp
+        public virtual Int32 Timestamp
         {
             get;
             set;
         }
 
         [GraphQLField("nullableTimestamp")]
-        public Int32? NullableTimestamp
+        public virtual Int32? NullableTimestamp
         {
             get;
             set;
         }
 
         [GraphQLField("email")]
-        public String Email
+        public virtual String Email
         {
             get;
             set;
         }
 
         [GraphQLField("nullableEmail")]
-        public String NullableEmail
+        public virtual String NullableEmail
         {
             get;
             set;
         }
 
         [GraphQLField("json")]
-        public String Json
+        public virtual String Json
         {
             get;
             set;
         }
 
         [GraphQLField("nullableJson")]
-        public String NullableJson
+        public virtual String NullableJson
         {
             get;
             set;
         }
 
         [GraphQLField("url")]
-        public String Url
+        public virtual String Url
         {
             get;
             set;
         }
 
         [GraphQLField("nullableUrl")]
-        public String NullableUrl
+        public virtual String NullableUrl
         {
             get;
             set;
         }
 
         [GraphQLField("phone")]
-        public String Phone
+        public virtual String Phone
         {
             get;
             set;
         }
 
         [GraphQLField("nullablePhone")]
-        public String NullablePhone
+        public virtual String NullablePhone
         {
             get;
             set;
         }
 
         [GraphQLField("ipAddress")]
-        public String IpAddress
+        public virtual String IpAddress
         {
             get;
             set;
         }
 
         [GraphQLField("nullableIPAddress")]
-        public String NullableIpAddress
+        public virtual String NullableIpAddress
         {
             get;
             set;

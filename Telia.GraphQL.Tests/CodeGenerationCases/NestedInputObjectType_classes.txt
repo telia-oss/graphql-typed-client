@@ -8,28 +8,28 @@
     public class SomeInputObject
     {
         [GraphQLField("foo")]
-        public String Foo
+        public virtual String Foo
         {
             get;
             set;
         }
 
         [GraphQLField("bar")]
-        public String Bar
+        public virtual String Bar
         {
             get;
             set;
         }
 
         [GraphQLField("faz")]
-        public Int32? Faz
+        public virtual Int32? Faz
         {
             get;
             set;
         }
 
         [GraphQLField("zap")]
-        public Int32 Zap
+        public virtual Int32 Zap
         {
             get;
             set;
@@ -40,35 +40,35 @@
     public class SomeOtherInputObject
     {
         [GraphQLField("foo")]
-        public String Foo
+        public virtual String Foo
         {
             get;
             set;
         }
 
         [GraphQLField("bar")]
-        public String Bar
+        public virtual String Bar
         {
             get;
             set;
         }
 
         [GraphQLField("faz")]
-        public Int32? Faz
+        public virtual Int32? Faz
         {
             get;
             set;
         }
 
         [GraphQLField("zap")]
-        public SomeInputObject Zap
+        public virtual SomeInputObject Zap
         {
             get;
             set;
         }
 
         [GraphQLField("nested")]
-        public SomeOtherInputObject Nested
+        public virtual SomeOtherInputObject Nested
         {
             get;
             set;

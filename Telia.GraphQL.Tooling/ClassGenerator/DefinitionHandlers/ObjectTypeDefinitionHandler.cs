@@ -63,6 +63,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 
             var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
                 .WithParameterList(this.GetParameterList(field.Arguments, allDefinitions))
                 .WithBody(this.GetEmptyBody());
@@ -85,6 +86,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions),
                 Utils.ToPascalCase(field.Name.Value))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
                 .AddAccessorListAccessors(
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)

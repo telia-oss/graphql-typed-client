@@ -22,14 +22,14 @@
     public class TestInterfaceImplementation1 : TestInterface
     {
         [GraphQLField("field")]
-        public string Field
+        public virtual string Field
         {
             get;
             set;
         }
 
         [GraphQLField("fieldWithParam")]
-        public Int32 FieldWithParam(Int32 param)
+        public virtual Int32 FieldWithParam(Int32 param)
         {
             throw new InvalidOperationException();
         }
@@ -39,20 +39,20 @@
     public class TestInterfaceImplementation2 : TestInterface
     {
         [GraphQLField("field")]
-        public string Field
+        public virtual string Field
         {
             get;
             set;
         }
 
         [GraphQLField("fieldWithParam")]
-        public Int32 FieldWithParam(Int32 param)
+        public virtual Int32 FieldWithParam(Int32 param)
         {
             throw new InvalidOperationException();
         }
 
         [GraphQLField("field2")]
-        public string Field2
+        public virtual string Field2
         {
             get;
             set;
