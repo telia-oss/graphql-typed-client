@@ -1,7 +1,6 @@
 ﻿using GraphQLParser;
 using Telia.GraphQL.Client;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Linq.Expressions;
 using GraphQLParser.AST;
@@ -22,7 +21,7 @@ namespace Telia.GraphQL
             this.client = client;
         }
 
-        public GraphQLResult<TReturn> Query<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
+        public virtual GraphQLResult<TReturn> Query<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
         {
             var context = new QueryContext();
 
@@ -43,7 +42,7 @@ namespace Telia.GraphQL
             return new GraphQLResult<TReturn>(value, response.Errors);
         }
 
-        public string CreateQuery<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
+        public virtual string CreateQuery<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
         {
             return this.CreateOperation(selector, new QueryContext(), OperationType.Query);
         }
@@ -85,12 +84,12 @@ namespace Telia.GraphQL
         {
         }
 
-        public string CreateMutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
+        public virtual string CreateMutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
         {
             return this.CreateOperation(selector, new QueryContext(), OperationType.Mutation);
         }
 
-        public GraphQLResult<TReturn> Mutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
+        public virtual GraphQLResult<TReturn> Mutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
         {
             var context = new QueryContext();
 
