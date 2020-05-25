@@ -220,12 +220,29 @@ namespace Telia.GraphQL.Tests
             Assert.AreEqual(TimeSpan.Parse("07:00:24.500"), result.Data.test);
         }
 
-        private enum TestEnum
+        [Test]
+        public void Query_FloatWithBigValue_ConvertsValue()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: { floatTest: 42949673666 } } }");
+
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Obj
+            });
+
+            Assert.AreEqual(42949673666, result.Data.test.FloatTestField);
+        }
+
+		private enum TestEnum
 		{
 			ENUM_1,
 			ENUM_2
 		}
 
+        [GraphQLType("TestQuery")]
 		private class TestQuery
         {
             [GraphQLField("test")]
@@ -242,6 +259,16 @@ namespace Telia.GraphQL.Tests
 
             [GraphQLField("time")]
             public TimeSpan Time { get; set; }
+
+            [GraphQLField("obj")]
+            public TestObjectWithFloat Obj { get; set; }
+		}
+
+		[GraphQLType("TestObjectWithFloat")]
+        private class TestObjectWithFloat
+        {
+            [GraphQLField("floatTest")]
+            public Single? FloatTestField { get; set; }
 		}
 
         private class TestClient : GraphQLCLient<TestQuery>

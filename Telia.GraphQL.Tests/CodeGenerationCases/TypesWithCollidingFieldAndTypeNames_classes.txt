@@ -1,0 +1,98 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQL.Client.Attributes;
+
+    [GraphQLType("SomeType")]
+    public class SomeType
+    {
+        [GraphQLField("someType")]
+        public virtual Int32? SomeTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLType("SomeInputType")]
+    public class SomeInputType
+    {
+        [GraphQLField("someInputType")]
+        public virtual Int32? SomeInputTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLType("SomeInterfaceType")]
+    public interface SomeInterfaceType
+    {
+        [GraphQLField("someInterfaceImplementationType")]
+        Int32? SomeInterfaceImplementationTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLType("SomeInterfaceImplementationType")]
+    public class SomeInterfaceImplementationType : SomeInterfaceType
+    {
+        [GraphQLField("someInterfaceImplementationType")]
+        public virtual Int32? SomeInterfaceImplementationTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLType("SomeAnotherInterfaceImplementationType")]
+    public class SomeAnotherInterfaceImplementationType : SomeInterfaceType
+    {
+        [GraphQLField("someInterfaceImplementationType")]
+        public virtual Int32? SomeInterfaceImplementationTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLType("SomeTypeWithMethod")]
+    public class SomeTypeWithMethod
+    {
+        [GraphQLField("someTypeWithMethod")]
+        public virtual Int32? SomeTypeWithMethodField(int test)
+        {
+            throw new InvalidOperationException();
+        }
+    }
+
+    [GraphQLType("SomeInterfaceTypeWithMethod")]
+    public interface SomeInterfaceTypeWithMethod
+    {
+        [GraphQLField("someInterfaceImplementationTypeWithMethod")]
+        Int32? SomeInterfaceImplementationTypeWithMethodField(int test);
+    }
+
+    [GraphQLType("SomeAnotherInterfaceImplementationTypeWithMethod")]
+    public class SomeAnotherInterfaceImplementationTypeWithMethod : SomeInterfaceTypeWithMethod
+    {
+        [GraphQLField("someInterfaceImplementationTypeWithMethod")]
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField(int test)
+        {
+            throw new InvalidOperationException();
+        }
+    }
+
+    [GraphQLType("SomeInterfaceImplementationTypeWithMethod")]
+    public class SomeInterfaceImplementationTypeWithMethod : SomeInterfaceTypeWithMethod
+    {
+        [GraphQLField("someInterfaceImplementationTypeWithMethod")]
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField(int test)
+        {
+            throw new InvalidOperationException();
+        }
+    }
+}

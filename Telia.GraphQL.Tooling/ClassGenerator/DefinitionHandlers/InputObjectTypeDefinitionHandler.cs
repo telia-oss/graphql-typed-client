@@ -25,28 +25,32 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddAttributeLists(GetTypeAttributes(objectTypeDefinition.Name.Value));
 
-            classDeclaration = this.CreateProperties(classDeclaration, objectTypeDefinition.Fields);
+            classDeclaration = this.CreateProperties(objectTypeDefinition.Name.Value, classDeclaration, objectTypeDefinition.Fields);
 
             return @namespace.AddMembers(classDeclaration);
         }
 
         private ClassDeclarationSyntax CreateProperties(
-            ClassDeclarationSyntax classDeclaration, IEnumerable<GraphQLInputValueDefinition> fields)
+            string objectTypeName,
+            ClassDeclarationSyntax classDeclaration,
+            IEnumerable<GraphQLInputValueDefinition> fields)
         {
             foreach (var field in fields)
             {
-                classDeclaration = GenerateProperty(classDeclaration, field);
+                classDeclaration = GenerateProperty(objectTypeName, classDeclaration, field);
             }
 
             return classDeclaration;
         }
 
         private ClassDeclarationSyntax GenerateProperty(
-            ClassDeclarationSyntax classDeclaration, GraphQLInputValueDefinition field)
+            string objectTypeName,
+            ClassDeclarationSyntax classDeclaration,
+            GraphQLInputValueDefinition field)
         {
             var member = SyntaxFactory.PropertyDeclaration(
                 this.GetCSharpTypeFromGraphQLType(field.Type),
-                Utils.ToPascalCase(field.Name.Value))
+                PickFieldName(objectTypeName, field))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
@@ -116,6 +120,18 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             }
 
             return cSharpType;
+        }
+
+        private string PickFieldName(string objectTypeName, GraphQLInputValueDefinition field)
+        {
+            var name = Utils.ToPascalCase(field.Name.Value);
+
+            if (objectTypeName == name)
+            {
+                return $"{name}Field";
+            }
+
+            return name;
         }
     }
 }

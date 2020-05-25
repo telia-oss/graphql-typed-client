@@ -85,6 +85,16 @@ namespace Telia.GraphQL.Tests
                 LoadData("./CodeGenerationCases/InterfaceWithImplementation_classes.txt"), code);
         }
 
+        [Test]
+        public void Generate_TypesWithCollidingFieldAndTypeNames_GeneratesClasses()
+        {
+            var code = this.generator.Generate(
+                LoadData("./CodeGenerationCases/TypesWithCollidingFieldAndTypeNames_schema.txt"), "Test");
+
+            AssertUtils.AreEqualIgnoreLineBreaks(
+                LoadData("./CodeGenerationCases/TypesWithCollidingFieldAndTypeNames_classes.txt"), code);
+        }
+
         private static string LoadData(string filename)
         {
             return File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, filename));

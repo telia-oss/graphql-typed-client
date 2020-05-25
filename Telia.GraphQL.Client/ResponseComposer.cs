@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using Newtonsoft.Json;
-using Telia.GraphQL.Client.Attributes;
 
 namespace Telia.GraphQL.Client
 {
@@ -166,8 +164,9 @@ namespace Telia.GraphQL.Client
                 {
                     Converters = new List<JsonConverter>()
                     {
-                        new GraphQLInterfaceConverter(typeof(TQueryType))
-                    }
+                        new GraphQLInterfaceConverter(typeof(TQueryType)),
+                        new GraphQLObjectConverter()
+                    },
                 }));
             }
             

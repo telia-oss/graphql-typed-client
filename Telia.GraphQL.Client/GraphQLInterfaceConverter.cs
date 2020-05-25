@@ -9,7 +9,7 @@ using Telia.GraphQL.Client.Attributes;
 
 namespace Telia.GraphQL.Client
 {
-    public class GraphQLInterfaceConverter : JsonConverter
+    public class GraphQLInterfaceConverter : GraphQLObjectConverter
     {
         private static readonly IDictionary<string, IDictionary<string, Type>> typeBindings = new ConcurrentDictionary<string, IDictionary<string, Type>>();
 
@@ -83,8 +83,8 @@ namespace Telia.GraphQL.Client
 
             var dotnetType = queryTypeCache[typeName];
             var instance = Activator.CreateInstance(dotnetType);
-            
-            serializer.Populate(jsonObject.CreateReader(), instance);
+
+            LoadFromJObject(dotnetType, jsonObject, instance, serializer);
 
             return instance;
         }

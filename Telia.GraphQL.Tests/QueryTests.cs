@@ -795,6 +795,22 @@ errors: [
         }
 
         [Test]
+        public void Query_WithDateTime_IsPossibleToParse()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: { ""field0"": ""2020-05-20T00:00:00.000"" } }");
+
+            var client = new TestClient(networkClient);
+
+            var data = client.Query(e => new
+            {
+                test = e.Date
+            });
+
+            Assert.AreEqual(DateTime.Parse("2020-05-20T00:00:00.000"), data.Data.test);
+        }
+
+        [Test]
         public void Query_WithNestedSelects_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();

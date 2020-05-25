@@ -21,23 +21,30 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddAttributeLists(GetTypeAttributes(objectTypeDefinition.Name.Value));
 
-            interfaceDeclaration = this.CreateProperties(interfaceDeclaration, objectTypeDefinition.Fields, allDefinitions);
+            interfaceDeclaration = this.CreateProperties(
+                objectTypeDefinition.Name.Value,
+                interfaceDeclaration,
+                objectTypeDefinition.Fields,
+                allDefinitions);
 
             return @namespace.AddMembers(interfaceDeclaration);
         }
 
         private InterfaceDeclarationSyntax CreateProperties(
-            InterfaceDeclarationSyntax interfaceDeclaration, IEnumerable<GraphQLFieldDefinition> fields, IEnumerable<ASTNode> allDefinitions)
+            string interfaceTypeName,
+            InterfaceDeclarationSyntax interfaceDeclaration,
+            IEnumerable<GraphQLFieldDefinition> fields,
+            IEnumerable<ASTNode> allDefinitions)
         {
             foreach (var field in fields)
             {
                 if (field.Arguments == null || field.Arguments.Count() == 0)
                 {
-                    interfaceDeclaration = GenerateProperty(interfaceDeclaration, field, allDefinitions);
+                    interfaceDeclaration = GenerateProperty(interfaceTypeName, interfaceDeclaration, field, allDefinitions);
                 }
                 else
                 {
-                    interfaceDeclaration = GenerateMethod(interfaceDeclaration, field, allDefinitions);
+                    interfaceDeclaration = GenerateMethod(interfaceTypeName, interfaceDeclaration, field, allDefinitions);
                 }
             }
 
@@ -45,10 +52,13 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
         }
 
         private InterfaceDeclarationSyntax GenerateMethod(
-            InterfaceDeclarationSyntax interfaceDeclaration, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
+            string interfaceTypeName,
+            InterfaceDeclarationSyntax interfaceDeclaration,
+            GraphQLFieldDefinition field,
+            IEnumerable<ASTNode> allDefinitions)
         {
             var returnType = this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions);
-            var methodName = Utils.ToPascalCase(field.Name.Value);
+            var methodName = PickFieldName(interfaceTypeName, field, allDefinitions);
 
             var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
@@ -59,11 +69,14 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
         }
 
         private InterfaceDeclarationSyntax GenerateProperty(
-            InterfaceDeclarationSyntax interfaceDeclaration, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
+            string interfaceTypeName,
+            InterfaceDeclarationSyntax interfaceDeclaration,
+            GraphQLFieldDefinition field,
+            IEnumerable<ASTNode> allDefinitions)
         {
             var member = SyntaxFactory.PropertyDeclaration(
                 this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions),
-                Utils.ToPascalCase(field.Name.Value))
+                PickFieldName(interfaceTypeName, field, allDefinitions))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
                 .AddAccessorListAccessors(
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
@@ -72,6 +85,25 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
 
             return interfaceDeclaration.AddMembers(member);
+        }
+
+        private string PickFieldName(string interfaceTypeName, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
+        {
+            var name = Utils.ToPascalCase(field.Name.Value);
+
+            var collidingObjectTypeDefinitions = allDefinitions
+                .Where(def => def.Kind == ASTNodeKind.ObjectTypeDefinition)
+                .Cast<GraphQLObjectTypeDefinition>()
+                .Where(def => def.Name.Value == name &&
+                              def.Interfaces != null &&
+                              def.Interfaces.Any(i => i.Name.Value == interfaceTypeName));
+
+            if (collidingObjectTypeDefinitions.Any())
+            {
+                return $"{name}Field";
+            }
+
+            return name;
         }
     }
 }

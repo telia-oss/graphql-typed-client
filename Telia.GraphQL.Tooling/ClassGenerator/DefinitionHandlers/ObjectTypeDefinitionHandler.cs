@@ -33,33 +33,44 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 classDeclaration = classDeclaration.WithBaseList(baseList);
             }
 
-            classDeclaration = this.CreateProperties(classDeclaration, objectTypeDefinition.Fields, allDefinitions);
+            classDeclaration = this.CreateProperties(
+                objectTypeDefinition,
+                classDeclaration,
+                objectTypeDefinition.Fields,
+                allDefinitions);
 
             return @namespace.AddMembers(classDeclaration);
         }
 
         private ClassDeclarationSyntax CreateProperties(
-            ClassDeclarationSyntax classDeclaration, IEnumerable<GraphQLFieldDefinition> fields, IEnumerable<ASTNode> allDefinitions)
+            GraphQLObjectTypeDefinition objectType,
+            ClassDeclarationSyntax classDeclaration,
+            IEnumerable<GraphQLFieldDefinition> fields,
+            IEnumerable<ASTNode> allDefinitions)
         {
             foreach (var field in fields)
             {
                 if (field.Arguments == null || field.Arguments.Count() == 0)
                 {
-                    classDeclaration = GenerateProperty(classDeclaration, field, allDefinitions);
+                    classDeclaration = GenerateProperty(objectType, classDeclaration, field, allDefinitions);
                 }
                 else
                 {
-                    classDeclaration = GenerateMethod(classDeclaration, field, allDefinitions);
+                    classDeclaration = GenerateMethod(objectType, classDeclaration, field, allDefinitions);
                 }
             }
 
             return classDeclaration;
         }
 
-        private ClassDeclarationSyntax GenerateMethod(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
+        private ClassDeclarationSyntax GenerateMethod(
+            GraphQLObjectTypeDefinition objectType,
+            ClassDeclarationSyntax classDeclaration,
+            GraphQLFieldDefinition field,
+            IEnumerable<ASTNode> allDefinitions)
         {
             var returnType = this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions);
-            var methodName = Utils.ToPascalCase(field.Name.Value);
+            var methodName = PickFieldName(objectType, field, allDefinitions);
 
             var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
@@ -80,11 +91,15 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return SyntaxFactory.Block(throwException);
         }
 
-        private ClassDeclarationSyntax GenerateProperty(ClassDeclarationSyntax classDeclaration, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
+        private ClassDeclarationSyntax GenerateProperty(
+            GraphQLObjectTypeDefinition objectType,
+            ClassDeclarationSyntax classDeclaration,
+            GraphQLFieldDefinition field,
+            IEnumerable<ASTNode> allDefinitions)
         {
             var member = SyntaxFactory.PropertyDeclaration(
                 this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions),
-                Utils.ToPascalCase(field.Name.Value))
+                PickFieldName(objectType, field, allDefinitions))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
@@ -95,6 +110,38 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
 
             return classDeclaration.AddMembers(member);
+        }
+
+        private string PickFieldName(GraphQLObjectTypeDefinition objectType, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
+        {
+            var implementedInterfaceDefinitions = allDefinitions
+                .Where(def => def.Kind == ASTNodeKind.InterfaceTypeDefinition)
+                .Cast<GraphQLInterfaceTypeDefinition>()
+                .Where(def => objectType?.Interfaces != null && objectType.Interfaces.Any(e => e.Name.Value == def.Name.Value));
+
+            var name = Utils.ToPascalCase(field.Name.Value);
+
+            if (objectType.Name.Value == name)
+            {
+                return $"{name}Field";
+            }
+
+            foreach (var interfaceDefinition in implementedInterfaceDefinitions)
+            {
+                var collidingObjectTypeDefinitions = allDefinitions
+                    .Where(def => def.Kind == ASTNodeKind.ObjectTypeDefinition)
+                    .Cast<GraphQLObjectTypeDefinition>()
+                    .Where(def => def.Name.Value == name &&
+                                  def.Interfaces != null &&
+                                  def.Interfaces.Any(i => i.Name.Value == interfaceDefinition.Name.Value));
+
+                if (collidingObjectTypeDefinitions.Any())
+                {
+                    return $"{name}Field";
+                }
+            }
+
+            return name;
         }
     }
 }
