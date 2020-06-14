@@ -75,7 +75,7 @@ namespace Telia.GraphQL.Tests
 
             var client = new TestClient(networkClient);
 
-            var dateTime = DateTime.Parse("2008-09-22T14:01:54.9571247Z");
+            var dateTime = DateTime.Parse("2008-09-22T14:01:54.9571247Z").ToUniversalTime();
 
             var query = client.CreateQuery(e => new
             {
@@ -83,7 +83,7 @@ namespace Telia.GraphQL.Tests
             });
 
             AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: test(dt: ""2008-09-22T16:01:54Z"")
+  field0: test(dt: ""2008-09-22T14:01:54Z"")
   __typename
 }", query);
         }

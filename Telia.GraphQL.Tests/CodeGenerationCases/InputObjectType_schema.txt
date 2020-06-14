@@ -3,4 +3,6 @@
   bar: String
   faz: Int
   zap: Int!
+  dt: DateTime!
+  ndt: DateTime
 }

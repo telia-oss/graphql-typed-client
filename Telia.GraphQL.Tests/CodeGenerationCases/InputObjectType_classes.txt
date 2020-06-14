@@ -34,5 +34,19 @@
             get;
             set;
         }
+
+        [GraphQLField("dt")]
+        public virtual DateTime Dt
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("ndt")]
+        public virtual DateTime? Ndt
+        {
+            get;
+            set;
+        }
     }
 }
