@@ -68,6 +68,26 @@ namespace Telia.GraphQL.Tests
 }", query);
         }
 
+        [Test]
+        public void Query_DateTimeParameter_CreatesCorrectQuery()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+
+            var client = new TestClient(networkClient);
+
+            var dateTime = DateTime.Parse("2008-09-22T14:01:54.9571247Z");
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.DateTimeParam(dateTime)
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: test(dt: ""2008-09-22T16:01:54Z"")
+  __typename
+}", query);
+        }
+
         private class TestQuery
         {
             [GraphQLField("test")]
@@ -75,6 +95,9 @@ namespace Telia.GraphQL.Tests
 
             [GraphQLField("test")]
             public int NullableParam(int? arr) { throw new InvalidOperationException(); }
+
+            [GraphQLField("test")]
+            public int DateTimeParam(DateTime dt) { throw new InvalidOperationException(); }
         }
 
         private class TestClient : GraphQLCLient<TestQuery>

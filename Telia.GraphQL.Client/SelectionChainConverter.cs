@@ -140,7 +140,23 @@ namespace Telia.GraphQL.Client
                 };
             }
 
-			var valueType = value.GetType();
+            if (value is Boolean)
+            {
+                return new GraphQLScalarValue(ASTNodeKind.BooleanValue)
+                {
+                    Value = value.ToString().ToLower()
+                };
+            }
+
+            if (value is DateTime)
+            {
+                return new GraphQLScalarValue(ASTNodeKind.StringValue)
+                {
+                    Value = ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ssZ")
+                };
+            }
+
+            var valueType = value.GetType();
 
 			if (valueType.IsEnum)
 			{
