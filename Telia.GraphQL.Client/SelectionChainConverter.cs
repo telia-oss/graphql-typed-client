@@ -156,6 +156,11 @@ namespace Telia.GraphQL.Client
                 };
             }
 
+            if (value is InputObjectValue)
+            {
+                return CreateGraphQLObject((InputObjectValue)value);
+            }
+
             var valueType = value.GetType();
 
 			if (valueType.IsEnum)
@@ -182,28 +187,23 @@ namespace Telia.GraphQL.Client
                 };
             }
 
-            if (valueType.IsClass)
-            {
-                return CreateGraphQLObject(value);
-            }
-
             throw new NotImplementedException($"Type {value.GetType()} is not implemented");
         }
 
-        private GraphQLValue CreateGraphQLObject(object value)
+        private GraphQLValue CreateGraphQLObject(InputObjectValue value)
         {
-            var valueType = value.GetType();
+            var valueType = value.ObjectType;
             var properties = valueType.GetProperties();
 
             return new GraphQLObjectValue()
             {
-                Fields = properties.Select(prop => new GraphQLObjectField
+                Fields = value.Select(prop => new GraphQLObjectField
                 {
                     Name = new GraphQLName
                     {
-                        Value = prop.GetCustomAttribute<GraphQLFieldAttribute>(true).Name
+                        Value = properties.Single(e => e.Name == prop.Key).GetCustomAttribute<GraphQLFieldAttribute>(true).Name
                     },
-                    Value = this.GetGraphQLValueFrom(prop.GetValue(value))
+                    Value = this.GetGraphQLValueFrom(prop.Value)
                 }).ToList()
             };
         }

@@ -88,6 +88,27 @@ namespace Telia.GraphQL.Tests
 }", query);
         }
 
+        [Test]
+        public void Query_InputType_CreatesCorrectQuery()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.InputObj(new SomeInputObject { 
+                    Faz = 42,
+                    Bar = null
+                })
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: test(input: {faz: 42, bar: null})
+  __typename
+}", query);
+        }
+
         private class TestQuery
         {
             [GraphQLField("test")]
@@ -98,6 +119,34 @@ namespace Telia.GraphQL.Tests
 
             [GraphQLField("test")]
             public int DateTimeParam(DateTime dt) { throw new InvalidOperationException(); }
+
+            [GraphQLField("test")]
+            public int InputObj(SomeInputObject input) { throw new InvalidOperationException(); }
+        }
+
+        [GraphQLType("SomeInputObject")]
+        public class SomeInputObject
+        {
+            [GraphQLField("foo")]
+            public virtual String Foo
+            {
+                get;
+                set;
+            }
+
+            [GraphQLField("bar")]
+            public virtual String Bar
+            {
+                get;
+                set;
+            }
+
+            [GraphQLField("faz")]
+            public virtual Int32? Faz
+            {
+                get;
+                set;
+            }
         }
 
         private class TestClient : GraphQLCLient<TestQuery>

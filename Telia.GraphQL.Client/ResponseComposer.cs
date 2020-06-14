@@ -214,7 +214,7 @@ namespace Telia.GraphQL.Client
                 if (returnType == typeof(TimeSpan) && value is string)
                 {
                     var date = (DateTime)Convert.ChangeType(value, typeof(DateTime));
-                    return date.ToUniversalTime() - DateTime.UtcNow.Date;
+                    return date.ToUniversalTime() - date.Date;
                 }
 
                 if (returnType == typeof(DateTime) && value is string)

@@ -227,9 +227,12 @@ namespace Telia.GraphQL.Client
             return array;
         }
 
-        private object GetValueFromMemberInit(MemberInitExpression argument)
+        private InputObjectValue GetValueFromMemberInit(MemberInitExpression argument)
         {
-            var obj = Activator.CreateInstance(argument.Type);
+            var obj = new InputObjectValue(argument.Type);
+            var requiredPropertiesToSendIn = argument.Type.GetProperties()
+                .Where(e => e.PropertyType.IsValueType && Nullable.GetUnderlyingType(e.PropertyType) == null)
+                .ToList();
 
             foreach (var binding in argument.Bindings)
             {
@@ -240,11 +243,17 @@ namespace Telia.GraphQL.Client
                             var assignmentBinding = (MemberAssignment)binding;
                             var value = this.GetValueFromExpression(assignmentBinding.Expression);
 
-                            binding.Member.SetValue(obj, value);
+                            obj.Add(binding.Member.Name, value);
+                            requiredPropertiesToSendIn.RemoveAll(e => e.Name == binding.Member.Name);
                         }
                         break;
                     default: throw new NotImplementedException($"GetValueFromMemberInit: Unknown BindingType: {binding.BindingType}");
                 }
+            }
+
+            foreach (var prop in requiredPropertiesToSendIn)
+            {
+                obj.Add(prop.Name, Activator.CreateInstance(prop.PropertyType));
             }
 
             return obj;
