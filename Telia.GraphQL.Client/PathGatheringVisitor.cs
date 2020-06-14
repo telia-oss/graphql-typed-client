@@ -167,10 +167,17 @@ namespace Telia.GraphQL.Client
             for (var i = 0; i < arguments.Count; i++)
             {
                 var argument = arguments.ElementAt(i);
+                var parameter = methodParameters.ElementAt(i);
+
+                var nameAttribute = parameter.GetCustomAttribute<GraphQLArgumentAttribute>();
+
+                var name = nameAttribute != null
+                    ? nameAttribute.Name
+                    : parameter.Name;
 
                 yield return new ChainLinkArgument()
                 {
-                    Name = methodParameters.ElementAt(i).Name,
+                    Name = name,
                     Value = this.GetValueFromExpression(argument)
                 };
             }

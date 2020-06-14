@@ -12,6 +12,116 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
     {
         protected GeneratorConfig config;
 
+        private static string[] ArgumentNameBlackList = new[]
+        {
+            "abstract",
+            "as",
+            "base",
+            "bool",
+            "break",
+            "byte",
+            "case",
+            "catch",
+            "char",
+            "checked",
+            "class",
+            "const",
+            "continue",
+            "decimal",
+            "default",
+            "delegate",
+            "do",
+            "double",
+            "else",
+            "enum",
+            "event",
+            "explicit",
+            "extern",
+            "false",
+            "finally",
+            "fixed",
+            "float",
+            "for",
+            "foreach",
+            "goto",
+            "if",
+            "implicit",
+            "in",
+            "int",
+            "interface",
+            "internal",
+            "is",
+            "lock",
+            "long",
+            "namespace",
+            "new",
+            "null",
+            "object",
+            "operator",
+            "out",
+            "override",
+            "params",
+            "private",
+            "protected",
+            "public",
+            "readonly",
+            "ref",
+            "return",
+            "sbyte",
+            "sealed",
+            "short",
+            "sizeof",
+            "stackalloc",
+            "static",
+            "string",
+            "struct",
+            "switch",
+            "this",
+            "throw",
+            "true",
+            "try",
+            "typeof",
+            "uint",
+            "ulong",
+            "unchecked",
+            "unsafe",
+            "ushort",
+            "using",
+            "virtual",
+            "void",
+            "volatile",
+            "add",
+            "alias",
+            "ascending",
+            "async",
+            "await",
+            "by",
+            "descending",
+            "dynamic",
+            "equals",
+            "from",
+            "get",
+            "global",
+            "group",
+            "into",
+            "join",
+            "let",
+            "nameof",
+            "on",
+            "orderby",
+            "partial",
+            "remove",
+            "select",
+            "set",
+            "unmanaged",
+            "value",
+            "var",
+            "when",
+            "where",
+            "where",
+            "yield"
+        };
+
         public TypeDefinitionHandlerBase(GeneratorConfig config)
         {
             this.config = config;
@@ -21,7 +131,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 
         protected EqualsValueClauseSyntax GetDefault(GraphQLValue defaultValue, TypeSyntax type)
         {
-            switch (defaultValue.Kind)
+            switch (defaultValue?.Kind)
             {
                 case ASTNodeKind.IntValue:
                     return SyntaxFactory.EqualsValueClause(
@@ -145,24 +255,49 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
         protected ParameterListSyntax GetParameterList(IEnumerable<GraphQLInputValueDefinition> arguments, IEnumerable<ASTNode> allDefinitions)
         {
             var parameterList = SyntaxFactory.ParameterList();
+            var parameters = new List<ParameterSyntax>();
 
             foreach (var arg in arguments)
             {
                 var parameterType = this.GetCSharpTypeFromGraphQLType(arg.Type, allDefinitions);
 
+                var name = ArgumentNameBlackList.Contains(arg.Name.Value)
+                    ? $"{arg.Name.Value}Argument"
+                    : arg.Name.Value;
+
                 var parameter = SyntaxFactory.Parameter(
-                    SyntaxFactory.Identifier(arg.Name.Value))
+                    SyntaxFactory.Identifier(name))
+                    .AddAttributeLists(GetArgumentAttributes(arg.Name.Value))
                     .WithType(parameterType);
 
-                if (arg.DefaultValue != null)
-                {
-                    parameter = parameter.WithDefault(this.GetDefault(arg.DefaultValue, parameterType));
-                }
+                // Defaults can't be used in expression so we'll skip them for now
+                //if (arg.DefaultValue != null || arg.Type.Kind != ASTNodeKind.NonNullType)
+                //{
+                //    parameter = parameter.WithDefault(this.GetDefault(arg.DefaultValue, parameterType));
+                //}
 
-                parameterList = parameterList.AddParameters(parameter);
+                parameters.Add(parameter);
             }
 
+            // Optional parameters can appear only after non-optionals
+            parameters = parameters.OrderBy(e => e.Default != null).ToList();
+
+            parameterList = parameterList.AddParameters(parameters.ToArray());
+
             return parameterList;
+        }
+
+        protected AttributeListSyntax GetArgumentAttributes(string fieldName)
+        {
+            var attributeArguments = SyntaxFactory.SingletonSeparatedList(
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{fieldName}\"")));
+
+            var attribute = SyntaxFactory.Attribute(
+                SyntaxFactory.ParseName("GraphQLArgument"),
+                SyntaxFactory.AttributeArgumentList(attributeArguments));
+
+            return SyntaxFactory.AttributeList(
+                SyntaxFactory.SingletonSeparatedList(attribute));
         }
     }
 }

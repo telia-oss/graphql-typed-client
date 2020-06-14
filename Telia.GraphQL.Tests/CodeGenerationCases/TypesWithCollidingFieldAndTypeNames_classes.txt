@@ -63,7 +63,13 @@
     public class SomeTypeWithMethod
     {
         [GraphQLField("someTypeWithMethod")]
-        public virtual Int32? SomeTypeWithMethodField(int test)
+        public virtual Int32? SomeTypeWithMethodField()
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("someTypeWithMethod")]
+        public virtual Int32? SomeTypeWithMethodField([GraphQLArgument("test")] int test)
         {
             throw new InvalidOperationException();
         }
@@ -73,14 +79,22 @@
     public interface SomeInterfaceTypeWithMethod
     {
         [GraphQLField("someInterfaceImplementationTypeWithMethod")]
-        Int32? SomeInterfaceImplementationTypeWithMethodField(int test);
+        Int32? SomeInterfaceImplementationTypeWithMethodField([GraphQLArgument("test")] int test);
+        [GraphQLField("someInterfaceImplementationTypeWithMethod")]
+        Int32? SomeInterfaceImplementationTypeWithMethodField([GraphQLArgument("test")] int test);
     }
 
     [GraphQLType("SomeAnotherInterfaceImplementationTypeWithMethod")]
     public class SomeAnotherInterfaceImplementationTypeWithMethod : SomeInterfaceTypeWithMethod
     {
         [GraphQLField("someInterfaceImplementationTypeWithMethod")]
-        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField(int test)
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField()
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("someInterfaceImplementationTypeWithMethod")]
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField([GraphQLArgument("test")] int test)
         {
             throw new InvalidOperationException();
         }
@@ -90,7 +104,13 @@
     public class SomeInterfaceImplementationTypeWithMethod : SomeInterfaceTypeWithMethod
     {
         [GraphQLField("someInterfaceImplementationTypeWithMethod")]
-        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField(int test)
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField()
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLField("someInterfaceImplementationTypeWithMethod")]
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField([GraphQLArgument("test")] int test)
         {
             throw new InvalidOperationException();
         }

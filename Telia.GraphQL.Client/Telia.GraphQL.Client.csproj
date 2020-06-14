@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\GraphQLArgumentAttribute.cs" />
     <Compile Include="Attributes\GraphQLTypeAttribute.cs" />
     <Compile Include="Attributes\GraphQLFieldAttribute.cs" />
     <Compile Include="CallChain.cs" />

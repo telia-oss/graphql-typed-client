@@ -60,6 +60,31 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             var returnType = this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions);
             var methodName = PickFieldName(interfaceTypeName, field, allDefinitions);
 
+            var nonNullArguments = field.Arguments.Where(arg => arg.Type.Kind == ASTNodeKind.NonNullType);
+            var nullableArguments = field.Arguments.Where(arg => arg.Type.Kind != ASTNodeKind.NonNullType);
+
+            var argumentList = nonNullArguments.ToList();
+
+            interfaceDeclaration = CreateMethod(
+                    interfaceDeclaration, field, allDefinitions, returnType, methodName);
+
+            foreach (var argument in nullableArguments)
+            {
+                argumentList.Add(argument);
+                interfaceDeclaration = CreateMethod(
+                    interfaceDeclaration, field, allDefinitions, returnType, methodName);
+            }
+
+            return interfaceDeclaration;
+        }
+
+        private InterfaceDeclarationSyntax CreateMethod(
+            InterfaceDeclarationSyntax interfaceDeclaration,
+            GraphQLFieldDefinition field,
+            IEnumerable<ASTNode> allDefinitions,
+            TypeSyntax returnType,
+            string methodName)
+        {
             var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
                 .WithParameterList(this.GetParameterList(field.Arguments, allDefinitions))

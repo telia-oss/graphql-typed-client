@@ -72,11 +72,37 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             var returnType = this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions);
             var methodName = PickFieldName(objectType, field, allDefinitions);
 
+            var nonNullArguments = field.Arguments.Where(arg => arg.Type.Kind == ASTNodeKind.NonNullType);
+            var nullableArguments = field.Arguments.Where(arg => arg.Type.Kind != ASTNodeKind.NonNullType);
+
+            var argumentList = nonNullArguments.ToList();
+
+            classDeclaration = CreateMethod(
+                    classDeclaration, field, allDefinitions, returnType, methodName, argumentList);
+
+            foreach (var argument in nullableArguments)
+            {
+                argumentList.Add(argument);
+                classDeclaration = CreateMethod(
+                    classDeclaration, field, allDefinitions, returnType, methodName, argumentList);
+            }
+
+            return classDeclaration;
+        }
+
+        private ClassDeclarationSyntax CreateMethod(
+            ClassDeclarationSyntax classDeclaration,
+            GraphQLFieldDefinition field,
+            IEnumerable<ASTNode> allDefinitions,
+            TypeSyntax returnType,
+            string methodName,
+            List<GraphQLInputValueDefinition> argumentList)
+        {
             var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
                 .AddAttributeLists(GetFieldAttributes(field.Name.Value))
-                .WithParameterList(this.GetParameterList(field.Arguments, allDefinitions))
+                .WithParameterList(this.GetParameterList(argumentList, allDefinitions))
                 .WithBody(this.GetEmptyBody());
 
             return classDeclaration.AddMembers(method);
