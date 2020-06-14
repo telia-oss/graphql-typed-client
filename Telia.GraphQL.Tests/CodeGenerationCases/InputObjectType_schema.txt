@@ -1,8 +1,15 @@
-﻿input SomeInputObject {
+﻿enum TestEnum {
+  A
+  B
+}
+
+input SomeInputObject {
   foo: String!
   bar: String
   faz: Int
   zap: Int!
   dt: DateTime!
   ndt: DateTime
+  enumf: TestEnum
+  enumnf: TestEnum!
 }

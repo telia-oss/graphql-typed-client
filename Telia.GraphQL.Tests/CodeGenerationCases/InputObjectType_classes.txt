@@ -4,6 +4,13 @@
     using System.Collections.Generic;
     using Telia.GraphQL.Client.Attributes;
 
+    [GraphQLType("TestEnum")]
+    public enum TestEnum
+    {
+        A,
+        B
+    }
+
     [GraphQLType("SomeInputObject")]
     public class SomeInputObject
     {
@@ -44,6 +51,20 @@
 
         [GraphQLField("ndt")]
         public virtual DateTime? Ndt
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("enumf")]
+        public virtual TestEnum? Enumf
+        {
+            get;
+            set;
+        }
+
+        [GraphQLField("enumnf")]
+        public virtual TestEnum Enumnf
         {
             get;
             set;

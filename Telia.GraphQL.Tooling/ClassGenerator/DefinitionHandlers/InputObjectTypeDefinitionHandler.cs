@@ -25,7 +25,8 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddAttributeLists(GetTypeAttributes(objectTypeDefinition.Name.Value));
 
-            classDeclaration = this.CreateProperties(objectTypeDefinition.Name.Value, classDeclaration, objectTypeDefinition.Fields);
+            classDeclaration = this.CreateProperties(
+                objectTypeDefinition.Name.Value, classDeclaration, objectTypeDefinition.Fields, allDefinitions);
 
             return @namespace.AddMembers(classDeclaration);
         }
@@ -33,11 +34,12 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
         private ClassDeclarationSyntax CreateProperties(
             string objectTypeName,
             ClassDeclarationSyntax classDeclaration,
-            IEnumerable<GraphQLInputValueDefinition> fields)
+            IEnumerable<GraphQLInputValueDefinition> fields,
+            IEnumerable<ASTNode> allDefinitions)
         {
             foreach (var field in fields)
             {
-                classDeclaration = GenerateProperty(objectTypeName, classDeclaration, field);
+                classDeclaration = GenerateProperty(objectTypeName, classDeclaration, field, allDefinitions);
             }
 
             return classDeclaration;
@@ -46,10 +48,11 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
         private ClassDeclarationSyntax GenerateProperty(
             string objectTypeName,
             ClassDeclarationSyntax classDeclaration,
-            GraphQLInputValueDefinition field)
+            GraphQLInputValueDefinition field,
+            IEnumerable<ASTNode> allDefinitions)
         {
             var member = SyntaxFactory.PropertyDeclaration(
-                this.GetCSharpTypeFromGraphQLType(field.Type),
+                this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions),
                 PickFieldName(objectTypeName, field))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
@@ -74,52 +77,6 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 
             return SyntaxFactory.AttributeList(
                 SyntaxFactory.SingletonSeparatedList(attribute));
-        }
-
-        private TypeSyntax GetCSharpTypeFromGraphQLType(GraphQLType type)
-        {
-            switch (type.Kind)
-            {
-                case ASTNodeKind.NamedType: return this.GetCSharpTypeFromGraphQLNamedType((GraphQLNamedType)type);
-                case ASTNodeKind.NonNullType: return this.GetCSharpTypeFromGraphQLNonNullType((GraphQLNonNullType)type);
-                case ASTNodeKind.ListType: return this.GetCSharpTypeFromGraphQLListType((GraphQLListType)type);
-            }
-
-            throw new NotImplementedException($"GetCSharpTypeFromGraphQLType: Unknown type.Kind: {type.Kind}");
-        }
-
-        private TypeSyntax GetCSharpTypeFromGraphQLListType(GraphQLListType type)
-        {
-            var underlyingType = this.GetCSharpTypeFromGraphQLType(type.Type);
-
-            var argumentList = SyntaxFactory.TypeArgumentList(
-                SyntaxFactory.SeparatedList<TypeSyntax>()
-                    .Add(underlyingType));
-
-            return SyntaxFactory.GenericName(SyntaxFactory.Identifier(typeof(IEnumerable).Name), argumentList);
-        }
-
-        private TypeSyntax GetCSharpTypeFromGraphQLNonNullType(GraphQLNonNullType type)
-        {
-            switch (type.Type.Kind)
-            {
-                case ASTNodeKind.NamedType: return this.GetCSharpTypeFromGraphQLNamedType((GraphQLNamedType)type.Type, false);
-                case ASTNodeKind.ListType: return this.GetCSharpTypeFromGraphQLListType((GraphQLListType)type.Type);
-            }
-
-            throw new NotImplementedException($"GetCSharpTypeFromGraphQLNonNullType: Unknown type.Kind: {type.Type.Kind}");
-        }
-
-        private TypeSyntax GetCSharpTypeFromGraphQLNamedType(GraphQLNamedType type, bool nullable = true)
-        {
-            var cSharpType = this.config.GetCSharpTypeFromGraphQLType(type.Name.Value, nullable);
-
-            if (cSharpType == null)
-            {
-                return SyntaxFactory.ParseTypeName(type.Name.Value);
-            }
-
-            return cSharpType;
         }
 
         private string PickFieldName(string objectTypeName, GraphQLInputValueDefinition field)
