@@ -32,6 +32,8 @@ namespace Telia.GraphQL.Client
             Type objectType, object existingValue,
             JsonSerializer serializer)
         {
+            if (reader.TokenType == JsonToken.Null) return null;
+
             var instance = Activator.CreateInstance(objectType);
             var jObject = JObject.Load(reader);
 

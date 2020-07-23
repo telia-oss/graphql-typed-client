@@ -72,6 +72,8 @@ namespace Telia.GraphQL.Client
                 return null;
             }
 
+            if (reader.TokenType == JsonToken.Null) return null;
+
             var queryTypeCache = typeBindings[queryType.FullName];
             var jsonObject = JObject.Load(reader);
             var typeName = jsonObject["__typename"]?.ToString();

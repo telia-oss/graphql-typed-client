@@ -1190,6 +1190,48 @@ errors: [
         }
 
         [Test]
+        public void Query_WithComplexObjectThatIsNull_ShouldReturnCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+  ""field0"": null
+} }");
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Complex
+            });
+
+            Assert.IsNull(result.Data.test);
+        }
+
+        [Test]
+        public void Query_WithComplexObjectThatHasNullFields_ShouldReturnCorrectData()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+  ""field0"": {
+    ""simpleInterface"": null,
+    ""test"": 42,
+    ""simple"": null,
+    ""simpleArray"": null
+  }
+} }");
+            var client = new TestClient(networkClient);
+
+            var result = client.Query(e => new
+            {
+                test = e.Complex
+            });
+
+            Assert.IsNull(result.Data.test.SimpleInterface);
+            Assert.IsNull(result.Data.test.Simple);
+            Assert.IsNull(result.Data.test.SimpleArray);
+            Assert.AreEqual(42, result.Data.test.Test);
+        }
+
+        [Test]
         public void Query_WithSimpleObjectArrayAndSelectMethod_ShouldExpandSelectionListToFields()
         {
             var networkClient = Substitute.For<INetworkClient>();
