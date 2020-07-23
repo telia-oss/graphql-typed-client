@@ -109,6 +109,28 @@ namespace Telia.GraphQL.Tests
 }", query);
         }
 
+        [Test]
+        public void Query_ArrayInputType_CreatesCorrectQuery()
+        {
+            var networkClient = Substitute.For<INetworkClient>();
+
+            var client = new TestClient(networkClient);
+
+            var query = client.CreateQuery(e => new
+            {
+                test = e.ArrayOfInputObj(new[]
+                {
+                    new SomeInputObject { Faz = 42, Bar = null },
+                    new SomeInputObject { Faz = 12, Bar = "test" }
+                })
+            });
+
+            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+  field0: test(input: [{faz: 42, bar: null}, {faz: 12, bar: ""test""}])
+  __typename
+}", query);
+        }
+
         private class TestQuery
         {
             [GraphQLField("test")]
@@ -122,6 +144,9 @@ namespace Telia.GraphQL.Tests
 
             [GraphQLField("test")]
             public int InputObj(SomeInputObject input) { throw new InvalidOperationException(); }
+
+            [GraphQLField("test")]
+            public int ArrayOfInputObj(IEnumerable<SomeInputObject> input) { throw new InvalidOperationException(); }
         }
 
         [GraphQLType("SomeInputObject")]

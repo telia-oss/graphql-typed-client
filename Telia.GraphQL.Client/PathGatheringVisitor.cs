@@ -215,7 +215,7 @@ namespace Telia.GraphQL.Client
 
         private object GetValueFromNewArrayInit(NewArrayExpression argument)
         {
-            var array = Activator.CreateInstance(argument.Type, argument.Expressions.Count) as Array;
+            var array = Activator.CreateInstance(typeof(object[]), argument.Expressions.Count) as Array;
 
             for (var i = 0; i < argument.Expressions.Count; i++)
             {
