@@ -7,29 +7,29 @@
     [GraphQLType("TestInterface")]
     public interface TestInterface
     {
-        [GraphQLField("field")]
+        [GraphQLField("field", "string")]
         string Field
         {
             get;
             set;
         }
 
-        [GraphQLField("fieldWithParam")]
-        Int32 FieldWithParam([GraphQLArgument("param")] Int32 param);
+        [GraphQLField("fieldWithParam", "Int!")]
+        Int32 FieldWithParam([GraphQLArgument("param", "Int!")] Int32 param);
     }
 
     [GraphQLType("TestInterfaceImplementation1")]
     public class TestInterfaceImplementation1 : TestInterface
     {
-        [GraphQLField("field")]
+        [GraphQLField("field", "string")]
         public virtual string Field
         {
             get;
             set;
         }
 
-        [GraphQLField("fieldWithParam")]
-        public virtual Int32 FieldWithParam([GraphQLArgument("param")] Int32 param)
+        [GraphQLField("fieldWithParam", "Int!")]
+        public virtual Int32 FieldWithParam([GraphQLArgument("param", "Int!")] Int32 param)
         {
             throw new InvalidOperationException();
         }
@@ -38,20 +38,20 @@
     [GraphQLType("TestInterfaceImplementation2")]
     public class TestInterfaceImplementation2 : TestInterface
     {
-        [GraphQLField("field")]
+        [GraphQLField("field", "string")]
         public virtual string Field
         {
             get;
             set;
         }
 
-        [GraphQLField("fieldWithParam")]
-        public virtual Int32 FieldWithParam([GraphQLArgument("param")] Int32 param)
+        [GraphQLField("fieldWithParam", "Int!")]
+        public virtual Int32 FieldWithParam([GraphQLArgument("param", "Int!")] Int32 param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("field2")]
+        [GraphQLField("field2", "string")]
         public virtual string Field2
         {
             get;

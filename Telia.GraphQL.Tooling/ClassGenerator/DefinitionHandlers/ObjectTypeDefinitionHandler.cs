@@ -101,7 +101,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
-                .AddAttributeLists(GetFieldAttributes(field.Name.Value))
+                .AddAttributeLists(GetFieldAttributes(field))
                 .WithParameterList(this.GetParameterList(argumentList, allDefinitions))
                 .WithBody(this.GetEmptyBody());
 
@@ -128,7 +128,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 PickFieldName(objectType, field, allDefinitions))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
-                .AddAttributeLists(GetFieldAttributes(field.Name.Value))
+                .AddAttributeLists(GetFieldAttributes(field))
                 .AddAccessorListAccessors(
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),

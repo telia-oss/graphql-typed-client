@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL.Tests
 {
@@ -21,14 +22,16 @@ namespace Telia.GraphQL.Tests
                 test2 = e.Object.TestWithParams(0.5f)
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: Float!) {
   field0: test
   field1: object{
-    field0: testWithParams(x: 0.5)
+    field0: testWithParams(x: $var_0)
     __typename
   }
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual(0.5f, query.Variables["var_0"]);
         }
 
         [Test]
@@ -44,13 +47,13 @@ namespace Telia.GraphQL.Tests
                 }
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: object{
     field0: test
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
@@ -65,7 +68,7 @@ namespace Telia.GraphQL.Tests
                 c = e.Complex.Complex.Simple.Test
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: complex{
     field0: test
     field1: complex{
@@ -82,7 +85,7 @@ namespace Telia.GraphQL.Tests
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
@@ -97,14 +100,14 @@ namespace Telia.GraphQL.Tests
                 c = e.ComplexWithParams("test1").ComplexWithParams("test3").Simple.Test
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: String!, $var_1: String!, $var_2: String!, $var_3: String!) {
   field0: complexWithParams(name: null){
     field0: test
     __typename
   }
-  field1: complexWithParams(name: ""test4""){
+  field1: complexWithParams(name: $var_0){
     field0: complex{
-      field0: complexWithParams(name: ""test2""){
+      field0: complexWithParams(name: $var_1){
         field0: complex{
           field0: test
           __typename
@@ -115,8 +118,8 @@ namespace Telia.GraphQL.Tests
     }
     __typename
   }
-  field2: complexWithParams(name: ""test1""){
-    field0: complexWithParams(name: ""test3""){
+  field2: complexWithParams(name: $var_2){
+    field0: complexWithParams(name: $var_3){
       field0: simple{
         field0: test
         __typename
@@ -126,7 +129,12 @@ namespace Telia.GraphQL.Tests
     __typename
   }
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual("test4", query.Variables["var_0"]);
+            Assert.AreEqual("test2", query.Variables["var_1"]);
+            Assert.AreEqual("test1", query.Variables["var_2"]);
+            Assert.AreEqual("test3", query.Variables["var_3"]);
         }
 
 
@@ -147,10 +155,10 @@ namespace Telia.GraphQL.Tests
                 c = e.ComplexWithParams(test1).ComplexWithParams2(test3, test4).Simple.Test
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: complexWithParams(name: ""test1""){
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: String!, $var_1: String!, $var_2: String!, $var_3: String!, $var_4: String!) {
+  field0: complexWithParams(name: $var_0){
     field0: test
-    field1: complexWithParams2(name: ""test3"", surname: ""test4""){
+    field1: complexWithParams2(name: $var_1, surname: $var_2){
       field0: simple{
         field0: test
         __typename
@@ -159,9 +167,9 @@ namespace Telia.GraphQL.Tests
     }
     __typename
   }
-  field1: complexWithParams(name: ""test4""){
+  field1: complexWithParams(name: $var_3){
     field0: complex{
-      field0: complexWithParams(name: ""test2""){
+      field0: complexWithParams(name: $var_4){
         field0: complex{
           field0: test
           __typename
@@ -173,7 +181,12 @@ namespace Telia.GraphQL.Tests
     __typename
   }
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual("test1", query.Variables["var_0"]);
+            Assert.AreEqual("test3", query.Variables["var_1"]);
+            Assert.AreEqual("test4", query.Variables["var_2"]);
+            Assert.AreEqual("test4", query.Variables["var_3"]);
         }
 
         [Test]
@@ -205,10 +218,10 @@ namespace Telia.GraphQL.Tests
                 c = e.ComplexWithParams(input.test1).ComplexWithParams(input.others.others.test3).Simple.Test
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: complexWithParams(name: ""test1""){
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: String!, $var_1: String!, $var_2: String!, $var_3: String!) {
+  field0: complexWithParams(name: $var_0){
     field0: test
-    field1: complexWithParams(name: ""test3""){
+    field1: complexWithParams(name: $var_1){
       field0: simple{
         field0: test
         __typename
@@ -217,9 +230,9 @@ namespace Telia.GraphQL.Tests
     }
     __typename
   }
-  field1: complexWithParams(name: ""test4""){
+  field1: complexWithParams(name: $var_2){
     field0: complex{
-      field0: complexWithParams(name: ""test2""){
+      field0: complexWithParams(name: $var_3){
         field0: complex{
           field0: test
           __typename
@@ -231,7 +244,12 @@ namespace Telia.GraphQL.Tests
     __typename
   }
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual("test1", query.Variables["var_0"]);
+            Assert.AreEqual("test3", query.Variables["var_1"]);
+            Assert.AreEqual("test4", query.Variables["var_2"]);
+            Assert.AreEqual("test2", query.Variables["var_3"]);
         }
 
 		[Test]
@@ -244,7 +262,7 @@ namespace Telia.GraphQL.Tests
 				o = e.Complex.ComplexArray.Select(x => x.Test)
 			});
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: complex{
     field0: complexArray{
       field0: test
@@ -253,7 +271,7 @@ namespace Telia.GraphQL.Tests
     __typename
   }
   __typename
-}", query);
+}", query.Query);
 		}
 
 		[Test]
@@ -266,7 +284,7 @@ namespace Telia.GraphQL.Tests
 				o = e.Complex.ComplexArray.Select(x => new { a = x.Test, b = e.Test })
 			});
 
-			AssertUtils.AreEqualIgnoreLineBreaks(@"{
+			AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: complex{
     field0: complexArray{
       field0: test
@@ -276,7 +294,7 @@ namespace Telia.GraphQL.Tests
   }
   field1: test
   __typename
-}", query);
+}", query.Query);
 		}
 
 
@@ -284,7 +302,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestForSimpleScalar_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -300,7 +318,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestForMultipleSimpleScalars_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -320,7 +338,7 @@ namespace Telia.GraphQL.Tests
         public void Query_NestedObject_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -346,7 +364,7 @@ namespace Telia.GraphQL.Tests
         public void Query_ComplexObject_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: 42, field1: { field0: 12, field1: { field0: { field0: 10 } } } } }");
 
             var client = new TestClient(networkClient);
@@ -369,7 +387,7 @@ namespace Telia.GraphQL.Tests
         public void Query_ComplexObjectNestedResult_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: 42, field1: { field0: 12, field1: { field0: { field0: 10 } } } } }");
 
             var client = new TestClient(networkClient);
@@ -398,7 +416,7 @@ namespace Telia.GraphQL.Tests
         public void Query_ComplexObjectNestedResult_HandlesNull()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: null, field1: null } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: null, field1: null } }");
 
             var client = new TestClient(networkClient);
 
@@ -426,7 +444,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestForScalarArray_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: { field0: [1, 2, 3] } } }");
 
             var client = new TestClient(networkClient);
@@ -443,7 +461,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestForObjectArray_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: { field0: [{ field0: 1 }, { field0: 2 }] } } }");
 
             var client = new TestClient(networkClient);
@@ -465,7 +483,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestForObjectArrayNested_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: { field0: [{ field0: 1, field1: [{ field0: 2 }, { field0: 3 }] }] } } }");
 
             var client = new TestClient(networkClient);
@@ -491,7 +509,7 @@ namespace Telia.GraphQL.Tests
 		public void Query_RequestForObjectArrayNestedOutsideContext_ReturnsCorrectData()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": {
   ""field0"": [
     { ""field0"": 1, ""field1"": [
@@ -532,7 +550,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestWithStringFormatting_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -548,7 +566,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestWithStringConcattenation_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -564,7 +582,7 @@ namespace Telia.GraphQL.Tests
         public void Query_RequestWithBinaryOperationsAndMethodInvocation_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -580,7 +598,7 @@ namespace Telia.GraphQL.Tests
 		public void Query_WithNestedSelectOutsideScope_ReturnsCorrectData()
 		{
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": {
   ""field0"": [
     { ""field0"": 42 }
@@ -608,7 +626,7 @@ namespace Telia.GraphQL.Tests
         public void Query_WithDataAndError_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns(@"{
 data: { field0: 42 },
 errors: [
@@ -639,7 +657,7 @@ errors: [
         public void Query_WithError_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns(@"{
 data: null,
 errors: [
@@ -671,7 +689,7 @@ errors: [
         public void Query_WithEnum_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": ""TEST2""
 } }");
 
@@ -689,7 +707,7 @@ errors: [
         public void Query_WithNestedEnum_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": { ""field0"": ""TEST2"" }
 } }");
 
@@ -707,7 +725,7 @@ errors: [
         public void Query_WithDate_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": ""2019-09-01T22:00:08.000Z""
 } }");
 
@@ -725,7 +743,7 @@ errors: [
         public void Query_WithOnlyDate_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": ""2019-09-01""
 } }");
 
@@ -743,7 +761,7 @@ errors: [
         public void Query_WithDateAsNull_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": null
 } }");
 
@@ -761,7 +779,7 @@ errors: [
         public void Query_WithTernaryOperator_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": ""2019-09-01T22:00:08.000Z""
 } }");
 
@@ -779,7 +797,7 @@ errors: [
         public void Query_WithMoreComplicatedTernaryOperator_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": { ""field0"": { ""field0"": { ""field0"": { ""field0"": 1 }, ""field1"": { ""field0"": { ""field0"": ""2019-09-01T22:00:08.000Z"" } } } } } } }");
 
             var client = new TestClient(networkClient);
@@ -798,7 +816,7 @@ errors: [
         public void Query_WithDateTime_IsPossibleToParse()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ data: { ""field0"": ""2020-05-20T00:00:00.000"" } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: { ""field0"": ""2020-05-20T00:00:00.000"" } }");
 
             var client = new TestClient(networkClient);
 
@@ -814,7 +832,7 @@ errors: [
         public void Query_WithNestedSelects_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [{ ""field0"": [ { ""field0"": 42 } ] }] } } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [{ ""field0"": [ { ""field0"": 42 } ] }] } } }");
 
             var client = new TestClient(networkClient);
 
@@ -830,7 +848,7 @@ errors: [
         public void Query_WithNestedSelectsWithParams_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [{ ""field0"": [ { ""field0"": 42 } ] }] } } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [{ ""field0"": [ { ""field0"": 42 } ] }] } } }");
 
             var client = new TestClient(networkClient);
 
@@ -853,7 +871,7 @@ errors: [
                 test = (e.SimpleInterface as SimpleObject).TestEnum
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: simpleInterface{
     ... on SimpleObject {
       field0: testEnum
@@ -862,7 +880,7 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
@@ -876,7 +894,7 @@ errors: [
                 test = e.Complex.ComplexArray.Select(a => (a.SimpleInterface as SimpleObject).TestEnum)
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: complex{
     field0: complexArray{
       field0: simpleInterface{
@@ -891,7 +909,7 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
@@ -908,7 +926,7 @@ errors: [
                 })
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: complex{
     field0: complexArray{
       field0: simpleInterface{
@@ -924,14 +942,14 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
         public void Query_WithFragmentInsideSelectAndMultipleProperties_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": {
     ""field0"": [{
       ""field0"": {
@@ -968,7 +986,7 @@ errors: [
         public void Query_WithFragment_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": ""TEST2"" } } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": ""TEST2"" } } }");
 
             var client = new TestClient(networkClient);
 
@@ -984,7 +1002,7 @@ errors: [
         public void Query_WithFragmentInsideSelect_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [ { ""field0"": { ""field0"": ""TEST2"",  ""field1"": ""42"",  ""field2"":  [1, 2, 3] } } ] } } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [ { ""field0"": { ""field0"": ""TEST2"",  ""field1"": ""42"",  ""field2"":  [1, 2, 3] } } ] } } }");
 
             var client = new TestClient(networkClient);
 
@@ -1011,7 +1029,7 @@ errors: [
                 test = e.Object
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: object{
     test
     date
@@ -1020,7 +1038,7 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
@@ -1034,7 +1052,7 @@ errors: [
                 test = e.ObjectArray
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: objectArray{
     test
     date
@@ -1043,14 +1061,14 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
         public void Query_WithSimpleObject_ShouldGetCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": { 
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { 
   ""test"": 42,
   ""date"": ""11-11-2006"",
   ""testEnum"": ""TEST2"",
@@ -1073,7 +1091,7 @@ errors: [
         public void Query_WithSimpleObjectArray_ShouldGetCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": { ""field0"": [{ 
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": [{ 
   ""test"": 42,
   ""date"": ""11-11-2006"",
   ""testEnum"": ""TEST2"",
@@ -1103,7 +1121,7 @@ errors: [
                 test = e.Complex
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: complex{
     simpleInterface{
       test
@@ -1128,14 +1146,14 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
         public void Query_WithComplexObject_ShouldReturnCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": {
     ""simpleInterface"": {
       ""__typename"": ""SimpleObject"",
@@ -1193,7 +1211,7 @@ errors: [
         public void Query_WithComplexObjectThatIsNull_ShouldReturnCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": null
 } }");
             var client = new TestClient(networkClient);
@@ -1210,7 +1228,7 @@ errors: [
         public void Query_WithComplexObjectThatHasNullFields_ShouldReturnCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": {
     ""simpleInterface"": null,
     ""test"": 42,
@@ -1242,7 +1260,7 @@ errors: [
                 test = e.ObjectArray.Select(o => o)
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: objectArray{
     test
     date
@@ -1251,7 +1269,7 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
@@ -1265,7 +1283,7 @@ errors: [
                 test = e.Complex.ComplexArray.Select(o => o.SimpleArray)
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: complex{
     field0: complexArray{
       field0: simpleArray{
@@ -1280,7 +1298,7 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
@@ -1298,7 +1316,7 @@ errors: [
                 })
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query {
   field0: complex{
     field0: complexArray{
       field0: simpleArray{
@@ -1336,14 +1354,14 @@ errors: [
     __typename
   }
   __typename
-}", query);
+}", query.Query);
         }
 
         [Test]
         public void Query_WithSimpleObjectArrayAndMultipleNestedSelectMethod_ShouldParseDataCorrectly()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns(@"{ ""data"": {
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": {
     ""field0"": [{
       ""field0"": [{
@@ -1401,89 +1419,89 @@ errors: [
         [GraphQLType("SimpleInterface")]
         private interface SimpleInterface
         {
-            [GraphQLField("test")]
+            [GraphQLField("test", "Int!")]
             int Test { get; set; }
 
-            [GraphQLField("testArray")]
+            [GraphQLField("testArray", "Int!")]
             IEnumerable<int> TestArray { get; set; }
         }
 
         [GraphQLType("TestQuery")]
         private class TestQuery
         {
-            [GraphQLField("simpleInterface")]
+            [GraphQLField("simpleInterface", "SimpleInterface")]
             public SimpleInterface SimpleInterface { get; set; }
 
-            [GraphQLField("testEnum")]
+            [GraphQLField("testEnum", "TestEnum")]
             public TestEnum TestEnum { get; set; }
 
-            [GraphQLField("test")]
+            [GraphQLField("test", "Int!")]
             public int Test { get; set; }
 
-            [GraphQLField("date")]
+            [GraphQLField("date", "Date")]
             public DateTime? Date { get; set; }
 
-            [GraphQLField("object")]
+            [GraphQLField("object", "SimpleObject")]
             public SimpleObject Object { get; set; }
 
-            [GraphQLField("objectArray")]
+            [GraphQLField("objectArray", "[SimpleObject]")]
             public IEnumerable<SimpleObject> ObjectArray { get; set; }
 
-            [GraphQLField("complex")]
+            [GraphQLField("complex", "ComplexObject")]
             public ComplexObject Complex { get; set; }
 
-            [GraphQLField("complexWithParams")]
-            public ComplexObject ComplexWithParams(string name) { throw new InvalidOperationException(); }
+            [GraphQLField("complexWithParams", "ComplexObject")]
+            public ComplexObject ComplexWithParams([GraphQLArgument("name", "String!")] string name) { throw new InvalidOperationException(); }
         }
 
         [GraphQLType("SimpleObject")]
         private class SimpleObject : SimpleInterface
         {
-            [GraphQLField("test")]
+            [GraphQLField("test", "Int")]
             public int Test { get; set; }
 
-            [GraphQLField("date")]
+            [GraphQLField("date", "Date")]
             public DateTime? Date { get; set; }
 
-            [GraphQLField("testEnum")]
+            [GraphQLField("testEnum", "TestEnum")]
             public TestEnum TestEnum { get; set; }
 
-            [GraphQLField("testWithParams")]
-            public int TestWithParams(float x) { throw new InvalidOperationException(); }
+            [GraphQLField("testWithParams", "TestWithParams")]
+            public int TestWithParams([GraphQLArgument("x", "Float!")] float x) { throw new InvalidOperationException(); }
 
-            [GraphQLField("testArray")]
+            [GraphQLField("testArray", "[Int!]")]
             public IEnumerable<int> TestArray { get; set; }
         }
 
         [GraphQLType("ComplexObject")]
         private class ComplexObject
         {
-            [GraphQLField("simpleInterface")]
+            [GraphQLField("simpleInterface", "SimpleInterface")]
             public SimpleInterface SimpleInterface { get; set; }
 
-            [GraphQLField("test")]
+            [GraphQLField("test", "Int")]
             public int Test { get; set; }
 
-            [GraphQLField("simple")]
+            [GraphQLField("simple", "SimpleObject")]
             public SimpleObject Simple { get; set; }
 
-            [GraphQLField("simpleArray")]
+            [GraphQLField("simpleArray", "[SimpleObject]")]
             public IEnumerable<SimpleObject> SimpleArray { get; set; }
 
-            [GraphQLField("complex")]
+            [GraphQLField("complex", "ComplexObject")]
             public ComplexObject Complex { get; set; }
 
-            [GraphQLField("complexWithParams")]
-            public ComplexObject ComplexWithParams(string name) { throw new InvalidOperationException(); }
+            [GraphQLField("complexWithParams", "ComplexObject")]
+            public ComplexObject ComplexWithParams([GraphQLArgument("name", "String!")] string name) { throw new InvalidOperationException(); }
 
-            [GraphQLField("complexWithParams2")]
-            public ComplexObject ComplexWithParams2(string name, string surname) { throw new InvalidOperationException(); }
+            [GraphQLField("complexWithParams2", "ComplexObject")]
+            public ComplexObject ComplexWithParams2([GraphQLArgument("name", "String!")] string name, [GraphQLArgument("surname", "String!")] string surname) { throw new InvalidOperationException(); }
 
-            [GraphQLField("complexArray")]
+            [GraphQLField("complexArray", "[ComplexObject]")]
             public IEnumerable<ComplexObject> ComplexArray { get; set; }
 
-            [GraphQLField("complexArrayWithparams")]
-            public IEnumerable<ComplexObject> ComplexArrayWithParams(string param) { throw new InvalidOperationException(); }
+            [GraphQLField("complexArrayWithparams", "[ComplexObject]")]
+            public IEnumerable<ComplexObject> ComplexArrayWithParams([GraphQLArgument("param", "String")] string param) { throw new InvalidOperationException(); }
         }
 
         private class TestClient : GraphQLCLient<TestQuery>

@@ -15,7 +15,7 @@ namespace Telia.GraphQL.Tests
         public void Mutation_RequestForSimpleScalar_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: 42 } }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
 
@@ -42,10 +42,13 @@ namespace Telia.GraphQL.Tests
                 })
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"mutation {
-  field0: someMutation(input: {test: 1, testArray: [2, 3, 4]})
+            AssertUtils.AreEqualIgnoreLineBreaks(@"mutation Mutation($var_0: SimpleObject) {
+  field0: someMutation(input: $var_0)
   __typename
-}", mutation);
+}", mutation.Query);
+
+            Assert.AreEqual(1, ((SimpleObject)mutation.Variables["var_0"]).Test);
+            Assert.AreEqual(new[] {2, 3, 4}, ((SimpleObject)mutation.Variables["var_0"]).TestArray);
         }
 
         [Test]
@@ -68,17 +71,19 @@ namespace Telia.GraphQL.Tests
                 })
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"mutation {
-  field0: someMutation(input: {object: {object: {test: 42}, test: 0}, test: 0})
+            AssertUtils.AreEqualIgnoreLineBreaks(@"mutation Mutation($var_0: SimpleObject) {
+  field0: someMutation(input: $var_0)
   __typename
-}", mutation);
+}", mutation.Query);
+
+            Assert.AreEqual(42, ((SimpleObject)mutation.Variables["var_0"]).Object.Object.Test);
         }
 
         [Test]
         public void Mutation_RequestForComplicatedObject_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ data: { field0: { field0: \"123\" } }}");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: { field0: \"123\" } }}");
 
             var client = new TestClient(networkClient);
 
@@ -94,7 +99,7 @@ namespace Telia.GraphQL.Tests
         public void Mutation_WithDataAndError_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns(@"{
 data: { field0: { field0: ""123"" } },
 errors: [
@@ -125,7 +130,7 @@ errors: [
         public void Mutation_WithError_ReturnsCorrectData()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>())
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns(@"{
 data: null,
 errors: [
@@ -160,20 +165,20 @@ errors: [
 
         private class TestMutation
         {
-            [GraphQLField("someMutation")]
+            [GraphQLField("someMutation", "Int!")]
             public int SomeMutation()
             {
                 throw new InvalidOperationException();
             }
 
-            [GraphQLField("someMutation")]
-            public int SomeOtherMutation(SimpleObject input)
+            [GraphQLField("someMutation", "Int!")]
+            public int SomeOtherMutation([GraphQLArgument("input", "SimpleObject")] SimpleObject input)
             {
                 throw new InvalidOperationException();
             }
 
-            [GraphQLField("someMutation")]
-            public SimpleObject ObjectMutation(SimpleObject input)
+            [GraphQLField("someMutation", "SimpleObject")]
+            public SimpleObject ObjectMutation([GraphQLArgument("input", "SimpleObject")] SimpleObject input)
             {
                 throw new InvalidOperationException();
             }
@@ -181,16 +186,16 @@ errors: [
 
         private class SimpleObject
         {
-            [GraphQLField("test")]
+            [GraphQLField("test", "Int!")]
             public int Test { get; set; }
 
-            [GraphQLField("stringTest")]
+            [GraphQLField("stringTest", "String")]
             public string StringTest { get; set; }
 
-            [GraphQLField("testArray")]
+            [GraphQLField("testArray", "[Int!]")]
             public IEnumerable<int> TestArray { get; set; }
 
-            [GraphQLField("object")]
+            [GraphQLField("object", "SimpleObject")]
             public SimpleObject Object { get; set; }
         }
 

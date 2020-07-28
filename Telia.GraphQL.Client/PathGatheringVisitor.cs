@@ -171,123 +171,34 @@ namespace Telia.GraphQL.Client
 
                 var nameAttribute = parameter.GetCustomAttribute<GraphQLArgumentAttribute>();
 
-                var name = nameAttribute != null
-                    ? nameAttribute.Name
-                    : parameter.Name;
+                if (nameAttribute == null)
+                {
+                    throw new InvalidOperationException($"Parameter {parameter.Name} doesn't have {nameof(GraphQLArgumentAttribute)} attribute");
+                }
 
                 yield return new ChainLinkArgument()
                 {
-                    Name = name,
-                    Value = this.GetValueFromExpression(argument)
+                    Name = nameAttribute.Name,
+                    Value = GetValueFromArgumentExpression(parameter.Name, argument),
+                    GraphQLType  = nameAttribute.GraphQLType
                 };
             }
         }
 
-        private object GetValueFromExpression(Expression argument)
+        private object GetValueFromArgumentExpression(string argumentName, Expression argument)
         {
-            switch (argument.NodeType)
+            try
             {
-                case ExpressionType.Constant: return ((ConstantExpression)argument).Value;
-                case ExpressionType.MemberAccess: return this.GetValueFromMemberAccessExpression((MemberExpression)argument);
-                case ExpressionType.MemberInit: return this.GetValueFromMemberInit((MemberInitExpression)argument);
-                case ExpressionType.NewArrayInit: return this.GetValueFromNewArrayInit((NewArrayExpression)argument);
+                return Expression.Lambda(argument).Compile().DynamicInvoke();
             }
-
-            if (argument is UnaryExpression)
+            catch (TargetInvocationException ex)
             {
-                return GetValueFromUnaryExpression((UnaryExpression)argument);
+                throw new ArgumentEvaluationException(argumentName, ex.InnerException);
             }
-
-            throw new NotImplementedException($"GetValueFromExpression: unknown NodeType: {argument.NodeType}");
-        }
-
-        private object GetValueFromUnaryExpression(UnaryExpression argument)
-        {
-            var value = this.GetValueFromExpression(argument.Operand);
-
-            if (argument.Method != null)
+            catch (Exception ex)
             {
-                return argument.Method.Invoke(value, new object[] { });
+                throw new ArgumentEvaluationException(argumentName, ex);
             }
-
-            return value;
-        }
-
-        private object GetValueFromNewArrayInit(NewArrayExpression argument)
-        {
-            var array = Activator.CreateInstance(typeof(object[]), argument.Expressions.Count) as Array;
-
-            for (var i = 0; i < argument.Expressions.Count; i++)
-            {
-                var value = this.GetValueFromExpression(argument.Expressions[i]);
-
-                array.SetValue(value, i);
-            }
-
-            return array;
-        }
-
-        private InputObjectValue GetValueFromMemberInit(MemberInitExpression argument)
-        {
-            var obj = new InputObjectValue(argument.Type);
-            var requiredPropertiesToSendIn = argument.Type.GetProperties()
-                .Where(e => e.PropertyType.IsValueType && Nullable.GetUnderlyingType(e.PropertyType) == null)
-                .ToList();
-
-            foreach (var binding in argument.Bindings)
-            {
-                switch (binding.BindingType)
-                {
-                    case MemberBindingType.Assignment:
-                        {
-                            var assignmentBinding = (MemberAssignment)binding;
-                            var value = this.GetValueFromExpression(assignmentBinding.Expression);
-
-                            obj.Add(binding.Member.Name, value);
-                            requiredPropertiesToSendIn.RemoveAll(e => e.Name == binding.Member.Name);
-                        }
-                        break;
-                    default: throw new NotImplementedException($"GetValueFromMemberInit: Unknown BindingType: {binding.BindingType}");
-                }
-            }
-
-            foreach (var prop in requiredPropertiesToSendIn)
-            {
-                obj.Add(prop.Name, Activator.CreateInstance(prop.PropertyType));
-            }
-
-            return obj;
-        }
-
-        private object GetValueFromMemberAccessExpression(MemberExpression argument)
-        {
-            var constant = argument as Expression;
-            var listOfMemberAccess = new List<MemberExpression>();
-
-            while (constant.NodeType == ExpressionType.MemberAccess)
-            {
-                var member = ((MemberExpression)constant);
-
-                listOfMemberAccess.Add(member);
-                constant = member.Expression;
-            }
-
-            if (constant.NodeType != ExpressionType.Constant)
-            {
-                throw new NotImplementedException(
-                    $"GetValueFromMemberAccessExpression: Not implemented scenario where constant.NodeType = {constant.NodeType}");
-            }
-
-            listOfMemberAccess.Reverse();
-
-            var returnValue = ((ConstantExpression)constant).Value;
-            
-            foreach (var memberAccess in listOfMemberAccess)
-            {
-                returnValue = memberAccess.Member.GetValue(returnValue);
-            }
-
-            return returnValue;
         }
     }
 }

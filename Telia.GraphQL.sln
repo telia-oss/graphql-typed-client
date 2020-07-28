@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telia.GraphQL.Tests", "Teli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telia.GraphQL.Tooling", "Telia.GraphQL.Tooling\Telia.GraphQL.Tooling.csproj", "{F3695DF0-C725-4A5A-8966-EEBBBC18BE8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telia.GraphQL.Playground", "Telia.GraphQL.Playground\Telia.GraphQL.Playground.csproj", "{4FDBF428-C6A5-4F90-9C84-D9B75CE25FA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F3695DF0-C725-4A5A-8966-EEBBBC18BE8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3695DF0-C725-4A5A-8966-EEBBBC18BE8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3695DF0-C725-4A5A-8966-EEBBBC18BE8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FDBF428-C6A5-4F90-9C84-D9B75CE25FA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FDBF428-C6A5-4F90-9C84-D9B75CE25FA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FDBF428-C6A5-4F90-9C84-D9B75CE25FA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FDBF428-C6A5-4F90-9C84-D9B75CE25FA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

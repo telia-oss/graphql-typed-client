@@ -19,17 +19,17 @@ type SomeAnotherInterfaceImplementationType implements SomeInterfaceType {
 }
 
 type SomeTypeWithMethod {
-	someTypeWithMethod(test: int): Int
+	someTypeWithMethod(test: Int): Int
 }
 
 interface SomeInterfaceTypeWithMethod {
-	someInterfaceImplementationTypeWithMethod(test: int): Int
+	someInterfaceImplementationTypeWithMethod(test: Int): Int
 }
 
 type SomeAnotherInterfaceImplementationTypeWithMethod implements SomeInterfaceTypeWithMethod {
-	someInterfaceImplementationTypeWithMethod(test: int): Int
+	someInterfaceImplementationTypeWithMethod(test: Int): Int
 }
 
 type SomeInterfaceImplementationTypeWithMethod implements SomeInterfaceTypeWithMethod {
-	someInterfaceImplementationTypeWithMethod(test: int): Int
+	someInterfaceImplementationTypeWithMethod(test: Int): Int
 }

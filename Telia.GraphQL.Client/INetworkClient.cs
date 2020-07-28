@@ -1,7 +1,9 @@
-﻿namespace Telia.GraphQL
+﻿using Telia.GraphQL.Client;
+
+namespace Telia.GraphQL
 {
     public interface INetworkClient
     {
-        string Send(string query);
+        string Send(GraphQLQueryInfo query);
     }
 }
