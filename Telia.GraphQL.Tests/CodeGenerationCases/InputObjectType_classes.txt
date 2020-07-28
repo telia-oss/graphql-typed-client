@@ -14,56 +14,56 @@
     [GraphQLType("SomeInputObject")]
     public class SomeInputObject
     {
-        [GraphQLField("foo")]
+        [GraphQLField("foo", "String!")]
         public virtual String Foo
         {
             get;
             set;
         }
 
-        [GraphQLField("bar")]
+        [GraphQLField("bar", "String")]
         public virtual String Bar
         {
             get;
             set;
         }
 
-        [GraphQLField("faz")]
+        [GraphQLField("faz", "Int")]
         public virtual Int32? Faz
         {
             get;
             set;
         }
 
-        [GraphQLField("zap")]
+        [GraphQLField("zap", "Int!")]
         public virtual Int32 Zap
         {
             get;
             set;
         }
 
-        [GraphQLField("dt")]
+        [GraphQLField("dt", "DateTime!")]
         public virtual DateTime Dt
         {
             get;
             set;
         }
 
-        [GraphQLField("ndt")]
+        [GraphQLField("ndt", "DateTime")]
         public virtual DateTime? Ndt
         {
             get;
             set;
         }
 
-        [GraphQLField("enumf")]
+        [GraphQLField("enumf", "TestEnum")]
         public virtual TestEnum? Enumf
         {
             get;
             set;
         }
 
-        [GraphQLField("enumnf")]
+        [GraphQLField("enumnf", "TestEnum!")]
         public virtual TestEnum Enumnf
         {
             get;

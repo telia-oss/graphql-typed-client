@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GraphQLParser;
 using GraphQLParser.AST;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -54,7 +55,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 PickFieldName(objectTypeName, field))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
-                .AddAttributeLists(GetFieldAttributes(field.Name.Value))
+                .AddAttributeLists(GetFieldAttributes(field))
                 .AddAccessorListAccessors(
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
@@ -64,10 +65,12 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return classDeclaration.AddMembers(member);
         }
 
-        private AttributeListSyntax GetFieldAttributes(string fieldName)
+        private AttributeListSyntax GetFieldAttributes(GraphQLInputValueDefinition field)
         {
-            var attributeArguments = SyntaxFactory.SingletonSeparatedList(
-                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{fieldName}\"")));
+            var printer = new Printer();
+            var attributeArguments = SyntaxFactory.SeparatedList(new[] {
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{field.Name.Value}\"")),
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{printer.Print(field.Type)}\""))});
 
             var attribute = SyntaxFactory.Attribute(
                 SyntaxFactory.ParseName("GraphQLField"),

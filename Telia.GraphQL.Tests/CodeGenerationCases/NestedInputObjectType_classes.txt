@@ -7,28 +7,28 @@
     [GraphQLType("SomeInputObject")]
     public class SomeInputObject
     {
-        [GraphQLField("foo")]
+        [GraphQLField("foo", "String!")]
         public virtual String Foo
         {
             get;
             set;
         }
 
-        [GraphQLField("bar")]
+        [GraphQLField("bar", "String")]
         public virtual String Bar
         {
             get;
             set;
         }
 
-        [GraphQLField("faz")]
+        [GraphQLField("faz", "Int")]
         public virtual Int32? Faz
         {
             get;
             set;
         }
 
-        [GraphQLField("zap")]
+        [GraphQLField("zap", "Int!")]
         public virtual Int32 Zap
         {
             get;
@@ -39,35 +39,35 @@
     [GraphQLType("SomeOtherInputObject")]
     public class SomeOtherInputObject
     {
-        [GraphQLField("foo")]
+        [GraphQLField("foo", "String!")]
         public virtual String Foo
         {
             get;
             set;
         }
 
-        [GraphQLField("bar")]
+        [GraphQLField("bar", "String")]
         public virtual String Bar
         {
             get;
             set;
         }
 
-        [GraphQLField("faz")]
+        [GraphQLField("faz", "Int")]
         public virtual Int32? Faz
         {
             get;
             set;
         }
 
-        [GraphQLField("zap")]
+        [GraphQLField("zap", "SomeInputObject!")]
         public virtual SomeInputObject Zap
         {
             get;
             set;
         }
 
-        [GraphQLField("nested")]
+        [GraphQLField("nested", "SomeOtherInputObject")]
         public virtual SomeOtherInputObject Nested
         {
             get;

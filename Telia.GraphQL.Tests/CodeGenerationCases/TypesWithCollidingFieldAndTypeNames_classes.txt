@@ -18,7 +18,7 @@
     [GraphQLType("SomeInputType")]
     public class SomeInputType
     {
-        [GraphQLField("someInputType")]
+        [GraphQLField("someInputType", "Int")]
         public virtual Int32? SomeInputTypeField
         {
             get;
