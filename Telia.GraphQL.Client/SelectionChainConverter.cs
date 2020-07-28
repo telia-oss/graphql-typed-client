@@ -17,21 +17,33 @@ namespace Telia.GraphQL.Client
             _context = context;
         }
 
-        public GraphQLSelectionSet Convert(IEnumerable<ChainLink> links)
+        public GraphQLSelectionSet Convert(
+            IEnumerable<ChainLink> links,
+            List<GraphQLVariableDefinition> variableDefinitions,
+            Dictionary<string, object> variableValues)
         {
             var index = 0;
 
-            return Convert(links, string.Empty, ref index);
+            return Convert(links, variableDefinitions, variableValues, string.Empty, ref index);
         }
 
-        public GraphQLSelectionSet Convert(IEnumerable<ChainLink> links, string path)
+        public GraphQLSelectionSet Convert(
+            IEnumerable<ChainLink> links,
+            List<GraphQLVariableDefinition> variableDefinitions,
+            Dictionary<string, object> variableValues,
+            string path)
         {
             var index = 0;
 
-            return Convert(links, path, ref index);
+            return Convert(links, variableDefinitions, variableValues, path, ref index);
         }
 
-        public GraphQLSelectionSet Convert(IEnumerable<ChainLink> links, string path, ref int index)
+        public GraphQLSelectionSet Convert(
+            IEnumerable<ChainLink> links,
+            List<GraphQLVariableDefinition> variableDefinitions,
+            Dictionary<string, object> variableValues,
+            string path,
+            ref int index)
         {
             if (links == null) return null;
 
@@ -66,9 +78,9 @@ namespace Telia.GraphQL.Client
                             {
                                 Value = arg.Name
                             },
-                            Value = GetGraphQLValueFrom(arg.Value)
+                            Value = CreateVariable(arg, variableDefinitions, variableValues)
                         }).ToList(),
-                        SelectionSet = this.Convert(link.Children, alias == null ? path : $"{path}.{alias.Value}")
+                        SelectionSet = this.Convert(link.Children, variableDefinitions, variableValues, alias == null ? path : $"{path}.{alias.Value}")
                     });
                 }
                 else
@@ -82,7 +94,7 @@ namespace Telia.GraphQL.Client
                                 Value = link.Fragment
                             }
                         },
-                        SelectionSet = this.Convert(link.Children, path, ref index)
+                        SelectionSet = this.Convert(link.Children, variableDefinitions, variableValues, path, ref index)
                     });
                 }
             }
@@ -101,111 +113,37 @@ namespace Telia.GraphQL.Client
             };
         }
 
-        private GraphQLValue GetGraphQLValueFrom(object value)
+        private GraphQLValue CreateVariable(ChainLinkArgument argument, List<GraphQLVariableDefinition> variableDefinitions, Dictionary<string, object> variableValues)
         {
-            if (value == null)
+            if (argument.Value == null)
             {
                 return new GraphQLScalarValue(ASTNodeKind.NullValue);
             }
 
-            if (value is Int32)
+            var variableName = $"var_{variableDefinitions.Count}";
+            var variable = new GraphQLVariable()
             {
-                return new GraphQLScalarValue(ASTNodeKind.IntValue)
+                Name = new GraphQLName()
                 {
-                    Value = value.ToString()
-                };
-            }
-
-            if (value is string)
-            {
-                return new GraphQLScalarValue(ASTNodeKind.StringValue)
-                {
-                    Value = value as string
-                };
-            }
-
-            if (value is Single)
-            {
-                return new GraphQLScalarValue(ASTNodeKind.FloatValue)
-                {
-                    Value = value.ToString()
-                };
-            }
-
-            if (value is Boolean)
-            {
-                return new GraphQLScalarValue(ASTNodeKind.BooleanValue)
-                {
-                    Value = value.ToString().ToLower()
-                };
-            }
-
-            if (value is Boolean)
-            {
-                return new GraphQLScalarValue(ASTNodeKind.BooleanValue)
-                {
-                    Value = value.ToString().ToLower()
-                };
-            }
-
-            if (value is DateTime)
-            {
-                return new GraphQLScalarValue(ASTNodeKind.StringValue)
-                {
-                    Value = ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ssZ")
-                };
-            }
-
-            if (value is InputObjectValue)
-            {
-                return CreateGraphQLObject((InputObjectValue)value);
-            }
-
-            var valueType = value.GetType();
-
-			if (valueType.IsEnum)
-			{
-				return new GraphQLScalarValue(ASTNodeKind.EnumValue)
-				{
-					Value = value.ToString()
-				};
-			}
-
-            if (valueType.IsEnumerable())
-            {
-                var enumerable = value as IEnumerable;
-                var listValues = new List<GraphQLValue>();
-
-                foreach (var member in enumerable)
-                {
-                    listValues.Add(this.GetGraphQLValueFrom(member));
+                    Value = variableName
                 }
-
-                return new GraphQLListValue(ASTNodeKind.ListValue)
-                {
-                    Values = listValues
-                };
-            }
-
-            throw new NotImplementedException($"Type {value.GetType()} is not implemented");
-        }
-
-        private GraphQLValue CreateGraphQLObject(InputObjectValue value)
-        {
-            var valueType = value.ObjectType;
-            var properties = valueType.GetProperties();
-
-            return new GraphQLObjectValue()
-            {
-                Fields = value.Select(prop => new GraphQLObjectField
-                {
-                    Name = new GraphQLName
-                    {
-                        Value = properties.Single(e => e.Name == prop.Key).GetCustomAttribute<GraphQLFieldAttribute>(true).Name
-                    },
-                    Value = this.GetGraphQLValueFrom(prop.Value)
-                }).ToList()
             };
+
+            variableDefinitions.Add(new GraphQLVariableDefinition()
+            {
+                Variable = variable,
+                Type = new GraphQLNamedType()
+                {
+                    Name = new GraphQLName()
+                    {
+                        Value = argument.GraphQLType
+                    }
+                }
+            });
+
+            variableValues.Add(variableName, argument.Value);
+
+            return variable;
         }
     }
 }

@@ -7,112 +7,112 @@
     [GraphQLType("Query")]
     public class Query
     {
-        [GraphQLField("date")]
+        [GraphQLField("date", "AWSDate!")]
         public virtual DateTime Date
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableDate")]
+        [GraphQLField("nullableDate", "AWSDate")]
         public virtual DateTime? NullableDate
         {
             get;
             set;
         }
 
-        [GraphQLField("time")]
+        [GraphQLField("time", "AWSTime!")]
         public virtual TimeSpan Time
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableTime")]
+        [GraphQLField("nullableTime", "AWSTime")]
         public virtual TimeSpan? NullableTime
         {
             get;
             set;
         }
 
-        [GraphQLField("timestamp")]
+        [GraphQLField("timestamp", "AWSTimestamp!")]
         public virtual Int32 Timestamp
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableTimestamp")]
+        [GraphQLField("nullableTimestamp", "AWSTimestamp")]
         public virtual Int32? NullableTimestamp
         {
             get;
             set;
         }
 
-        [GraphQLField("email")]
+        [GraphQLField("email", "AWSEmail!")]
         public virtual String Email
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableEmail")]
+        [GraphQLField("nullableEmail", "AWSEmail")]
         public virtual String NullableEmail
         {
             get;
             set;
         }
 
-        [GraphQLField("json")]
+        [GraphQLField("json", "AWSJSON!")]
         public virtual String Json
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableJson")]
+        [GraphQLField("nullableJson", "AWSJSON")]
         public virtual String NullableJson
         {
             get;
             set;
         }
 
-        [GraphQLField("url")]
+        [GraphQLField("url", "AWSURL!")]
         public virtual String Url
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableUrl")]
+        [GraphQLField("nullableUrl", "AWSURL")]
         public virtual String NullableUrl
         {
             get;
             set;
         }
 
-        [GraphQLField("phone")]
+        [GraphQLField("phone", "AWSPhone!")]
         public virtual String Phone
         {
             get;
             set;
         }
 
-        [GraphQLField("nullablePhone")]
+        [GraphQLField("nullablePhone", "AWSPhone")]
         public virtual String NullablePhone
         {
             get;
             set;
         }
 
-        [GraphQLField("ipAddress")]
+        [GraphQLField("ipAddress", "AWSIPAddress!")]
         public virtual String IpAddress
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableIPAddress")]
+        [GraphQLField("nullableIPAddress", "AWSIPAddress")]
         public virtual String NullableIpAddress
         {
             get;

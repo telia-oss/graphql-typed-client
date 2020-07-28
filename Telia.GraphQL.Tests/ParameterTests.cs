@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using NSubstitute;
 using System;
+using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL.Tests
 {
@@ -13,7 +14,7 @@ namespace Telia.GraphQL.Tests
         public void Query_ArrayAsParameter_CreatesCorrectQuery()
         {
 			var networkClient = Substitute.For<INetworkClient>();
-			networkClient.Send(Arg.Any<string>()).Returns("{ field0: 1 }");
+			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ field0: 1 }");
 
 			var client = new TestClient(networkClient);
             var param = new int[] { 1, 2, 3 };
@@ -23,17 +24,19 @@ namespace Telia.GraphQL.Tests
                 test = e.ArrayAsParameter(param)
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: test(arr: [1, 2, 3])
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: [Int!]!) {
+  field0: test(arr: $var_0)
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual(param, query.Variables["var_0"]);
         }
 
         [Test]
         public void Query_ListAsParameter_CreatesCorrectQuery()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 1 }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ field0: 1 }");
 
             var client = new TestClient(networkClient);
             var param = new List<int> { 1, 2, 3 };
@@ -43,17 +46,19 @@ namespace Telia.GraphQL.Tests
                 test = e.ArrayAsParameter(param)
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: test(arr: [1, 2, 3])
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: [Int!]!) {
+  field0: test(arr: $var_0)
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual(param, query.Variables["var_0"]);
         }
 
         [Test]
         public void Query_NonNullToNullParameter_CreatesCorrectQuery()
         {
             var networkClient = Substitute.For<INetworkClient>();
-            networkClient.Send(Arg.Any<string>()).Returns("{ field0: 1 }");
+            networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ field0: 1 }");
 
             var client = new TestClient(networkClient);
 
@@ -62,10 +67,12 @@ namespace Telia.GraphQL.Tests
                 test = e.NullableParam(1)
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: test(arr: 1)
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: Int) {
+  field0: test(arr: $var_0)
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual(1, query.Variables["var_0"]);
         }
 
         [Test]
@@ -82,10 +89,12 @@ namespace Telia.GraphQL.Tests
                 test = e.DateTimeParam(dateTime)
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: test(dt: ""2008-09-22T14:01:54Z"")
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: DateTime!) {
+  field0: test(dt: $var_0)
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual(dateTime, query.Variables["var_0"]);
         }
 
         [Test]
@@ -103,10 +112,13 @@ namespace Telia.GraphQL.Tests
                 })
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: test(input: {faz: 42, bar: null})
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: SomeInputObject) {
+  field0: test(input: $var_0)
   __typename
-}", query);
+}", query.Query);
+
+            Assert.AreEqual(42, ((SomeInputObject)query.Variables["var_0"]).Faz);
+            Assert.AreEqual(null, ((SomeInputObject)query.Variables["var_0"]).Bar);
         }
 
         [Test]
@@ -125,48 +137,48 @@ namespace Telia.GraphQL.Tests
                 })
             });
 
-            AssertUtils.AreEqualIgnoreLineBreaks(@"{
-  field0: test(input: [{faz: 42, bar: null}, {faz: 12, bar: ""test""}])
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: [SomeInputObject]) {
+  field0: test(input: $var_0)
   __typename
-}", query);
+}", query.Query);
         }
 
         private class TestQuery
         {
-            [GraphQLField("test")]
-            public int ArrayAsParameter(IEnumerable<int> arr) { throw new InvalidOperationException(); }
+            [GraphQLField("test", "Int!")]
+            public int ArrayAsParameter([GraphQLArgument("arr", "[Int!]!")] IEnumerable<int> arr) { throw new InvalidOperationException(); }
 
-            [GraphQLField("test")]
-            public int NullableParam(int? arr) { throw new InvalidOperationException(); }
+            [GraphQLField("test", "Int!")]
+            public int NullableParam([GraphQLArgument("arr", "Int")] int? arr) { throw new InvalidOperationException(); }
 
-            [GraphQLField("test")]
-            public int DateTimeParam(DateTime dt) { throw new InvalidOperationException(); }
+            [GraphQLField("test", "Int!")]
+            public int DateTimeParam([GraphQLArgument("dt", "DateTime!")] DateTime dt) { throw new InvalidOperationException(); }
 
-            [GraphQLField("test")]
-            public int InputObj(SomeInputObject input) { throw new InvalidOperationException(); }
+            [GraphQLField("test", "Int!")]
+            public int InputObj([GraphQLArgument("input", "SomeInputObject")] SomeInputObject input) { throw new InvalidOperationException(); }
 
-            [GraphQLField("test")]
-            public int ArrayOfInputObj(IEnumerable<SomeInputObject> input) { throw new InvalidOperationException(); }
+            [GraphQLField("test", "Int!")]
+            public int ArrayOfInputObj([GraphQLArgument("input", "[SomeInputObject]")] IEnumerable<SomeInputObject> input) { throw new InvalidOperationException(); }
         }
 
         [GraphQLType("SomeInputObject")]
         public class SomeInputObject
         {
-            [GraphQLField("foo")]
+            [GraphQLField("foo", "String")]
             public virtual String Foo
             {
                 get;
                 set;
             }
 
-            [GraphQLField("bar")]
+            [GraphQLField("bar", "String")]
             public virtual String Bar
             {
                 get;
                 set;
             }
 
-            [GraphQLField("faz")]
+            [GraphQLField("faz", "Int")]
             public virtual Int32? Faz
             {
                 get;

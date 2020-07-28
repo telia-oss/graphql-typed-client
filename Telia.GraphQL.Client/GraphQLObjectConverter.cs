@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -11,7 +9,7 @@ namespace Telia.GraphQL.Client
 {
     public class GraphQLObjectConverter : JsonConverter
     {
-        public override bool CanWrite => false;
+        public override bool CanWrite => true;
 
         public override bool CanRead => true;
 
@@ -25,7 +23,22 @@ namespace Telia.GraphQL.Client
         public override void WriteJson(JsonWriter writer,
             object value, JsonSerializer serializer)
         {
-            throw new InvalidOperationException("Use default serialization.");
+            var type = value.GetType();
+            var jo = new JObject();
+
+            foreach (PropertyInfo prop in type.GetProperties())
+            {
+                var fieldAttribute = prop.GetCustomAttribute<GraphQLFieldAttribute>();
+                if (prop.CanRead && fieldAttribute != null)
+                {
+                    var propVal = prop.GetValue(value, null);
+                    if (propVal != null)
+                    {
+                        jo.Add(fieldAttribute.Name, JToken.FromObject(propVal, serializer));
+                    }
+                }
+            }
+            jo.WriteTo(writer);
         }
 
         public override object ReadJson(JsonReader reader,

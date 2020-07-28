@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GraphQLParser;
 
 namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 {
@@ -168,10 +169,12 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
         }
 
-        protected AttributeListSyntax GetFieldAttributes(string fieldName)
+        protected AttributeListSyntax GetFieldAttributes(GraphQLFieldDefinition field)
         {
-            var attributeArguments = SyntaxFactory.SingletonSeparatedList(
-                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{fieldName}\"")));
+            var printer = new Printer();
+            var attributeArguments = SyntaxFactory.SeparatedList(new[] {
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{field.Name.Value}\"")),
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{printer.Print(field.Type)}\""))});
 
             var attribute = SyntaxFactory.Attribute(
                 SyntaxFactory.ParseName("GraphQLField"),
@@ -267,7 +270,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 
                 var parameter = SyntaxFactory.Parameter(
                     SyntaxFactory.Identifier(name))
-                    .AddAttributeLists(GetArgumentAttributes(arg.Name.Value))
+                    .AddAttributeLists(GetArgumentAttributes(arg))
                     .WithType(parameterType);
 
                 // Defaults can't be used in expression so we'll skip them for now
@@ -287,10 +290,12 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return parameterList;
         }
 
-        protected AttributeListSyntax GetArgumentAttributes(string fieldName)
+        protected AttributeListSyntax GetArgumentAttributes(GraphQLInputValueDefinition inputValueDefinition)
         {
-            var attributeArguments = SyntaxFactory.SingletonSeparatedList(
-                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{fieldName}\"")));
+            var printer = new Printer();
+            var attributeArguments = SyntaxFactory.SeparatedList(new [] {
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{inputValueDefinition.Name.Value}\"")),
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{printer.Print(inputValueDefinition.Type)}\""))});
 
             var attribute = SyntaxFactory.Attribute(
                 SyntaxFactory.ParseName("GraphQLArgument"),

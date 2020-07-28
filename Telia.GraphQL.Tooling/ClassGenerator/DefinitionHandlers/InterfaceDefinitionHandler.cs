@@ -86,7 +86,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             string methodName)
         {
             var method = SyntaxFactory.MethodDeclaration(returnType, methodName)
-                .AddAttributeLists(GetFieldAttributes(field.Name.Value))
+                .AddAttributeLists(GetFieldAttributes(field))
                 .WithParameterList(this.GetParameterList(field.Arguments, allDefinitions))
                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
 
@@ -102,7 +102,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             var member = SyntaxFactory.PropertyDeclaration(
                 this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions),
                 PickFieldName(interfaceTypeName, field, allDefinitions))
-                .AddAttributeLists(GetFieldAttributes(field.Name.Value))
+                .AddAttributeLists(GetFieldAttributes(field))
                 .AddAccessorListAccessors(
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),

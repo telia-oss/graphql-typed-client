@@ -2,6 +2,7 @@
 using Telia.GraphQL.Client;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using GraphQLParser.AST;
 
@@ -42,12 +43,12 @@ namespace Telia.GraphQL
             return new GraphQLResult<TReturn>(value, response.Errors);
         }
 
-        public virtual string CreateQuery<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
+        public virtual GraphQLQueryInfo CreateQuery<TReturn>(Expression<Func<TQueryType, TReturn>> selector)
         {
             return this.CreateOperation(selector, new QueryContext(), OperationType.Query);
         }
 
-        internal string CreateOperation<TType, TReturn>(
+        internal GraphQLQueryInfo CreateOperation<TType, TReturn>(
             Expression<Func<TType, TReturn>> selector,
             QueryContext context,
             OperationType operationType)
@@ -65,12 +66,21 @@ namespace Telia.GraphQL
             context.SelectionChains.AddRange(expanded);
 
             var groupedChains = grouping.Group();
+            var variableDefinitions = new List<GraphQLVariableDefinition>();
+            var variableValues = new Dictionary<string, object>();
 
-            return astPrinter.Print(new GraphQLOperationDefinition
+            var query = astPrinter.Print(new GraphQLOperationDefinition
             {
+                Name = new GraphQLName()
+                {
+                    Value = operationType.ToString()
+                },
+                VariableDefinitions = variableDefinitions,
                 Operation = operationType,
-                SelectionSet = converter.Convert(groupedChains)
+                SelectionSet = converter.Convert(groupedChains, variableDefinitions, variableValues)
             });
+
+            return new GraphQLQueryInfo(query, variableValues);
         }
     }
 
@@ -84,7 +94,7 @@ namespace Telia.GraphQL
         {
         }
 
-        public virtual string CreateMutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
+        public virtual GraphQLQueryInfo CreateMutation<TReturn>(Expression<Func<TMutationType, TReturn>> selector)
         {
             return this.CreateOperation(selector, new QueryContext(), OperationType.Mutation);
         }

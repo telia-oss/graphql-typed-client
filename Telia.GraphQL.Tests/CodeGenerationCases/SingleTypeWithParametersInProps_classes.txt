@@ -15,176 +15,176 @@
     [GraphQLType("Query")]
     public class Query
     {
-        [GraphQLField("singleNullableIntParam")]
+        [GraphQLField("singleNullableIntParam", "Int")]
         public virtual Int32? SingleNullableIntParam()
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableIntParam")]
-        public virtual Int32? SingleNullableIntParam([GraphQLArgument("param")] Int32? param)
+        [GraphQLField("singleNullableIntParam", "Int")]
+        public virtual Int32? SingleNullableIntParam([GraphQLArgument("param", "Int")] Int32? param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableIntParamWithDefaultValue")]
+        [GraphQLField("singleNullableIntParamWithDefaultValue", "Int")]
         public virtual Int32? SingleNullableIntParamWithDefaultValue()
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableIntParamWithDefaultValue")]
-        public virtual Int32? SingleNullableIntParamWithDefaultValue([GraphQLArgument("param")] Int32? param)
+        [GraphQLField("singleNullableIntParamWithDefaultValue", "Int")]
+        public virtual Int32? SingleNullableIntParamWithDefaultValue([GraphQLArgument("param", "Int")] Int32? param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableFloatParamWithDefaultValue")]
+        [GraphQLField("singleNullableFloatParamWithDefaultValue", "Float")]
         public virtual Single? SingleNullableFloatParamWithDefaultValue()
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableFloatParamWithDefaultValue")]
-        public virtual Single? SingleNullableFloatParamWithDefaultValue([GraphQLArgument("param")] Single? param)
+        [GraphQLField("singleNullableFloatParamWithDefaultValue", "Float")]
+        public virtual Single? SingleNullableFloatParamWithDefaultValue([GraphQLArgument("param", "Float")] Single? param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableStringParamWithDefaultValue")]
+        [GraphQLField("singleNullableStringParamWithDefaultValue", "String")]
         public virtual String SingleNullableStringParamWithDefaultValue()
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableStringParamWithDefaultValue")]
-        public virtual String SingleNullableStringParamWithDefaultValue([GraphQLArgument("param")] String param)
+        [GraphQLField("singleNullableStringParamWithDefaultValue", "String")]
+        public virtual String SingleNullableStringParamWithDefaultValue([GraphQLArgument("param", "String")] String param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableOtherParamWithDefaultValue")]
+        [GraphQLField("singleNullableOtherParamWithDefaultValue", "SomeOtherType")]
         public virtual SomeOtherType SingleNullableOtherParamWithDefaultValue()
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableOtherParamWithDefaultValue")]
-        public virtual SomeOtherType SingleNullableOtherParamWithDefaultValue([GraphQLArgument("param")] SomeOtherType param)
+        [GraphQLField("singleNullableOtherParamWithDefaultValue", "SomeOtherType")]
+        public virtual SomeOtherType SingleNullableOtherParamWithDefaultValue([GraphQLArgument("param", "SomeOtherType")] SomeOtherType param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("booleanParamSetToTrue")]
+        [GraphQLField("booleanParamSetToTrue", "Boolean")]
         public virtual Boolean? BooleanParamSetToTrue()
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("booleanParamSetToTrue")]
-        public virtual Boolean? BooleanParamSetToTrue([GraphQLArgument("param")] Boolean? param)
+        [GraphQLField("booleanParamSetToTrue", "Boolean")]
+        public virtual Boolean? BooleanParamSetToTrue([GraphQLArgument("param", "Boolean")] Boolean? param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("booleanParamSetToFalse")]
+        [GraphQLField("booleanParamSetToFalse", "Boolean")]
         public virtual Boolean? BooleanParamSetToFalse()
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("booleanParamSetToFalse")]
-        public virtual Boolean? BooleanParamSetToFalse([GraphQLArgument("param")] Boolean? param)
+        [GraphQLField("booleanParamSetToFalse", "Boolean")]
+        public virtual Boolean? BooleanParamSetToFalse([GraphQLArgument("param", "Boolean")] Boolean? param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableEnumValue")]
+        [GraphQLField("singleNullableEnumValue", "TestEnum")]
         public virtual TestEnum? SingleNullableEnumValue()
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNullableEnumValue")]
-        public virtual TestEnum? SingleNullableEnumValue([GraphQLArgument("param")] TestEnum? param)
+        [GraphQLField("singleNullableEnumValue", "TestEnum")]
+        public virtual TestEnum? SingleNullableEnumValue([GraphQLArgument("param", "TestEnum")] TestEnum? param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("singleNonNullableEnumValue")]
-        public virtual TestEnum SingleNonNullableEnumValue([GraphQLArgument("param")] TestEnum param)
+        [GraphQLField("singleNonNullableEnumValue", "TestEnum!")]
+        public virtual TestEnum SingleNonNullableEnumValue([GraphQLArgument("param", "TestEnum!")] TestEnum param)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParameters")]
-        public virtual Boolean? MultipleParameters([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10)
+        [GraphQLField("multipleParameters", "Boolean")]
+        public virtual Boolean? MultipleParameters([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParameters")]
-        public virtual Boolean? MultipleParameters([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1)
+        [GraphQLField("multipleParameters", "Boolean")]
+        public virtual Boolean? MultipleParameters([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParameters")]
-        public virtual Boolean? MultipleParameters([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1, [GraphQLArgument("param3")] Single? param3)
+        [GraphQLField("multipleParameters", "Boolean")]
+        public virtual Boolean? MultipleParameters([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1, [GraphQLArgument("param3", "Float")] Single? param3)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParameters")]
-        public virtual Boolean? MultipleParameters([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1, [GraphQLArgument("param3")] Single? param3, [GraphQLArgument("param5")] String param5)
+        [GraphQLField("multipleParameters", "Boolean")]
+        public virtual Boolean? MultipleParameters([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1, [GraphQLArgument("param3", "Float")] Single? param3, [GraphQLArgument("param5", "String")] String param5)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParameters")]
-        public virtual Boolean? MultipleParameters([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1, [GraphQLArgument("param3")] Single? param3, [GraphQLArgument("param5")] String param5, [GraphQLArgument("param7")] Boolean? param7)
+        [GraphQLField("multipleParameters", "Boolean")]
+        public virtual Boolean? MultipleParameters([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1, [GraphQLArgument("param3", "Float")] Single? param3, [GraphQLArgument("param5", "String")] String param5, [GraphQLArgument("param7", "Boolean")] Boolean? param7)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParameters")]
-        public virtual Boolean? MultipleParameters([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1, [GraphQLArgument("param3")] Single? param3, [GraphQLArgument("param5")] String param5, [GraphQLArgument("param7")] Boolean? param7, [GraphQLArgument("param9")] TestEnum? param9)
+        [GraphQLField("multipleParameters", "Boolean")]
+        public virtual Boolean? MultipleParameters([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1, [GraphQLArgument("param3", "Float")] Single? param3, [GraphQLArgument("param5", "String")] String param5, [GraphQLArgument("param7", "Boolean")] Boolean? param7, [GraphQLArgument("param9", "TestEnum")] TestEnum? param9)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParametersWithDefaultValues")]
-        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10)
+        [GraphQLField("multipleParametersWithDefaultValues", "Boolean")]
+        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParametersWithDefaultValues")]
-        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1)
+        [GraphQLField("multipleParametersWithDefaultValues", "Boolean")]
+        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParametersWithDefaultValues")]
-        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1, [GraphQLArgument("param3")] Single? param3)
+        [GraphQLField("multipleParametersWithDefaultValues", "Boolean")]
+        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1, [GraphQLArgument("param3", "Float")] Single? param3)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParametersWithDefaultValues")]
-        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1, [GraphQLArgument("param3")] Single? param3, [GraphQLArgument("param5")] String param5)
+        [GraphQLField("multipleParametersWithDefaultValues", "Boolean")]
+        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1, [GraphQLArgument("param3", "Float")] Single? param3, [GraphQLArgument("param5", "String")] String param5)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParametersWithDefaultValues")]
-        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1, [GraphQLArgument("param3")] Single? param3, [GraphQLArgument("param5")] String param5, [GraphQLArgument("param7")] Boolean? param7)
+        [GraphQLField("multipleParametersWithDefaultValues", "Boolean")]
+        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1, [GraphQLArgument("param3", "Float")] Single? param3, [GraphQLArgument("param5", "String")] String param5, [GraphQLArgument("param7", "Boolean")] Boolean? param7)
         {
             throw new InvalidOperationException();
         }
 
-        [GraphQLField("multipleParametersWithDefaultValues")]
-        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2")] Int32 param2, [GraphQLArgument("param4")] Single param4, [GraphQLArgument("param6")] String param6, [GraphQLArgument("param8")] Boolean param8, [GraphQLArgument("param10")] TestEnum param10, [GraphQLArgument("param1")] Int32? param1, [GraphQLArgument("param3")] Single? param3, [GraphQLArgument("param5")] String param5, [GraphQLArgument("param7")] Boolean? param7, [GraphQLArgument("param9")] TestEnum? param9)
+        [GraphQLField("multipleParametersWithDefaultValues", "Boolean")]
+        public virtual Boolean? MultipleParametersWithDefaultValues([GraphQLArgument("param2", "Int!")] Int32 param2, [GraphQLArgument("param4", "Float!")] Single param4, [GraphQLArgument("param6", "String!")] String param6, [GraphQLArgument("param8", "Boolean!")] Boolean param8, [GraphQLArgument("param10", "TestEnum!")] TestEnum param10, [GraphQLArgument("param1", "Int")] Int32? param1, [GraphQLArgument("param3", "Float")] Single? param3, [GraphQLArgument("param5", "String")] String param5, [GraphQLArgument("param7", "Boolean")] Boolean? param7, [GraphQLArgument("param9", "TestEnum")] TestEnum? param9)
         {
             throw new InvalidOperationException();
         }

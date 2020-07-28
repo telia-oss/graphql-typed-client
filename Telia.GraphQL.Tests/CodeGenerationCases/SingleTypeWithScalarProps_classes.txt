@@ -7,126 +7,126 @@
     [GraphQLType("Query")]
     public class Query
     {
-        [GraphQLField("nonNullableInteger")]
+        [GraphQLField("nonNullableInteger", "Int!")]
         public virtual Int32 NonNullableInteger
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableInteger")]
+        [GraphQLField("nullableInteger", "Int")]
         public virtual Int32? NullableInteger
         {
             get;
             set;
         }
 
-        [GraphQLField("nonNullableId")]
+        [GraphQLField("nonNullableId", "ID!")]
         public virtual String NonNullableId
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableId")]
+        [GraphQLField("nullableId", "ID")]
         public virtual String NullableId
         {
             get;
             set;
         }
 
-        [GraphQLField("nonNullableFloat")]
+        [GraphQLField("nonNullableFloat", "Float!")]
         public virtual Single NonNullableFloat
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableFloat")]
+        [GraphQLField("nullableFloat", "Float")]
         public virtual Single? NullableFloat
         {
             get;
             set;
         }
 
-        [GraphQLField("nonNullableBoolean")]
+        [GraphQLField("nonNullableBoolean", "Boolean!")]
         public virtual Boolean NonNullableBoolean
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableBoolean")]
+        [GraphQLField("nullableBoolean", "Boolean")]
         public virtual Boolean? NullableBoolean
         {
             get;
             set;
         }
 
-        [GraphQLField("nonNullableString")]
+        [GraphQLField("nonNullableString", "String!")]
         public virtual String NonNullableString
         {
             get;
             set;
         }
 
-        [GraphQLField("nullableString")]
+        [GraphQLField("nullableString", "String")]
         public virtual String NullableString
         {
             get;
             set;
         }
 
-        [GraphQLField("listOfNullableStrings")]
+        [GraphQLField("listOfNullableStrings", "[String]")]
         public virtual IEnumerable<String> ListOfNullableStrings
         {
             get;
             set;
         }
 
-        [GraphQLField("listOfNonNullableString")]
+        [GraphQLField("listOfNonNullableString", "[String!]")]
         public virtual IEnumerable<String> ListOfNonNullableString
         {
             get;
             set;
         }
 
-        [GraphQLField("listOfNullableIntegers")]
+        [GraphQLField("listOfNullableIntegers", "[Int]")]
         public virtual IEnumerable<Int32? > ListOfNullableIntegers
         {
             get;
             set;
         }
 
-        [GraphQLField("listOfNonNullableIntegers")]
+        [GraphQLField("listOfNonNullableIntegers", "[Int!]")]
         public virtual IEnumerable<Int32> ListOfNonNullableIntegers
         {
             get;
             set;
         }
 
-        [GraphQLField("nonNullableListOfNullableIntegers")]
+        [GraphQLField("nonNullableListOfNullableIntegers", "[Int]!")]
         public virtual IEnumerable<Int32? > NonNullableListOfNullableIntegers
         {
             get;
             set;
         }
 
-        [GraphQLField("nonNullableListOfNonNullableIntegers")]
+        [GraphQLField("nonNullableListOfNonNullableIntegers", "[Int!]!")]
         public virtual IEnumerable<Int32> NonNullableListOfNonNullableIntegers
         {
             get;
             set;
         }
 
-        [GraphQLField("nonNullableListOfNullableString")]
+        [GraphQLField("nonNullableListOfNullableString", "[String]!")]
         public virtual IEnumerable<String> NonNullableListOfNullableString
         {
             get;
             set;
         }
 
-        [GraphQLField("nonNullableListOfNonNullableString")]
+        [GraphQLField("nonNullableListOfNonNullableString", "[String!]!")]
         public virtual IEnumerable<String> NonNullableListOfNonNullableString
         {
             get;

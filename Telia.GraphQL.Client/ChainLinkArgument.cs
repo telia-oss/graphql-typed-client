@@ -8,6 +8,7 @@ namespace Telia.GraphQL.Client
     {
         public string Name { get; set; }
         public object Value { get; set; }
+        public string GraphQLType { get; set; }
 
         public override bool Equals(object obj)
         {
