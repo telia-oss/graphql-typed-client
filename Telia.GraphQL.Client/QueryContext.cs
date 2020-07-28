@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 
 namespace Telia.GraphQL.Client
@@ -11,6 +12,7 @@ namespace Telia.GraphQL.Client
 		private Dictionary<ParameterExpression, List<ChainLink>> parameterToChain;
 		private Dictionary<Expression, string> bindings;
 		private Dictionary<ParameterExpression, JToken> parameterToModelBindings;
+        private Dictionary<Expression, object> argumentCache; 
 
 		internal List<CallChain> SelectionChains { get; private set; }
 
@@ -20,7 +22,33 @@ namespace Telia.GraphQL.Client
 			this.SelectionChains = new List<CallChain>();
 			this.parameterToModelBindings = new Dictionary<ParameterExpression, JToken>();
 			this.bindings = new Dictionary<Expression, string>();
+			this.argumentCache = new Dictionary<Expression, object>();
 		}
+
+        internal object GetValueFromArgumentExpression(string argumentName, Expression argument)
+        {
+            if (argumentCache.ContainsKey(argument))
+            {
+                return argumentCache[argument];
+            }
+
+            try
+            {
+                var result = Expression.Lambda(argument).Compile().DynamicInvoke();
+
+                argumentCache.Add(argument, result);
+
+                return result;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw new ArgumentEvaluationException(argumentName, ex.InnerException);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentEvaluationException(argumentName, ex);
+            }
+        }
 
 		internal void AddParameterToCallChainBinding(ParameterExpression parameterExpression, List<ChainLink> chainPrefix)
 		{
@@ -95,5 +123,5 @@ namespace Telia.GraphQL.Client
 
 			return visitor.UsedParameters.FirstOrDefault();
 		}
-	}
+    }
 }

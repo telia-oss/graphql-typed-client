@@ -142,7 +142,7 @@ namespace Telia.GraphQL.Client
 				chain.Add(new ChainLink(
 					attribute.Name,
                     true,
-					this.GetArgumentsFromMethod(methodCallExpression)));
+					this.GetArgumentsFromMethod(methodCallExpression, context)));
 
 				current = methodCallExpression.Object;
 			}
@@ -159,7 +159,7 @@ namespace Telia.GraphQL.Client
 			return chainPrefix;
 		}
 
-		private IEnumerable<ChainLinkArgument> GetArgumentsFromMethod(MethodCallExpression methodCallExpression)
+		private IEnumerable<ChainLinkArgument> GetArgumentsFromMethod(MethodCallExpression methodCallExpression, QueryContext context)
         {
             var methodParameters = methodCallExpression.Method.GetParameters();
             var arguments = methodCallExpression.Arguments;
@@ -179,25 +179,9 @@ namespace Telia.GraphQL.Client
                 yield return new ChainLinkArgument()
                 {
                     Name = nameAttribute.Name,
-                    Value = GetValueFromArgumentExpression(parameter.Name, argument),
+                    Value = context.GetValueFromArgumentExpression(parameter.Name, argument),
                     GraphQLType  = nameAttribute.GraphQLType
                 };
-            }
-        }
-
-        private object GetValueFromArgumentExpression(string argumentName, Expression argument)
-        {
-            try
-            {
-                return Expression.Lambda(argument).Compile().DynamicInvoke();
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw new ArgumentEvaluationException(argumentName, ex.InnerException);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentEvaluationException(argumentName, ex);
             }
         }
     }
