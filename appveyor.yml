@@ -9,7 +9,7 @@ assembly_info:
   assembly_informational_version: '{version}'
 environment:
   marketplacepublishtoken:
-    secure: xCM8+dV2BwpXo0fYuON1ag2n5dLZHLrC7ak5wPWTor4dG7DQi89/ya0woibcu1FV3bkJkBpvbgfbfqG3ezy1pA==
+    secure: JYg/B7OanltuZBh0LcLnAnWacGboU3C5s0asiIANkwYxHXYA5+XFcD8v7Ji/dsHZP49lpgSvYUSDYxAztpHtFw==
   matrix:
   - {}
 before_build:
@@ -26,7 +26,7 @@ build:
 deploy:
 - provider: NuGet
   api_key:
-    secure: JJqRZ9VeHydrhH6UroXmGo0RaZsTvDs6txFts2F+bnEVVVbir6iPVHyIsHaos1BL
+    secure: jybNeBQRLT8IpnQQiYJGG2ay9ZFONaHOqQ5qSmPhYgbjGOLo7QKXCvlaTPty83Yl
   on:
     branch: master
 after_deploy:

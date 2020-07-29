@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json.Converters;
 using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL
@@ -20,13 +21,15 @@ namespace Telia.GraphQL
         {
             var request = (HttpWebRequest)WebRequest.Create(this.endpoint);
 
-            var data = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(query, new JsonSerializerSettings()
+            var json = JsonConvert.SerializeObject(query, new JsonSerializerSettings()
             {
                 Converters = new List<JsonConverter>()
                 {
-                    new GraphQLObjectConverter()
+                    new GraphQLObjectConverter(),
+                    new StringEnumConverter()
                 }
-            }));
+            });
+            var data = Encoding.ASCII.GetBytes(json);
 
             request.Method = "POST";
             request.ContentType = "application/json";
