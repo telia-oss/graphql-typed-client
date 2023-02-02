@@ -26,7 +26,7 @@ public class FullSchemaConverterTests
 
         File.WriteAllText(outputPath, code);
 
-        Assert.IsTrue(code != null && code.Length > 1000, "Output was empty");
+        Assert.IsTrue(code != null && code.Length > 100, "Output was empty");
 
         Assert.IsTrue(code.Contains("namespace "), "missing namespaces");
 

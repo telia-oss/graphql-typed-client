@@ -4,8 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SystemLibrary.Common.Net;
 
-using Telia.GraphQL;
-using Telia.GraphQL.Schema;
+using Test;
 
 namespace Telia.LinqToGraphQL.Tests
 {
@@ -16,25 +15,15 @@ namespace Telia.LinqToGraphQL.Tests
         public void Test()
         {
             var expected = Assemblies.GetEmbeddedResource("Assets", "expected-country-korea.json");
+
             var countryCode = "KR";
 
-            var countryQueries = new CountryQueries();
+            var queries = new CountryQueries();
 
-            var query = countryQueries.GetCountryCode(countryCode);
+            var query = queries.GetCountry(countryCode);
 
             IsEqualIgnoreWhitespace(query, expected);
         }
-
-        public class CountryQueries : GraphQLQuery<Query>
-        {
-            public string GetCountryCode(string countryCode)
-            {
-                var filter = new CountryFilter() { CountryCode = countryCode };
-
-                return Query(x => x.CountriesCollection(filter).CountryCode);
-            }
-        }
-
 
         void IsEqualIgnoreWhitespace(string text, string expected)
         {
@@ -60,7 +49,8 @@ namespace Telia.LinqToGraphQL.Tests
                 .Replace(": ", ":")
                 .Replace("{ ", "{")
                 .Replace(" }", "}")
-                .Replace(", ", ",");
+                .Replace(", ", ",")
+                .Replace("? >", "?>");
 
             return sb.ToString();
         }

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telia.LinqToGraphQL", "Teli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telia.LinqToGraphQL.Tests", "Telia.LinqToGraphQL.Tests\Telia.LinqToGraphQL.Tests.csproj", "{903FC7F1-8D61-4DBE-AFB3-42501DF08820}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telia.LinqToGraphQL.Benchmarks", "Telia.LinqToGraphQL.Benchmarks\Telia.LinqToGraphQL.Benchmarks.csproj", "{876464DE-159C-416F-8C56-F61338214A44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|Any CPU = Release|Any CPU
@@ -16,6 +18,8 @@ Global
 		{794782F0-6869-4277-8717-C5B8F9919D3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{903FC7F1-8D61-4DBE-AFB3-42501DF08820}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{903FC7F1-8D61-4DBE-AFB3-42501DF08820}.Release|Any CPU.Build.0 = Release|Any CPU
+		{876464DE-159C-416F-8C56-F61338214A44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{876464DE-159C-416F-8C56-F61338214A44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
