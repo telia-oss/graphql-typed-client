@@ -1,0 +1,18 @@
+﻿type Query {
+  date: AWSDate!
+  nullableDate: AWSDate
+  time: AWSTime!
+  nullableTime: AWSTime
+  timestamp: AWSTimestamp!
+  nullableTimestamp: AWSTimestamp
+  email: AWSEmail!
+  nullableEmail: AWSEmail
+  json: AWSJSON!
+  nullableJson: AWSJSON
+  url: AWSURL!
+  nullableUrl: AWSURL
+  phone: AWSPhone!
+  nullablePhone: AWSPhone
+  ipAddress: AWSIPAddress!
+  nullableIPAddress: AWSIPAddress
+}

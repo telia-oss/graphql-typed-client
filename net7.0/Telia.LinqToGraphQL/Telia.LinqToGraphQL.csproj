@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Configurations>Release</Configurations>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="GraphQL-Parser" Version="8.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="System.Text.Json" Version="6.0.7" />
+    <PackageReference Include="SystemLibrary.Common.Net" Version="6.6.1.4" />
+  </ItemGroup>
+</Project>

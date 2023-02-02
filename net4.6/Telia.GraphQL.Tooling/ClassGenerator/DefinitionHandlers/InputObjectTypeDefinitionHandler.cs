@@ -1,0 +1,95 @@
+﻿using System.Collections.Generic;
+using GraphQLParser;
+using GraphQLParser.AST;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Telia.GraphQL.Client;
+
+namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
+{
+    public class InputObjectTypeDefinitionHandler : TypeDefinitionHandlerBase
+    {
+        GeneratorConfig config;
+
+        public InputObjectTypeDefinitionHandler(GeneratorConfig config) : base(config)
+        {
+            this.config = config;
+        }
+
+        public override NamespaceDeclarationSyntax Handle(ASTNode definition, NamespaceDeclarationSyntax @namespace, IEnumerable<ASTNode> allDefinitions)
+        {
+            var objectTypeDefinition = definition as GraphQLInputObjectTypeDefinition;
+
+            var classDeclaration = SyntaxFactory.ClassDeclaration(objectTypeDefinition.Name.Value)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddAttributeLists(GetTypeAttributes(objectTypeDefinition.Name.Value));
+
+            classDeclaration = this.CreateProperties(
+                objectTypeDefinition.Name.Value, classDeclaration, objectTypeDefinition.Fields, allDefinitions);
+
+            return @namespace.AddMembers(classDeclaration);
+        }
+
+        ClassDeclarationSyntax CreateProperties(
+            string objectTypeName,
+            ClassDeclarationSyntax classDeclaration,
+            IEnumerable<GraphQLInputValueDefinition> fields,
+            IEnumerable<ASTNode> allDefinitions)
+        {
+            foreach (var field in fields)
+            {
+                classDeclaration = GenerateProperty(objectTypeName, classDeclaration, field, allDefinitions);
+            }
+
+            return classDeclaration;
+        }
+
+        ClassDeclarationSyntax GenerateProperty(
+            string objectTypeName,
+            ClassDeclarationSyntax classDeclaration,
+            GraphQLInputValueDefinition field,
+            IEnumerable<ASTNode> allDefinitions)
+        {
+            var member = SyntaxFactory.PropertyDeclaration(
+                this.GetCSharpTypeFromGraphQLType(field.Type, allDefinitions),
+                PickFieldName(objectTypeName, field))
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.VirtualKeyword))
+                .AddAttributeLists(GetFieldAttributes(field))
+                .AddAccessorListAccessors(
+                    SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
+                    SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration)
+                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+
+            return classDeclaration.AddMembers(member);
+        }
+
+        AttributeListSyntax GetFieldAttributes(GraphQLInputValueDefinition field)
+        {
+            var printer = new Printer();
+            var attributeArguments = SyntaxFactory.SeparatedList(new[] {
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{field.Name.Value}\"")),
+                SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"\"{printer.Print(field.Type)}\""))});
+
+            var attribute = SyntaxFactory.Attribute(
+                SyntaxFactory.ParseName("GraphQLField"),
+                SyntaxFactory.AttributeArgumentList(attributeArguments));
+
+            return SyntaxFactory.AttributeList(
+                SyntaxFactory.SingletonSeparatedList(attribute));
+        }
+
+        string PickFieldName(string objectTypeName, GraphQLInputValueDefinition field)
+        {
+            var name = Utils.ToPascalCase(field.Name.Value);
+
+            if (objectTypeName == name)
+            {
+                return $"{name}Field";
+            }
+
+            return name;
+        }
+    }
+}
