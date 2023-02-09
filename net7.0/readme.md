@@ -1,4 +1,4 @@
-![](media/icon.png)
+![](net4.6/media/icon.png)
 
 # C# expressions to GraphQL to C# Models
 
@@ -7,9 +7,6 @@ A typesafe way to create graphql queries from C# expressions
 > Looking for the nuget package on the .NET Framework version? It's here: [![NuGet Badge](https://buildstats.info/nuget/Telia.GraphQL.Client)](https://www.nuget.org/packages/Telia.GraphQL.Client/)
 
 ## Example
-
-![](media/example.png)
-
 Assume schema
 
 ```csharp
