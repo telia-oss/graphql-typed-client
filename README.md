@@ -10,6 +10,6 @@
 #### .NET 7 version aka: Linq (Expressions) to GraphQl to C# Models
 - The .net 7 version is in folder "net7.0"
 - No Vsix nor Nuget package, simply clone, build, copy the output dll file for reuse
-- Have no dependency on HttpClient anymore, it's up to the callee how request is sent
+- Dependency on HttClient is also freed, its up to the callee how request are sent
 
 
