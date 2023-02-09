@@ -10,8 +10,11 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Telia.LinqToGraphQL">
-      <HintPath>..\Telia.LinqToGraphQL\bin\Release\net7.0\Telia.LinqToGraphQL.dll</HintPath>
+    <Folder Include="DependencyBin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Telia.LinqToGraphQLToModel">
+      <HintPath>DependencyBin\Telia.LinqToGraphQLToModel.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

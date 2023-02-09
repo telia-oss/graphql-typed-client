@@ -1,0 +1,5 @@
+﻿{
+    "query": "query Query{field0:test __typename}",
+    "variables": {
+    }
+}

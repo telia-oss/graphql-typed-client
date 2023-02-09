@@ -20,7 +20,7 @@ public class SchemaConverterTests
     {
         var graphqlFileData = GetTextFromFile(schemaFileName);
 
-        var converter = new ShemaConverter();
+        var converter = new SchemaConverter();
 
         return converter.Convert<GraphQLTypeAttribute, GraphQLFieldAttribute, GraphQLArgumentAttribute>(graphqlFileData, "Test");
     }

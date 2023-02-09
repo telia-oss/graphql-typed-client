@@ -1,0 +1,8 @@
+﻿{
+  "query": "query Query($var_0: CountryFilter) { field0: countryCollection(filter: $var_0){ field0: countries { countryCode name operators{name price __typename} __typename } __typename } __typename }",
+  "variables": {
+    "var_0": {
+      "countryCode": "KR"
+    }
+  }
+}

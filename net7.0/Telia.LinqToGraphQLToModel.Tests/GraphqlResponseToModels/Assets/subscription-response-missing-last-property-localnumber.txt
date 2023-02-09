@@ -1,0 +1,129 @@
+﻿{
+  "data": {
+    "field0": [
+      {
+        "field0": "PRIVATE",
+        "field1": {
+          "countryCode": "47",
+          "__typename": "PhoneNumber"
+        },
+        "field2": {
+          "field0": "Mr",
+          "field1": "Test",
+          "field2": "mr.test@telia.no",
+          "field3": {
+            "field0": "47",
+            "__typename": "PhoneNumber"
+          },
+          "__typename": "ProductUser"
+        },
+        "field3": {
+          "field0": {
+            "field0": "Mr",
+            "field1": "Test",
+            "field2": "mr.test@telia.no",
+            "field3": {
+              "countryCode": "47",
+              "__typename": "PhoneNumber"
+            },
+            "__typename": "ProductUser"
+          },
+          "__typename": "Customer"
+        },
+        "field4": [
+          "PRODUCT_USER",
+          "INVOICE_PAYER",
+          "LEGAL_OWNER"
+        ],
+        "field5": "2020-12-01",
+        "field6": 0,
+        "field7": "MBB4G_100GB_PRIV_3",
+        "field8": null,
+        "field9": null,
+        "__typename": "SubscriptionData"
+      },
+      {
+        "field0": "PRIVATE",
+        "field1": {
+          "countryCode": "47",
+          "__typename": "PhoneNumber"
+        },
+        "field2": {
+          "field0": "Mr",
+          "field1": "Test",
+          "field2": "mr.test@telia.no",
+          "field3": {
+            "field0": "47",
+            "field1": "90012345",
+            "__typename": "PhoneNumber"
+          },
+          "__typename": "ProductUser"
+        },
+        "field3": {
+          "field0": {
+            "field0": "Mr",
+            "field1": "Test",
+            "field2": "mr.test@telia.no",
+            "field3": {
+              "countryCode": "47",
+              "__typename": "PhoneNumber"
+            },
+            "__typename": "ProductUser"
+          },
+          "__typename": "Customer"
+        },
+        "field4": [
+          "PRODUCT_USER",
+          "LEGAL_OWNER"
+        ],
+        "field5": "2020-10-15",
+        "field6": 0,
+        "field7": "TELIA_MOBIL_X_NORMAL",
+        "field8": null,
+        "field9": null,
+        "__typename": "SubscriptionData"
+      },
+      {
+        "field0": "PRIVATE",
+        "field1": {
+          "countryCode": "47",
+          "__typename": "PhoneNumber"
+        },
+        "field2": {
+          "field0": "Mr 2",
+          "field1": "Test 2",
+          "field2": "mr.test2@telia.no",
+          "field3": {
+            "field0": "47",
+            "field1": "90012345",
+            "__typename": "PhoneNumber"
+          },
+          "__typename": "ProductUser"
+        },
+        "field3": {
+          "field0": {
+            "field0": "Mr",
+            "field1": "Test",
+            "field2": "mr.test@telia.no",
+            "field3": {
+              "countryCode": "47",
+              "__typename": "PhoneNumber"
+            },
+            "__typename": "ProductUser"
+          },
+          "__typename": "Customer"
+        },
+        "field4": [
+          "LEGAL_OWNER"
+        ],
+        "field5": "2020-09-21",
+        "field6": 0,
+        "field7": "TELIA_MOBIL_15GB",
+        "field8": null,
+        "field9": null,
+        "__typename": "SubscriptionData"
+      }
+    ],
+    "__typename": "Query"
+  }
+}

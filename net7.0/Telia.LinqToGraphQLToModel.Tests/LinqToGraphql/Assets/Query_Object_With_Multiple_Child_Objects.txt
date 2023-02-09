@@ -1,0 +1,22 @@
+﻿{
+    "query": "query Query {
+      field0: complex{
+        field0: test
+        field1: complex{
+          field0: complex{
+            field0: test
+            __typename
+          }
+          field1: simple{
+            field0: test
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }",
+    "variables": {
+    }
+}

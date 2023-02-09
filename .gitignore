@@ -6,6 +6,9 @@ dist/
 
 App_Data/
 TestResults/
+**/*Artifacts/results/
+*report-github.md
+
 
 **/*.graphql
 **/Output.cs

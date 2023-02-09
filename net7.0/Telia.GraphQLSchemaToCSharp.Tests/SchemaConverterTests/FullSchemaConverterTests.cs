@@ -12,10 +12,18 @@ public class FullSchemaConverterTests
     [TestMethod]
     public void Convert_Simple_Schema_To_Models_Success()
     {
-        //NOTE: File is not pushed to github, find the proper repository and copy paste it to the "_LocalTestFiles" folder
+        /*
+            NOTE: .graphql file is not pushed to github
+            Simply use your own instead
+            
+            NOTE 2: .graphql file should be of some size
+            So attributes like GraphQlArgument, Fields, Type etc are all used, to bypass the poor mans tests below
+
+            NOTE 3: verify final output by recompiling this very project after 'test run', it will then recompile with the output file
+         */
         var graphqlFileData = Assemblies.GetEmbeddedResource("_LocalTestFiles", "Models.graphql");
 
-        var converter = new ShemaConverter();
+        var converter = new SchemaConverter();
 
         var code = converter.Convert<GraphQLTypeAttribute, GraphQLFieldAttribute, GraphQLArgumentAttribute>(graphqlFileData, "Test");
 
