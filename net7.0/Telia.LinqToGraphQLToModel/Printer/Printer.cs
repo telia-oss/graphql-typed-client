@@ -10,7 +10,7 @@ public class Printer
 {
     /// <summary>
     /// TODO: This uses our "own old" printer instead of the AST Printer/SDL Printer from GraphQLParser as that gave errors, so stopped trying, but should update to it
-    /// - Could optimize with stringbuilder and spans, it only uses strings over and over
+    /// - Could optimize with stringbuilder and spans ("latest features"), compared to "ROM" object of ours
     /// </summary>
     public string Print(ASTNode node)
     {
