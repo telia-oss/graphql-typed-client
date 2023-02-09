@@ -31,9 +31,9 @@ namespace Telia.GraphQL.Tooling
     [ComVisible(true)]
     public abstract class BaseCodeGeneratorWithSite : BaseCodeGenerator, VSOLE.IObjectWithSite
     {
-        object site = null;
-        CodeDomProvider codeDomProvider = null;
-        ServiceProvider serviceProvider = null;
+        private object site = null;
+        private CodeDomProvider codeDomProvider = null;
+        private ServiceProvider serviceProvider = null;
 
         #region IObjectWithSite Members
 
@@ -77,7 +77,7 @@ namespace Telia.GraphQL.Tooling
         /// <summary>
         /// Demand-creates a ServiceProvider
         /// </summary>
-        ServiceProvider SiteServiceProvider
+        private ServiceProvider SiteServiceProvider
         {
             get
             {

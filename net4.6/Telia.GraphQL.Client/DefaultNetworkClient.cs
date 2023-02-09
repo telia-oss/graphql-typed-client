@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Text;
-
-using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-
 using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL
 {
-    public class DefaultNetworkClient
+    public class DefaultNetworkClient : INetworkClient
     {
-        string endpoint;
+        private string endpoint;
 
         public DefaultNetworkClient(string endpoint)
         {

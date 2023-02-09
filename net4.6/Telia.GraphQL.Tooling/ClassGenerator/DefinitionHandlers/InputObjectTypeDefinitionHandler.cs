@@ -9,7 +9,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
 {
     public class InputObjectTypeDefinitionHandler : TypeDefinitionHandlerBase
     {
-        GeneratorConfig config;
+        private GeneratorConfig config;
 
         public InputObjectTypeDefinitionHandler(GeneratorConfig config) : base(config)
         {
@@ -30,7 +30,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return @namespace.AddMembers(classDeclaration);
         }
 
-        ClassDeclarationSyntax CreateProperties(
+        private ClassDeclarationSyntax CreateProperties(
             string objectTypeName,
             ClassDeclarationSyntax classDeclaration,
             IEnumerable<GraphQLInputValueDefinition> fields,
@@ -44,7 +44,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return classDeclaration;
         }
 
-        ClassDeclarationSyntax GenerateProperty(
+        private ClassDeclarationSyntax GenerateProperty(
             string objectTypeName,
             ClassDeclarationSyntax classDeclaration,
             GraphQLInputValueDefinition field,
@@ -65,7 +65,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return classDeclaration.AddMembers(member);
         }
 
-        AttributeListSyntax GetFieldAttributes(GraphQLInputValueDefinition field)
+        private AttributeListSyntax GetFieldAttributes(GraphQLInputValueDefinition field)
         {
             var printer = new Printer();
             var attributeArguments = SyntaxFactory.SeparatedList(new[] {
@@ -80,7 +80,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
                 SyntaxFactory.SingletonSeparatedList(attribute));
         }
 
-        string PickFieldName(string objectTypeName, GraphQLInputValueDefinition field)
+        private string PickFieldName(string objectTypeName, GraphQLInputValueDefinition field)
         {
             var name = Utils.ToPascalCase(field.Name.Value);
 

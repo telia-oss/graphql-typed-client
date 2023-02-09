@@ -11,13 +11,13 @@ namespace Telia.GraphQL.Client
 {
     public class GraphQLInterfaceConverter : GraphQLObjectConverter
     {
-        static readonly IDictionary<string, IDictionary<string, Type>> typeBindings = new ConcurrentDictionary<string, IDictionary<string, Type>>();
+        private static readonly IDictionary<string, IDictionary<string, Type>> typeBindings = new ConcurrentDictionary<string, IDictionary<string, Type>>();
 
         public override bool CanWrite => false;
 
         public override bool CanRead => true;
 
-        Type queryType;
+        private readonly Type queryType;
 
         public GraphQLInterfaceConverter(Type queryType)
         {
@@ -26,7 +26,7 @@ namespace Telia.GraphQL.Client
             this.queryType = queryType;
         }
 
-        static void EnsureCachedTypes(Type queryType)
+        private static void EnsureCachedTypes(Type queryType)
         {
             var fullQueryName = queryType.FullName;
             if (typeBindings.ContainsKey(fullQueryName))

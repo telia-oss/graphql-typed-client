@@ -42,7 +42,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return @namespace.AddMembers(classDeclaration);
         }
 
-        ClassDeclarationSyntax CreateProperties(
+        private ClassDeclarationSyntax CreateProperties(
             GraphQLObjectTypeDefinition objectType,
             ClassDeclarationSyntax classDeclaration,
             IEnumerable<GraphQLFieldDefinition> fields,
@@ -63,7 +63,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return classDeclaration;
         }
 
-        ClassDeclarationSyntax GenerateMethod(
+        private ClassDeclarationSyntax GenerateMethod(
             GraphQLObjectTypeDefinition objectType,
             ClassDeclarationSyntax classDeclaration,
             GraphQLFieldDefinition field,
@@ -90,7 +90,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return classDeclaration;
         }
 
-        ClassDeclarationSyntax CreateMethod(
+        private ClassDeclarationSyntax CreateMethod(
             ClassDeclarationSyntax classDeclaration,
             GraphQLFieldDefinition field,
             IEnumerable<ASTNode> allDefinitions,
@@ -108,7 +108,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return classDeclaration.AddMembers(method);
         }
 
-        BlockSyntax GetEmptyBody()
+        private BlockSyntax GetEmptyBody()
         {
             var throwException = SyntaxFactory.ThrowStatement(
                     SyntaxFactory.InvocationExpression(
@@ -117,7 +117,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return SyntaxFactory.Block(throwException);
         }
 
-        ClassDeclarationSyntax GenerateProperty(
+        private ClassDeclarationSyntax GenerateProperty(
             GraphQLObjectTypeDefinition objectType,
             ClassDeclarationSyntax classDeclaration,
             GraphQLFieldDefinition field,
@@ -138,7 +138,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return classDeclaration.AddMembers(member);
         }
 
-        string PickFieldName(GraphQLObjectTypeDefinition objectType, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
+        private string PickFieldName(GraphQLObjectTypeDefinition objectType, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
         {
             var implementedInterfaceDefinitions = allDefinitions
                 .Where(def => def.Kind == ASTNodeKind.InterfaceTypeDefinition)

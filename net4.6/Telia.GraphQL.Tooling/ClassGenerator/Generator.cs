@@ -1,24 +1,23 @@
-﻿using System.Collections.Generic;
-
-using GraphQLParser;
+﻿using GraphQLParser;
 using GraphQLParser.AST;
-
+using Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-using Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers;
+using System.Collections.Generic;
 
 namespace Telia.GraphQL.Tooling.CodeGenerator
 {
     public class Generator
     {
-        Parser graphQLParser;
-        IDictionary<ASTNodeKind, IDefinitionHandler> handlers;
+        private readonly Parser graphQLParser;
+        private readonly GeneratorConfig config;
+        private readonly IDictionary<ASTNodeKind, IDefinitionHandler> handlers;
 
         public Generator(GeneratorConfig config)
         {
             this.graphQLParser = new Parser(new Lexer());
+            this.config = config;
             this.handlers = new Dictionary<ASTNodeKind, IDefinitionHandler>
             {
                 { ASTNodeKind.ObjectTypeDefinition, new ObjectTypeDefinitionHandler(config) },
@@ -45,7 +44,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator
                 .ToFullString();
         }
 
-        NamespaceDeclarationSyntax GenerateTypeDefinitions(
+        private NamespaceDeclarationSyntax GenerateTypeDefinitions(
             IEnumerable<ASTNode> definitions, NamespaceDeclarationSyntax @namespace)
         {
             foreach (var definition in definitions)
@@ -59,7 +58,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator
             return @namespace;
         }
 
-        NamespaceDeclarationSyntax GenerateNamespace(string schemaName)
+        private NamespaceDeclarationSyntax GenerateNamespace(string schemaName)
         {
             var namespaceName = SyntaxFactory.ParseName(schemaName);
             var @namespace = SyntaxFactory.NamespaceDeclaration(namespaceName).NormalizeWhitespace();

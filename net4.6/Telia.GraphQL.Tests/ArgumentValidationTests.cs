@@ -12,31 +12,31 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_InputFailingOnNull_ThrowsAppropriateError()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             SomeInputObject input = null;
 
-            var exception = Assert.Throws<Exception>(() => client.Query(e => e.Test(input.Test)));
+            var exception = Assert.Throws<ArgumentEvaluationException>(() => client.Query(e => e.Test(input.Test)));
 
             Assert.AreEqual("Evaluating argument \"input\" failed. See inner exception for details.", exception.Message);
             Assert.AreEqual("Object reference not set to an instance of an object.", exception.InnerException.Message);
         }
 
-        class SomeInputObject
+        private class SomeInputObject
         {
             public string Test { get; set; }
         }
 
-        class TestQuery
+        private class TestQuery
         {
             [GraphQLField("test", "Int!")]
             public int Test([GraphQLArgument("input", "String!")] string input) { throw new InvalidOperationException(); }
         }
         
-        class TestClient : GraphQLCLient<TestQuery>
+        private class TestClient : GraphQLCLient<TestQuery>
         {
-            public TestClient(DefaultNetworkClient client) : base(client)
+            public TestClient(INetworkClient client) : base(client)
             {
             }
         }

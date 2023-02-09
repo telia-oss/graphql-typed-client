@@ -301,7 +301,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
         public void Query_RequestForSimpleScalar_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
@@ -317,7 +317,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_RequestForMultipleSimpleScalars_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
@@ -337,7 +337,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_NestedObject_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
@@ -363,7 +363,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_ComplexObject_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: 42, field1: { field0: 12, field1: { field0: { field0: 10 } } } } }");
 
@@ -386,7 +386,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_ComplexObjectNestedResult_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: 42, field1: { field0: 12, field1: { field0: { field0: 10 } } } } }");
 
@@ -415,7 +415,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_ComplexObjectNestedResult_HandlesNull()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: null, field1: null } }");
 
             var client = new TestClient(networkClient);
@@ -443,7 +443,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_RequestForScalarArray_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: { field0: [1, 2, 3] } } }");
 
@@ -460,7 +460,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_RequestForObjectArray_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: { field0: [{ field0: 1 }, { field0: 2 }] } } }");
 
@@ -482,7 +482,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_RequestForObjectArrayNested_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns("{ data: { field0: { field0: [{ field0: 1, field1: [{ field0: 2 }, { field0: 3 }] }] } } }");
 
@@ -508,7 +508,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequestForObjectArrayNestedOutsideContext_ReturnsCorrectData()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": {
   ""field0"": [
@@ -549,7 +549,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
         public void Query_RequestWithStringFormatting_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
@@ -565,7 +565,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_RequestWithStringConcattenation_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
@@ -581,7 +581,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_RequestWithBinaryOperationsAndMethodInvocation_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
@@ -597,7 +597,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_WithNestedSelectOutsideScope_ReturnsCorrectData()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": {
   ""field0"": [
@@ -625,7 +625,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_WithDataAndError_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns(@"{
 data: { field0: 42 },
@@ -656,7 +656,7 @@ errors: [
         [Test]
         public void Query_WithError_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns(@"{
 data: null,
@@ -688,7 +688,7 @@ errors: [
         [Test]
         public void Query_WithEnum_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": ""TEST2""
 } }");
@@ -706,7 +706,7 @@ errors: [
         [Test]
         public void Query_WithNestedEnum_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": { ""field0"": ""TEST2"" }
 } }");
@@ -724,7 +724,7 @@ errors: [
         [Test]
         public void Query_WithDate_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": ""2019-09-01T22:00:08.000Z""
 } }");
@@ -742,7 +742,7 @@ errors: [
         [Test]
         public void Query_WithOnlyDate_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": ""2019-09-01""
 } }");
@@ -760,7 +760,7 @@ errors: [
         [Test]
         public void Query_WithDateAsNull_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": null
 } }");
@@ -778,7 +778,7 @@ errors: [
         [Test]
         public void Query_WithTernaryOperator_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": ""2019-09-01T22:00:08.000Z""
 } }");
@@ -796,7 +796,7 @@ errors: [
         [Test]
         public void Query_WithMoreComplicatedTernaryOperator_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: {
 ""field0"": { ""field0"": { ""field0"": { ""field0"": { ""field0"": 1 }, ""field1"": { ""field0"": { ""field0"": ""2019-09-01T22:00:08.000Z"" } } } } } } }");
 
@@ -815,7 +815,7 @@ errors: [
         [Test]
         public void Query_WithDateTime_IsPossibleToParse()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ data: { ""field0"": ""2020-05-20T00:00:00.000"" } }");
 
             var client = new TestClient(networkClient);
@@ -831,7 +831,7 @@ errors: [
         [Test]
         public void Query_WithNestedSelects_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [{ ""field0"": [ { ""field0"": 42 } ] }] } } }");
 
             var client = new TestClient(networkClient);
@@ -847,7 +847,7 @@ errors: [
         [Test]
         public void Query_WithNestedSelectsWithParams_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [{ ""field0"": [ { ""field0"": 42 } ] }] } } }");
 
             var client = new TestClient(networkClient);
@@ -863,7 +863,7 @@ errors: [
         [Test]
         public void Query_WithFragment_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -886,7 +886,7 @@ errors: [
         [Test]
         public void Query_WithFragmentInsideSelect_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -915,7 +915,7 @@ errors: [
         [Test]
         public void Query_WithFragmentInsideSelectAndMultipleProperties_CreatesCorrectQueryThatDoesntCollideWithPropertyNames()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -948,7 +948,7 @@ errors: [
         [Test]
         public void Query_WithFragmentInsideSelectAndMultipleProperties_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": {
     ""field0"": [{
@@ -985,7 +985,7 @@ errors: [
         [Test]
         public void Query_WithFragment_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": ""TEST2"" } } }");
 
             var client = new TestClient(networkClient);
@@ -1001,7 +1001,7 @@ errors: [
         [Test]
         public void Query_WithFragmentInsideSelect_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { ""field0"": [ { ""field0"": { ""field0"": ""TEST2"",  ""field1"": ""42"",  ""field2"":  [1, 2, 3] } } ] } } }");
 
             var client = new TestClient(networkClient);
@@ -1021,7 +1021,7 @@ errors: [
         [Test]
         public void Query_WithSimpleObject_ShouldExpandSelectionListToFields()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -1044,7 +1044,7 @@ errors: [
         [Test]
         public void Query_WithSimpleObjectArray_ShouldExpandSelectionListToFields()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -1067,7 +1067,7 @@ errors: [
         [Test]
         public void Query_WithSimpleObject_ShouldGetCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": { 
   ""test"": 42,
   ""date"": ""11-11-2006"",
@@ -1090,7 +1090,7 @@ errors: [
         [Test]
         public void Query_WithSimpleObjectArray_ShouldGetCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": { ""field0"": [{ 
   ""test"": 42,
   ""date"": ""11-11-2006"",
@@ -1113,7 +1113,7 @@ errors: [
         [Test]
         public void Query_WithComplexObject_ShouldExpandSelectionListToFields()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -1152,7 +1152,7 @@ errors: [
         [Test]
         public void Query_WithComplexObject_ShouldReturnCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": {
     ""simpleInterface"": {
@@ -1210,7 +1210,7 @@ errors: [
         [Test]
         public void Query_WithComplexObjectThatIsNull_ShouldReturnCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": null
 } }");
@@ -1227,7 +1227,7 @@ errors: [
         [Test]
         public void Query_WithComplexObjectThatHasNullFields_ShouldReturnCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": {
     ""simpleInterface"": null,
@@ -1252,7 +1252,7 @@ errors: [
         [Test]
         public void Query_WithSimpleObjectArrayAndSelectMethod_ShouldExpandSelectionListToFields()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -1275,7 +1275,7 @@ errors: [
         [Test]
         public void Query_WithSimpleObjectArrayAndNestedSelectMethod_ShouldExpandSelectionListToFields()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -1304,7 +1304,7 @@ errors: [
         [Test]
         public void Query_WithSimpleObjectArrayAndMultipleNestedSelectMethod_ShouldExpandSelectionListToFields()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var query = client.CreateQuery(e => new
@@ -1360,7 +1360,7 @@ errors: [
         [Test]
         public void Query_WithSimpleObjectArrayAndMultipleNestedSelectMethod_ShouldParseDataCorrectly()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns(@"{ ""data"": {
   ""field0"": {
     ""field0"": [{
@@ -1410,14 +1410,14 @@ errors: [
         }
 
         [GraphQLType("TestEnum")]
-        enum TestEnum
+        private enum TestEnum
         {
             TEST1,
             TEST2
         }
 
         [GraphQLType("SimpleInterface")]
-        interface SimpleInterface
+        private interface SimpleInterface
         {
             [GraphQLField("test", "Int!")]
             int Test { get; set; }
@@ -1427,7 +1427,7 @@ errors: [
         }
 
         [GraphQLType("TestQuery")]
-        class TestQuery
+        private class TestQuery
         {
             [GraphQLField("simpleInterface", "SimpleInterface")]
             public SimpleInterface SimpleInterface { get; set; }
@@ -1455,7 +1455,7 @@ errors: [
         }
 
         [GraphQLType("SimpleObject")]
-        class SimpleObject : SimpleInterface
+        private class SimpleObject : SimpleInterface
         {
             [GraphQLField("test", "Int")]
             public int Test { get; set; }
@@ -1474,7 +1474,7 @@ errors: [
         }
 
         [GraphQLType("ComplexObject")]
-        class ComplexObject
+        private class ComplexObject
         {
             [GraphQLField("simpleInterface", "SimpleInterface")]
             public SimpleInterface SimpleInterface { get; set; }
@@ -1504,9 +1504,9 @@ errors: [
             public IEnumerable<ComplexObject> ComplexArrayWithParams([GraphQLArgument("param", "String")] string param) { throw new InvalidOperationException(); }
         }
 
-        class TestClient : GraphQLCLient<TestQuery>
+        private class TestClient : GraphQLCLient<TestQuery>
         {
-            public TestClient(DefaultNetworkClient client) : base(client)
+            public TestClient(INetworkClient client) : base(client)
             {
             }
         }

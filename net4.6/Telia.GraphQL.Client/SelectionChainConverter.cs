@@ -10,7 +10,7 @@ namespace Telia.GraphQL.Client
 {
     internal class SelectionChainConverter
     {
-        QueryContext _context;
+        private readonly QueryContext _context;
 
         public SelectionChainConverter(QueryContext context)
         {
@@ -113,7 +113,7 @@ namespace Telia.GraphQL.Client
             };
         }
 
-        GraphQLValue CreateVariable(ChainLinkArgument argument, List<GraphQLVariableDefinition> variableDefinitions, Dictionary<string, object> variableValues)
+        private GraphQLValue CreateVariable(ChainLinkArgument argument, List<GraphQLVariableDefinition> variableDefinitions, Dictionary<string, object> variableValues)
         {
             if (argument.Value == null)
             {

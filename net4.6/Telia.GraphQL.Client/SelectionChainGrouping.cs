@@ -5,7 +5,7 @@ namespace Telia.GraphQL.Client
 {
 	internal class SelectionChainGrouping
     {
-		QueryContext context;
+		private readonly QueryContext context;
 
 		public SelectionChainGrouping(QueryContext context)
 		{
@@ -33,7 +33,7 @@ namespace Telia.GraphQL.Client
             return rootLinks;
         }
 
-        ChainLink TryGroup(ChainLink part, List<ChainLink> groupedLink)
+        private ChainLink TryGroup(ChainLink part, List<ChainLink> groupedLink)
         {
             var existingLink = groupedLink.SingleOrDefault(e => e.Equals(part));
 

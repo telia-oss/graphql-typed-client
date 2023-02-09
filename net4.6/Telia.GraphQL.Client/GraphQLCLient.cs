@@ -1,26 +1,23 @@
-﻿using System;
+﻿using GraphQLParser;
+using Telia.GraphQL.Client;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-
-using GraphQLParser;
 using GraphQLParser.AST;
-
-using Newtonsoft.Json;
-
-using Telia.GraphQL.Client;
 
 namespace Telia.GraphQL
 {
     public abstract class GraphQLCLient<TQueryType>
     {
-        protected readonly DefaultNetworkClient client;
+        protected readonly INetworkClient client;
 
         public GraphQLCLient(string endpoint) : this(new DefaultNetworkClient(endpoint))
         {
 
         }
 
-        public GraphQLCLient(DefaultNetworkClient client)
+        public GraphQLCLient(INetworkClient client)
         {
             this.client = client;
         }
@@ -64,13 +61,11 @@ namespace Telia.GraphQL
             var expander = new SelectionChainExpander(context);
 
             visitor.Visit(selector);
-
             var expanded = expander.Expand();
 
             context.SelectionChains.AddRange(expanded);
 
             var groupedChains = grouping.Group();
-
             var variableDefinitions = new List<GraphQLVariableDefinition>();
             var variableValues = new Dictionary<string, object>();
 
@@ -95,7 +90,7 @@ namespace Telia.GraphQL
         {
         }
 
-        public GraphQLCLient(DefaultNetworkClient client) : base(client)
+        public GraphQLCLient(INetworkClient client) : base(client)
         {
         }
 

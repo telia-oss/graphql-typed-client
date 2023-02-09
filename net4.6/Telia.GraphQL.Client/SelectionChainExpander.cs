@@ -10,7 +10,7 @@ namespace Telia.GraphQL.Client
 {
 	internal class SelectionChainExpander
     {
-		QueryContext context;
+		private readonly QueryContext context;
 
 		public SelectionChainExpander(QueryContext context)
 		{

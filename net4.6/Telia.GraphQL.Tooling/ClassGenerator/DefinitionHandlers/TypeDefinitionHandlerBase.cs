@@ -13,7 +13,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
     {
         protected GeneratorConfig config;
 
-        static string[] ArgumentNameBlackList = new[]
+        private static string[] ArgumentNameBlackList = new[]
         {
             "abstract",
             "as",

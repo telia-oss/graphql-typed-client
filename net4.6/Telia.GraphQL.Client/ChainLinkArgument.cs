@@ -22,7 +22,7 @@ namespace Telia.GraphQL.Client
             return arg.Name == this.Name && this.ValuesAreTheSame(arg);
         }
 
-        bool ValuesAreTheSame(ChainLinkArgument arg)
+        private bool ValuesAreTheSame(ChainLinkArgument arg)
         {
             return JsonConvert.SerializeObject(arg.Value) == JsonConvert.SerializeObject(this.Value);
         }

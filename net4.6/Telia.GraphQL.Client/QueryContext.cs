@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 
 namespace Telia.GraphQL.Client
 {
 	internal class QueryContext
 	{
-		Dictionary<ParameterExpression, List<ChainLink>> parameterToChain;
-		Dictionary<Expression, string> bindings;
-		Dictionary<ParameterExpression, JToken> parameterToModelBindings;
-        Dictionary<Expression, object> argumentCache; 
+		private Dictionary<ParameterExpression, List<ChainLink>> parameterToChain;
+		private Dictionary<Expression, string> bindings;
+		private Dictionary<ParameterExpression, JToken> parameterToModelBindings;
+        private Dictionary<Expression, object> argumentCache; 
 
-		internal List<CallChain> SelectionChains { get; set; }
+		internal List<CallChain> SelectionChains { get; private set; }
 
 		public QueryContext()
 		{
@@ -40,9 +40,13 @@ namespace Telia.GraphQL.Client
 
                 return result;
             }
+            catch (TargetInvocationException ex)
+            {
+                throw new ArgumentEvaluationException(argumentName, ex.InnerException);
+            }
             catch (Exception ex)
             {
-				throw ex;
+                throw new ArgumentEvaluationException(argumentName, ex);
             }
         }
 
@@ -105,7 +109,7 @@ namespace Telia.GraphQL.Client
 			return this.parameterToModelBindings[param];
 		}
 
-		ParameterExpression GetParameterFrom(Expression node)
+		private ParameterExpression GetParameterFrom(Expression node)
 		{
 			var visitor = new ExtractParameterVisitor();
 

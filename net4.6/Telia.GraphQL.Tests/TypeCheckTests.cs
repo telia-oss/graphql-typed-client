@@ -14,7 +14,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_RequiredIntResultHasTrue_ConvertsValue()
         {
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: true } }");
 
 			var client = new TestClient(networkClient);
@@ -30,7 +30,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequiredIntResultHasFalse_ConvertsValue()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: false } }");
 
 			var client = new TestClient(networkClient);
@@ -46,7 +46,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequiredIntResultHasArray_ReturnsDefaultValue()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: [] } }");
 
 			var client = new TestClient(networkClient);
@@ -62,7 +62,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequiredIntResultHasObject_ReturnsDefaultValue()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: {} } }");
 
 			var client = new TestClient(networkClient);
@@ -78,7 +78,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequiredIntResultHasNull_ReturnsDefaultValue()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: null } }");
 
 			var client = new TestClient(networkClient);
@@ -94,7 +94,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequiredArrayResultHasInt_ReturnsNull()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 1 } }");
 
 			var client = new TestClient(networkClient);
@@ -110,7 +110,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequiredArrayOfIntsResultHasArrayOfObjects_ReturnsArrayOfDefaults()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: [{}, {}, {}] } }");
 
 			var client = new TestClient(networkClient);
@@ -128,7 +128,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequiredObjectResultHasInt_ReturnsNull()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 1 } }");
 
 			var client = new TestClient(networkClient);
@@ -144,7 +144,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_RequiredEnumResultHasString_ConvertsValue()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: \"ENUM_2\" } }");
 
 			var client = new TestClient(networkClient);
@@ -160,7 +160,7 @@ namespace Telia.GraphQL.Tests
 		[Test]
 		public void Query_NestedEnum_ConvertsValue()
 		{
-			var networkClient = Substitute.For<DefaultNetworkClient>();
+			var networkClient = Substitute.For<INetworkClient>();
 			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0:  { field0: \"ENUM_2\" } } }");
 
 			var client = new TestClient(networkClient);
@@ -176,7 +176,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_TimeSpan_ConvertsValue()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: \"12:30Z\" } }");
 
             var client = new TestClient(networkClient);
@@ -192,7 +192,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_TimeSpan2_ConvertsValue()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: \"12:30:24-07:00\" } }");
 
             var client = new TestClient(networkClient);
@@ -208,7 +208,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_TimeSpan3_ConvertsValue()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: \"12:30:24.500+05:30\" } }");
 
             var client = new TestClient(networkClient);
@@ -224,7 +224,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_FloatWithBigValue_ConvertsValue()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: { floatTest: 42949673666 } } }");
 
             var client = new TestClient(networkClient);
@@ -237,14 +237,14 @@ namespace Telia.GraphQL.Tests
             Assert.AreEqual(42949673666, result.Data.test.FloatTestField);
         }
 
-		enum TestEnum
+		private enum TestEnum
 		{
 			ENUM_1,
 			ENUM_2
 		}
 
         [GraphQLType("TestQuery")]
-		class TestQuery
+		private class TestQuery
         {
             [GraphQLField("test", "Int!")]
             public int Test { get; set; }
@@ -266,15 +266,15 @@ namespace Telia.GraphQL.Tests
 		}
 
 		[GraphQLType("TestObjectWithFloat")]
-        class TestObjectWithFloat
+        private class TestObjectWithFloat
         {
             [GraphQLField("floatTest", "Float")]
             public Single? FloatTestField { get; set; }
 		}
 
-        class TestClient : GraphQLCLient<TestQuery>
+        private class TestClient : GraphQLCLient<TestQuery>
         {
-            public TestClient(DefaultNetworkClient client) : base(client)
+            public TestClient(INetworkClient client) : base(client)
             {
             }
         }

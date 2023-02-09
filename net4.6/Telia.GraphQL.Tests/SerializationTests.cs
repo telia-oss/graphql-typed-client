@@ -15,7 +15,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_ArrayInputType_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
 
             var client = new TestClient(networkClient);
 
@@ -58,7 +58,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_ArrayInputTypeWithNull_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
 
             var client = new TestClient(networkClient);
 
@@ -98,7 +98,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_InputTypeWithNull_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
 
             var client = new TestClient(networkClient);
 
@@ -129,7 +129,7 @@ namespace Telia.GraphQL.Tests
         }
 
 
-        class TestQuery
+        private class TestQuery
         {
             [GraphQLField("test", "Int!")]
             public int InputObj([GraphQLArgument("input", "SomeInputObject")] SomeInputObject input) { throw new InvalidOperationException(); }
@@ -146,9 +146,9 @@ namespace Telia.GraphQL.Tests
             [GraphQLField("faz", "Int")] public virtual Int32? Faz { get; set; }
         }
 
-        class TestClient : GraphQLCLient<TestQuery>
+        private class TestClient : GraphQLCLient<TestQuery>
         {
-            public TestClient(DefaultNetworkClient client) : base(client)
+            public TestClient(INetworkClient client) : base(client)
             {
             }
         }

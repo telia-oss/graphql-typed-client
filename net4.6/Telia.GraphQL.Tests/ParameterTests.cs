@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-using NSubstitute;
-
+﻿using Telia.GraphQL.Client.Attributes;
 using NUnit.Framework;
-
+using System.Collections.Generic;
+using NSubstitute;
+using System;
 using Telia.GraphQL.Client;
-using Telia.GraphQL.Client.Attributes;
 
 namespace Telia.GraphQL.Tests
 {
@@ -16,30 +13,29 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_ArrayAsParameter_CreatesCorrectQuery()
         {
-//			var networkClient = Substitute.For<DefaultNetworkClient();
+			var networkClient = Substitute.For<INetworkClient>();
+			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ field0: 1 }");
 
-//			networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ field0: 1 }");
+			var client = new TestClient(networkClient);
+            var param = new int[] { 1, 2, 3 };
 
-//			var client = new TestClient(networkClient);
-//            var param = new int[] { 1, 2, 3 };
+            var query = client.CreateQuery(e => new
+            {
+                test = e.ArrayAsParameter(param)
+            });
 
-//            var query = client.CreateQuery(e => new
-//            {
-//                test = e.ArrayAsParameter(param)
-//            });
+            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: [Int!]!) {
+  field0: test(arr: $var_0)
+  __typename
+}", query.Query);
 
-//            AssertUtils.AreEqualIgnoreLineBreaks(@"query Query($var_0: [Int!]!) {
-//  field0: test(arr: $var_0)
-//  __typename
-//}", query.Query);
-
-//            Assert.AreEqual(param, query.Variables["var_0"]);
+            Assert.AreEqual(param, query.Variables["var_0"]);
         }
 
         [Test]
         public void Query_ListAsParameter_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ field0: 1 }");
 
             var client = new TestClient(networkClient);
@@ -61,7 +57,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_NonNullToNullParameter_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ field0: 1 }");
 
             var client = new TestClient(networkClient);
@@ -82,7 +78,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_DateTimeParameter_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
 
             var client = new TestClient(networkClient);
 
@@ -104,7 +100,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_InputType_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
 
             var client = new TestClient(networkClient);
 
@@ -128,7 +124,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Query_ArrayInputType_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
 
             var client = new TestClient(networkClient);
 
@@ -147,7 +143,7 @@ namespace Telia.GraphQL.Tests
 }", query.Query);
         }
 
-        class TestQuery
+        private class TestQuery
         {
             [GraphQLField("test", "Int!")]
             public int ArrayAsParameter([GraphQLArgument("arr", "[Int!]!")] IEnumerable<int> arr) { throw new InvalidOperationException(); }
@@ -190,9 +186,9 @@ namespace Telia.GraphQL.Tests
             }
         }
 
-        class TestClient : GraphQLCLient<TestQuery>
+        private class TestClient : GraphQLCLient<TestQuery>
         {
-            public TestClient(DefaultNetworkClient client) : base(client)
+            public TestClient(INetworkClient client) : base(client)
             {
             }
         }

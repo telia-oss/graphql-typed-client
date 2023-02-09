@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿using Telia.GraphQL.Client.Attributes;
 using NSubstitute;
-
 using NUnit.Framework;
-
+using System;
+using System.Collections.Generic;
 using Telia.GraphQL.Client;
-using Telia.GraphQL.Client.Attributes;
+using System.Linq;
 
 namespace Telia.GraphQL.Tests
 {
@@ -17,7 +14,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Mutation_RequestForSimpleScalar_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: 42 } }");
 
             var client = new TestClient(networkClient);
@@ -33,7 +30,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void CreateMutation_InputObjectWithSimpleScalars_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var mutation = client.CreateMutation(e => new
@@ -57,7 +54,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void CreateMutation_NestedInputObjectWith_CreatesCorrectQuery()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             var client = new TestClient(networkClient);
 
             var mutation = client.CreateMutation(e => new
@@ -85,7 +82,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Mutation_RequestForComplicatedObject_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>()).Returns("{ data: { field0: { field0: \"123\" } }}");
 
             var client = new TestClient(networkClient);
@@ -101,7 +98,7 @@ namespace Telia.GraphQL.Tests
         [Test]
         public void Mutation_WithDataAndError_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns(@"{
 data: { field0: { field0: ""123"" } },
@@ -132,7 +129,7 @@ errors: [
         [Test]
         public void Mutation_WithError_ReturnsCorrectData()
         {
-            var networkClient = Substitute.For<DefaultNetworkClient>();
+            var networkClient = Substitute.For<INetworkClient>();
             networkClient.Send(Arg.Any<GraphQLQueryInfo>())
                 .Returns(@"{
 data: null,
@@ -161,12 +158,12 @@ errors: [
             Assert.AreEqual("faa", data.Errors.First().Path.ElementAt(3));
         }
 
-        class TestQuery
+        private class TestQuery
         {
 
         }
 
-        class TestMutation
+        private class TestMutation
         {
             [GraphQLField("someMutation", "Int!")]
             public int SomeMutation()
@@ -187,7 +184,7 @@ errors: [
             }
         }
 
-        class SimpleObject
+        private class SimpleObject
         {
             [GraphQLField("test", "Int!")]
             public int Test { get; set; }
@@ -202,9 +199,9 @@ errors: [
             public SimpleObject Object { get; set; }
         }
 
-        class TestClient : GraphQLCLient<TestQuery, TestMutation>
+        private class TestClient : GraphQLCLient<TestQuery, TestMutation>
         {
-            public TestClient(DefaultNetworkClient client) : base(client)
+            public TestClient(INetworkClient client) : base(client)
             {
             }
         }

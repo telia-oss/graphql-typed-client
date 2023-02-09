@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Telia.GraphQL.Client
 {
-    internal class ResponseComposer<TQueryType, TReturn>
+	internal class ResponseComposer<TQueryType, TReturn>
 	{
-        Expression<Func<TQueryType, TReturn>> selector;
-		QueryContext context;
+        private Expression<Func<TQueryType, TReturn>> selector;
+		private QueryContext context;
 
 		public ResponseComposer(Expression<Func<TQueryType, TReturn>> selector, QueryContext context)
         {
@@ -28,11 +27,11 @@ namespace Telia.GraphQL.Client
             return substituted.Compile()(default);
         }
 
-        class ResponseComposerVisitor : ExpressionVisitor
+        private class ResponseComposerVisitor : ExpressionVisitor
         {
-            JToken response;
-			QueryContext context;
-			ParameterExpression lambdaParameter;
+            private JToken response;
+			private QueryContext context;
+			private ParameterExpression lambdaParameter;
 
 			public ResponseComposerVisitor(
                 JToken response,
@@ -79,7 +78,7 @@ namespace Telia.GraphQL.Client
                 return base.VisitMethodCall(node);
             }
 
-            Expression CreateInitializer(
+            private Expression CreateInitializer(
                 Type elementType,
                 object element,
                 Expression childExpression)
@@ -122,14 +121,14 @@ namespace Telia.GraphQL.Client
 				return base.VisitMember(node);
             }
 
-            object GetValueFrom(JToken model, string binding, Type returnType)
+            private object GetValueFrom(JToken model, string binding, Type returnType)
             {
                 var token = model.SelectToken(binding);
 
                 return GetValueFromToken(returnType, token);
             }
 
-            object GetValueFromToken(Type returnType, JToken token)
+            private object GetValueFromToken(Type returnType, JToken token)
             {
                 if (token == null)
                 {
@@ -154,9 +153,9 @@ namespace Telia.GraphQL.Client
                 return GetValueFromJValue(returnType, (JValue)token);
             }
 
-            object GetValueFromJObject(Type returnType, JObject token)
+            private object GetValueFromJObject(Type returnType, JObject token)
             {
-				if (!returnType.IsClass)
+				if (!returnType.IsObject())
 				{
 					return this.GetDefaultValue(returnType);
 				}
@@ -171,12 +170,12 @@ namespace Telia.GraphQL.Client
                 }));
             }
             
-            object GetValueFromProperty(Type returnType, JProperty token)
+            private object GetValueFromProperty(Type returnType, JProperty token)
             {
                 return this.GetValueFromToken(returnType, new JObject(token));
             }
 
-            object GetValueFromArray(Type returnType, JArray array)
+            private object GetValueFromArray(Type returnType, JArray array)
             {
 				if (!returnType.IsEnumerable())
 				{
@@ -198,7 +197,7 @@ namespace Telia.GraphQL.Client
                 return list;
             }
 
-            object GetValueFromJValue(Type returnType, JValue token)
+            private object GetValueFromJValue(Type returnType, JValue token)
             {
                 var value = token?.Value;
 
@@ -249,7 +248,7 @@ namespace Telia.GraphQL.Client
 				}
             }
 
-            object GetDefaultValue(Type t)
+            private object GetDefaultValue(Type t)
             {
                 if (t.IsValueType)
                     return Activator.CreateInstance(t);

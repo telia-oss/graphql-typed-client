@@ -30,7 +30,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return @namespace.AddMembers(interfaceDeclaration);
         }
 
-        InterfaceDeclarationSyntax CreateProperties(
+        private InterfaceDeclarationSyntax CreateProperties(
             string interfaceTypeName,
             InterfaceDeclarationSyntax interfaceDeclaration,
             IEnumerable<GraphQLFieldDefinition> fields,
@@ -51,7 +51,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return interfaceDeclaration;
         }
 
-        InterfaceDeclarationSyntax GenerateMethod(
+        private InterfaceDeclarationSyntax GenerateMethod(
             string interfaceTypeName,
             InterfaceDeclarationSyntax interfaceDeclaration,
             GraphQLFieldDefinition field,
@@ -78,7 +78,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return interfaceDeclaration;
         }
 
-        InterfaceDeclarationSyntax CreateMethod(
+        private InterfaceDeclarationSyntax CreateMethod(
             InterfaceDeclarationSyntax interfaceDeclaration,
             GraphQLFieldDefinition field,
             IEnumerable<ASTNode> allDefinitions,
@@ -93,7 +93,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return interfaceDeclaration.AddMembers(method);
         }
 
-        InterfaceDeclarationSyntax GenerateProperty(
+        private InterfaceDeclarationSyntax GenerateProperty(
             string interfaceTypeName,
             InterfaceDeclarationSyntax interfaceDeclaration,
             GraphQLFieldDefinition field,
@@ -112,7 +112,7 @@ namespace Telia.GraphQL.Tooling.CodeGenerator.DefinitionHandlers
             return interfaceDeclaration.AddMembers(member);
         }
 
-        string PickFieldName(string interfaceTypeName, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
+        private string PickFieldName(string interfaceTypeName, GraphQLFieldDefinition field, IEnumerable<ASTNode> allDefinitions)
         {
             var name = Utils.ToPascalCase(field.Name.Value);
 

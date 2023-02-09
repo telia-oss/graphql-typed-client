@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Telia.GraphQL.Client.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Telia.GraphQL.Client.Attributes;
-
 namespace Telia.GraphQL.Client
 {
     internal class PathGatheringVisitor : ExpressionVisitor
     {
-		QueryContext context;
+		private readonly QueryContext context;
 
         public PathGatheringVisitor(QueryContext context)
         {
@@ -56,7 +55,7 @@ namespace Telia.GraphQL.Client
             return node;
         }
 
-        Expression AddToChainFromExpression(List<ChainLink> chain, Expression current)
+        private Expression AddToChainFromExpression(List<ChainLink> chain, Expression current)
         {
             if (current.NodeType == ExpressionType.MemberAccess)
             {
@@ -88,7 +87,7 @@ namespace Telia.GraphQL.Client
             return current;
         }
 
-        Expression AddToChainFromMembers(List<ChainLink> chain, Expression current)
+        private Expression AddToChainFromMembers(List<ChainLink> chain, Expression current)
         {
             while (current.NodeType == ExpressionType.MemberAccess)
             {
@@ -109,7 +108,7 @@ namespace Telia.GraphQL.Client
             return AddToChainFromExpression(chain, current);
         }
 
-        Expression AddToChainFromMethods(List<ChainLink> chain, Expression current)
+        private Expression AddToChainFromMethods(List<ChainLink> chain, Expression current)
         {
             while (current.NodeType == ExpressionType.Call)
 			{
@@ -151,7 +150,7 @@ namespace Telia.GraphQL.Client
             return AddToChainFromExpression(chain, current);
         }
 
-		List<ChainLink> GetChainToSelectMethod(MethodCallExpression methodCallExpression)
+		private List<ChainLink> GetChainToSelectMethod(MethodCallExpression methodCallExpression)
 		{
 			var chainPrefix = new List<ChainLink>();
 
@@ -160,7 +159,7 @@ namespace Telia.GraphQL.Client
 			return chainPrefix;
 		}
 
-		IEnumerable<ChainLinkArgument> GetArgumentsFromMethod(MethodCallExpression methodCallExpression, QueryContext context)
+		private IEnumerable<ChainLinkArgument> GetArgumentsFromMethod(MethodCallExpression methodCallExpression, QueryContext context)
         {
             var methodParameters = methodCallExpression.Method.GetParameters();
             var arguments = methodCallExpression.Arguments;

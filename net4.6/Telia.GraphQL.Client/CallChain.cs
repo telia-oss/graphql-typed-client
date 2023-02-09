@@ -5,9 +5,9 @@ namespace Telia.GraphQL.Client
 {
     internal class CallChain
     {
-        List<ChainLink> links;
-        Expression node;
-        bool isTerminal;
+        private readonly List<ChainLink> links;
+        private readonly Expression node;
+        private readonly bool isTerminal;
 
         public IEnumerable<ChainLink> Links => this.links;
         public Expression Node => this.node;

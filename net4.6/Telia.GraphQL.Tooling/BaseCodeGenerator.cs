@@ -27,9 +27,9 @@ namespace Telia.GraphQL.Tooling
     [ComVisible(true)]
     public abstract class BaseCodeGenerator : IVsSingleFileGenerator
     {
-        IVsGeneratorProgress codeGeneratorProgress;
-        string codeFileNameSpace = String.Empty;
-        string codeFilePath = String.Empty;
+        private IVsGeneratorProgress codeGeneratorProgress;
+        private string codeFileNameSpace = String.Empty;
+        private string codeFilePath = String.Empty;
 
         #region IVsSingleFileGenerator Members
 

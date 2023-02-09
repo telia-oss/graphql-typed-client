@@ -81,7 +81,7 @@ namespace Telia.GraphQL.Tooling
             return code;
         }
 
-        static CodeTypeDeclaration CreateClass(XmlNode node)
+        private static CodeTypeDeclaration CreateClass(XmlNode node)
         {
             string className;
             string classAccess;
@@ -118,7 +118,7 @@ namespace Telia.GraphQL.Tooling
             return typeDeclaration;
         }
 
-        static void GetClassInfo(XmlNode node, out string className, out string classAccess, out bool isPartial)
+        private static void GetClassInfo(XmlNode node, out string className, out string classAccess, out bool isPartial)
         {
             if (node.Attributes != null && node.Attributes.GetNamedItem("name") != null && node.Attributes.GetNamedItem("name").Value != string.Empty)
             {
@@ -148,7 +148,7 @@ namespace Telia.GraphQL.Tooling
             }
         }
 
-        static CodeMemberField CreateField(XmlNode n)
+        private static CodeMemberField CreateField(XmlNode n)
         {
             string fieldName;
             string fieldAccess;
@@ -200,7 +200,7 @@ namespace Telia.GraphQL.Tooling
             return field;
         }
 
-        static void GetFieldInfo(XmlNode n, out string memberName, out string memberAccess, out string memberValue, out string memberType, out bool memberIsStatic)
+        private static void GetFieldInfo(XmlNode n, out string memberName, out string memberAccess, out string memberValue, out string memberType, out bool memberIsStatic)
         {
             if (n.Name != "Variable" && n.Name != "Constant")
             {
@@ -267,7 +267,7 @@ namespace Telia.GraphQL.Tooling
             }
         }
 
-        static CodeTypeDeclaration CreateEnum(XmlNode node)
+        private static CodeTypeDeclaration CreateEnum(XmlNode node)
         {
             string enumName;
             string enumAccess;
@@ -318,7 +318,7 @@ namespace Telia.GraphQL.Tooling
             return typeDeclaration;
         }
 
-        static void GetEnumMemberInfo(bool enumFlagsAttribute, XmlNode n, out string memberName, out int memberValue, out bool hasValue)
+        private static void GetEnumMemberInfo(bool enumFlagsAttribute, XmlNode n, out string memberName, out int memberValue, out bool hasValue)
         {
             if (n.Name != "EnumMember")
             {
@@ -353,7 +353,7 @@ namespace Telia.GraphQL.Tooling
             }
         }
 
-        static void GetEnumInfo(XmlNode node, out string enumName, out string enumAccess, out bool enumFlagsAttribute)
+        private static void GetEnumInfo(XmlNode node, out string enumName, out string enumAccess, out bool enumFlagsAttribute)
         {
             if (node.Attributes != null && node.Attributes.GetNamedItem("name") != null && node.Attributes.GetNamedItem("name").Value != string.Empty)
             {

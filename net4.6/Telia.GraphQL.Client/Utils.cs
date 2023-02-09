@@ -1,16 +1,16 @@
 ﻿namespace Telia.GraphQL.Client
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
+	using System.Collections;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Linq.Expressions;
+	using System.Reflection;
     using System.Text.RegularExpressions;
 
     public static class Utils
     {
-		static MethodInfo[] SelectMethods = typeof(Enumerable)
+		private static MethodInfo[] SelectMethods = typeof(Enumerable)
 			.GetMethods()
 			.Where(e => e.Name == "Select")
 			.ToArray();
@@ -82,6 +82,16 @@
 			}
 
 			if (t.IsGenericType && typeof(IEnumerable<>).IsAssignableFrom(t.GetGenericTypeDefinition()))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		public static bool IsObject(this Type t)
+		{
+			if (t.IsClass)
 			{
 				return true;
 			}

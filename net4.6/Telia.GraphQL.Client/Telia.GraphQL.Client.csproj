@@ -9,9 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Telia.GraphQL.Client</RootNamespace>
     <AssemblyName>Telia.GraphQL.Client</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,8 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -55,9 +53,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Schema\Attributes\GraphQLArgumentAttribute.cs" />
-    <Compile Include="Schema\Attributes\GraphQLTypeAttribute.cs" />
-    <Compile Include="Schema\Attributes\GraphQLFieldAttribute.cs" />
+    <Compile Include="ArgumentEvaluationException.cs" />
+    <Compile Include="Attributes\GraphQLArgumentAttribute.cs" />
+    <Compile Include="Attributes\GraphQLTypeAttribute.cs" />
+    <Compile Include="Attributes\GraphQLFieldAttribute.cs" />
     <Compile Include="CallChain.cs" />
     <Compile Include="ChainLink.cs" />
     <Compile Include="ChainLinkArgument.cs" />
@@ -68,6 +67,7 @@
     <Compile Include="GraphQLInterfaceConverter.cs" />
     <Compile Include="GraphQLQueryInfo.cs" />
     <Compile Include="GraphQLResult.cs" />
+    <Compile Include="INetworkClient.cs" />
     <Compile Include="PathGatheringVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryContext.cs" />
@@ -78,8 +78,10 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

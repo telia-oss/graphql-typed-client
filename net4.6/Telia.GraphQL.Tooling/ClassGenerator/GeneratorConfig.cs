@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Collections.Generic;
 
 namespace Telia.GraphQL.Tooling.CodeGenerator
 {
     public class GeneratorConfig
     {
-        Dictionary<string, Type> graphQLToCSharpTypeBindings;
+        private Dictionary<string, Type> graphQLToCSharpTypeBindings;
 
         public GeneratorConfig()
         {
             this.SetupDefaults();
         }
 
-        void SetupDefaults()
+        private void SetupDefaults()
         {
             this.graphQLToCSharpTypeBindings = new Dictionary<string, Type>();
 
