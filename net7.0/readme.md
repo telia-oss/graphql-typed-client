@@ -1,12 +1,10 @@
 ![](media/icon.png)
 
-# C# expressions to GraphQL
-
-[![NuGet Badge](https://buildstats.info/nuget/Telia.GraphQL.Client)](https://www.nuget.org/packages/Telia.GraphQL.Client/)
-
-> This project is currently work in progress and contains only very basic functionality. Usage in production is discouraged unless you know what you're doing.
+# C# expressions to GraphQL to C# Models
 
 A typesafe way to create graphql queries from C# expressions
+
+> Looking for the nuget package on the .NET Framework version? It's here: [![NuGet Badge](https://buildstats.info/nuget/Telia.GraphQL.Client)](https://www.nuget.org/packages/Telia.GraphQL.Client/)
 
 ## Example
 
@@ -19,16 +17,16 @@ namespace Schema
 {
     using System;
     using System.Collections.Generic;
+    using Telia.GraphQL.Schema.Attributes;
 
-    public class Query
+    [GraphQLType("Query")]
+    public class SchemaQuery
     {
-        public Int32? A
-        {
-            get;
-            set;
-        }
+        [GraphQLField("a", "Int")]
+        public int? A { get; set; }
 
-        public Int32 B(Int32 x)
+        [GraphQLField("b", "Int")]
+        public int B([GraphQLArgument("x", "Int")] int x)
         {
             throw new InvalidOperationException();
         }
@@ -37,13 +35,21 @@ namespace Schema
 ```
 
 ```csharp
-var client = new MyClient("<your_endpoint>");
+var schema = new GraphQLQuery<SchemaQuery>();
 
-var graphQlQuery = new Query(() => new {
+var model = schema.Query(() => new {
 {
     a = e.A,
     b = e.B(12)
-});
+}, Send);
 
-Console.Write(graphQlQuery); // Prints a formatted graphQlQuery
+// Variabel 'model' is now the anonymous type with a and b
+
+// Skip sending 'Send' as second argument, to get the graphql query as a string, which prints this:
+// {"query":"query Query($var_0:Int){field0:a field1:b(x:$var_0) __typename}","variables":{"var_0":100}}
+
+string Send(string query) {
+    // Pseudo code:
+    return new HttpClient(url, query, ...).Post().Response;
+}
 ```

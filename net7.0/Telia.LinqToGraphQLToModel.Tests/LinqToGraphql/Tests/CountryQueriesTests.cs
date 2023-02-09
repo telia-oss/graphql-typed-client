@@ -2,7 +2,9 @@
 
 using SystemLibrary.Common.Net;
 
+using Telia.GraphQL;
 using Telia.LinqToGraphQL.LinqToGraphql.Queries;
+using Telia.LinqToGraphQL.LinqToGraphql.Schema;
 using Telia.LinqToGraphQLToModel.Tests._Abstract;
 
 namespace Telia.LinqToGraphQLToModel.Tests.LinqToGraphql.Tests;
@@ -34,6 +36,23 @@ public class LinqToGraphqlTests : BaseTestClass
         var expected = GetExpected("Select_Countries_Without_Filter_Returns_GraphQl");
 
         IsEqualIgnoreWhitespace(query, expected);
+    }
+
+
+    [TestMethod]
+    public void ReadMe_Schema_Query_Sample()
+    {
+        var schema = new GraphQLQuery<ReadMeSchema>();
+
+        var graphQlQuery = schema.Query((e) => new
+        {
+            a = e.A,
+            b = e.B(100)
+        });
+
+        var expected = "{\"query\":\"query Query($var_0: Int) { field0: a field1: b(x: $var_0) __typename}\",\"variables\":{\"var_0\":100}}";
+
+        IsEqualIgnoreWhitespace(graphQlQuery, expected);
     }
 
     string GetExpected(string fileName)
