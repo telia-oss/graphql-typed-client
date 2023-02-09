@@ -1,10 +1,8 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Telia.GraphQL.Client.JsonConverters
+namespace Telia.LinqToGraphQLToModel.GraphQLJsonConverters;
+
+public static class GraphQLJsonConverters
 {
-    public static class GraphQLJsonConverters
-    {
-        public static List<JsonConverter> JsonConverters { get; set; }
-    }
+    public static List<JsonConverter> JsonConverters { get; set; }
 }

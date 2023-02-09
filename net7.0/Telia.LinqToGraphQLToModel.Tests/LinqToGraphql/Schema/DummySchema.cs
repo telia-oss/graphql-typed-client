@@ -1,4 +1,4 @@
-﻿using Telia.GraphQL.Schema.Attributes;
+﻿using Telia.LinqToGraphQLToModel.Schema.Attributes;
 
 namespace Telia.LinqToGraphQLToModel.Tests.LinqToGraphql.Schema;
 

@@ -1,8 +1,8 @@
 ﻿using GraphQLParser.AST;
 
-using Telia.GraphQL.Client.Models;
+using Telia.LinqToGraphQLToModel.Models;
 
-namespace Telia.GraphQL.Client;
+namespace Telia.LinqToGraphQLToModel;
 
 internal class SelectionChainConverter
 {

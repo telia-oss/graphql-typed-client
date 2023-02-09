@@ -1,9 +1,8 @@
-﻿namespace Telia.LinqToGraphQL123;
+﻿// NOTE: Just a sample of dummy objects to fake a real case scenario
 
-using System;
-using System.Collections.Generic;
+using Telia.LinqToGraphQLToModel.Schema.Attributes;
 
-using Telia.GraphQL.Schema.Attributes;
+namespace Telia.LinqToGraphQLToModel.Tests.GraphqlResponseToModels.Schema;
 
 [GraphQLTypeAttribute("AgreementType")]
 public enum AgreementType
@@ -82,12 +81,6 @@ public class ProductUser
     [GraphQLFieldAttribute("telephoneNumber", "PhoneNumber")]
     public virtual PhoneNumber TelephoneNumber { get; set; }
 
-    [GraphQLFieldAttribute("ssnRegistered", "Boolean")]
-    public virtual Boolean? SsnRegistered { get; set; }
-
-    [GraphQLFieldAttribute("roleIndicator", "Boolean")]
-    public virtual Boolean? RoleIndicator { get; set; }
-
     [GraphQLFieldAttribute("birthDate", "AWSDate")]
     public virtual DateTime? BirthDate { get; set; }
 }
@@ -122,17 +115,8 @@ public class SubscriptionData
     [GraphQLFieldAttribute("commitmentEndDate", "AWSDate")]
     public virtual DateTime? CommitmentEndDate { get; set; }
 
-    [GraphQLFieldAttribute("canBeSuspended", "Boolean!")]
-    public virtual Boolean CanBeSuspended { get; set; }
-
-    [GraphQLFieldAttribute("canBeUnSuspended", "Boolean!")]
-    public virtual Boolean CanBeUnSuspended { get; set; }
-    
     [GraphQLFieldAttribute("roles", "[UserRole!]!")]
     public virtual IEnumerable<UserRole> Roles { get; set; }
-
-    [GraphQLFieldAttribute("baseDataRefreshDate", "AWSDateTime")]
-    public virtual DateTime? BaseDataRefreshDate { get; set; }
 
     [GraphQLFieldAttribute("subscriptionRank", "Int")]
     public virtual Int32? SubscriptionRank { get; set; }
@@ -142,11 +126,6 @@ public class SubscriptionData
 public enum UserRole
 {
     COMPANY,
-    COMPANY_ADMINISTRATOR,
-    COMPANY_REPORT_USER,
-    GROUP_ADMINISTRATOR,
-    GROUP_SUPERVISOR,
-    GROUP_REPORT_USER,
     LEGAL_OWNER,
     INVOICE_PAYER,
     PRODUCT_USER,
@@ -168,9 +147,6 @@ public class UserData
 
     [GraphQLFieldAttribute("isAccountOwner", "Boolean")]
     public virtual Boolean? IsAccountOwner { get; set; }
-
-    [GraphQLFieldAttribute("isBusiness", "Boolean")]
-    public virtual Boolean? IsBusiness { get; set; }
 }
 
 [GraphQLTypeAttribute("Query")]
@@ -230,10 +206,4 @@ public class CountryFilter
 {
     [GraphQLFieldAttribute("countryCode", "String")]
     public virtual String CountryCode { get; set; }
-
-    [GraphQLFieldAttribute("mnc", "String")]
-    public virtual String Mnc { get; set; }
-
-    [GraphQLFieldAttribute("mcc", "String")]
-    public virtual String Mcc { get; set; }
 }

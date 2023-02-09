@@ -1,4 +1,4 @@
-﻿namespace Telia.GraphQL.Schema.Attributes;
+﻿namespace Telia.LinqToGraphQLToModel.Schema.Attributes;
 
 [AttributeUsage(AttributeTargets.Parameter)]
 public class GraphQLArgumentAttribute : Attribute

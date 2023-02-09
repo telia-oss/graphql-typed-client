@@ -1,9 +1,9 @@
-﻿namespace Telia.LinqToGraphQL.Benchmarks.LinqToGraphqlBenchmarks.Schema;
+﻿namespace Telia.LinqToGraphQLToModel.Benchmarks.LinqToGraphqlBenchmarks.Schema;
 
 using System;
 using System.Collections.Generic;
 
-using Telia.GraphQL.Schema.Attributes;
+using Telia.LinqToGraphQLToModel.Schema.Attributes;
 
 [GraphQLType("CountryFilter")]
 public class CountryFilter

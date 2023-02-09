@@ -1,15 +1,14 @@
 ﻿using System.Linq.Expressions;
 
-using GraphQLParser;
 using GraphQLParser.AST;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-using Telia.GraphQL.Client;
-using Telia.LinqToGraphQL.Response;
+using Telia.LinqToGraphQLToModel.GraphQLParser;
+using Telia.LinqToGraphQLToModel.Response;
 
-namespace Telia.GraphQL;
+namespace Telia.LinqToGraphQLToModel;
 
 public class GraphQLQuery<TQueryRoot>
 {

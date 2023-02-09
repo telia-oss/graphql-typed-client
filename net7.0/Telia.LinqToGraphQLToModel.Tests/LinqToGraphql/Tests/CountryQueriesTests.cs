@@ -2,10 +2,9 @@
 
 using SystemLibrary.Common.Net;
 
-using Telia.GraphQL;
-using Telia.LinqToGraphQL.LinqToGraphql.Queries;
-using Telia.LinqToGraphQL.LinqToGraphql.Schema;
 using Telia.LinqToGraphQLToModel.Tests._Abstract;
+using Telia.LinqToGraphQLToModel.Tests.LinqToGraphql.Queries;
+using Telia.LinqToGraphQLToModel.Tests.LinqToGraphql.Schema;
 
 namespace Telia.LinqToGraphQLToModel.Tests.LinqToGraphql.Tests;
 

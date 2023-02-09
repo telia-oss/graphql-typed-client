@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Telia.GraphQL.Client;
+namespace Telia.LinqToGraphQLToModel;
 
 public class GraphQLQueryData
 {

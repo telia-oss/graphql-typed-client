@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
 
-using Telia.LinqToGraphQL.Benchmarks.LinqToGraphqlBenchmarks.Benchmarks;
+using Telia.LinqToGraphQLToModel.Benchmarks.LinqToGraphqlBenchmarks.Benchmarks;
 
 BenchmarkRunner.Run(typeof(LinqToGraphqlBenchmarks));

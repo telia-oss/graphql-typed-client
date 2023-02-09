@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Telia.GraphQL.Client;
+namespace Telia.LinqToGraphQLToModel;
 
 public class ExtractParameterVisitor : ExpressionVisitor
 {

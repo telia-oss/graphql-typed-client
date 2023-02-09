@@ -1,11 +1,10 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-using Telia.GraphQL.Client.Models;
-using Telia.GraphQL.Schema.Attributes;
-using Telia.LinqToGraphQL;
+using Telia.LinqToGraphQLToModel.Models;
+using Telia.LinqToGraphQLToModel.Schema.Attributes;
 
-namespace Telia.GraphQL.Client;
+namespace Telia.LinqToGraphQLToModel;
 
 internal class PathGatheringVisitor : ExpressionVisitor
 {

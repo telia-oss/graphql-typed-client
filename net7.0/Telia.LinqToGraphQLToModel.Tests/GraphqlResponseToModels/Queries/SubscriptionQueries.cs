@@ -1,9 +1,8 @@
 ﻿using SystemLibrary.Common.Net;
 
-using Telia.GraphQL;
-using Telia.LinqToGraphQL123;
+using Telia.LinqToGraphQLToModel.Tests.GraphqlResponseToModels.Schema;
 
-namespace Telia.LinqToGraphQLToModel.Tests.LinqToGraphqlToModels.Queries;
+namespace Telia.LinqToGraphQLToModel.Tests.GraphqlResponseToModels.Queries;
 
 public class SubscriptionQueries : GraphQLQuery<TeliaSchema>
 {

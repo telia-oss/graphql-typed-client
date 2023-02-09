@@ -1,9 +1,9 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 
-using Telia.LinqToGraphQL.Benchmarks.LinqToGraphqlBenchmarks.Queries;
+using Telia.LinqToGraphQLToModel.Benchmarks.LinqToGraphqlBenchmarks.Queries;
 
-namespace Telia.LinqToGraphQL.Benchmarks.LinqToGraphqlBenchmarks.Benchmarks;
+namespace Telia.LinqToGraphQLToModel.Benchmarks.LinqToGraphqlBenchmarks.Benchmarks;
 
 [SimpleJob(RuntimeMoniker.Net70, warmupCount: 3, launchCount: 3, iterationCount: 5, invocationCount: 20)]
 [MemoryDiagnoser]

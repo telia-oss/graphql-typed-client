@@ -115,10 +115,17 @@ public class SchemaConverterTests
         text = Minify(text);
 
         expected = Minify(expected);
+        try
+        {
+            Assert.IsTrue(text == expected);
+        }
+        catch
+        {
+            Dump.Write(text);
+            Dump.Write(expected);
 
-        Dump.Write(text);
-        Dump.Write(expected);
-        Assert.IsTrue(text == expected, "Error: " + text.Length + " vs " + expected.Length);
+            Assert.IsTrue(text == expected);
+        }
     }
 
     string Minify(string data)

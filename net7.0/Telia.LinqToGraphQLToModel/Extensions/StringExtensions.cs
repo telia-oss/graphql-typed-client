@@ -1,6 +1,6 @@
 ﻿using GraphQLParser.AST;
 
-namespace Telia.GraphQL.Client;
+namespace Telia.LinqToGraphQLToModel;
 
 internal static class StringExtensions
 {

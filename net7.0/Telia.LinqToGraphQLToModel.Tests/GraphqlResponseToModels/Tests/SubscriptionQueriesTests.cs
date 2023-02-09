@@ -1,10 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Telia.LinqToGraphQL.LinqToGraphql.Queries;
 using Telia.LinqToGraphQLToModel.Tests._Abstract;
-using Telia.LinqToGraphQLToModel.Tests.LinqToGraphqlToModels.Queries;
+using Telia.LinqToGraphQLToModel.Tests.GraphqlResponseToModels.Queries;
 
-namespace Telia.LinqToGraphQLToModel.Tests.LinqToGraphqlToModels.Tests;
+namespace Telia.LinqToGraphQLToModel.Tests.GraphqlResponseToModels.Tests;
 
 [TestClass]
 public class SubscriptionQueriesTests : BaseTestClass

@@ -1,7 +1,6 @@
-﻿using Telia.GraphQL;
-using Telia.LinqToGraphQL.Benchmarks.LinqToGraphqlBenchmarks.Schema;
+﻿using Telia.LinqToGraphQLToModel.Benchmarks.LinqToGraphqlBenchmarks.Schema;
 
-namespace Telia.LinqToGraphQL.Benchmarks.LinqToGraphqlBenchmarks.Queries;
+namespace Telia.LinqToGraphQLToModel.Benchmarks.LinqToGraphqlBenchmarks.Queries;
 
 public class CountryQueries : GraphQLQuery<CountrySchema>
 {

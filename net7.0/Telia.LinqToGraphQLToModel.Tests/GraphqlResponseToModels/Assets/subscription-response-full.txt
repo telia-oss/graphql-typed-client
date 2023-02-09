@@ -5,7 +5,7 @@
         "field0": "PRIVATE",
         "field1": {
           "countryCode": "47",
-          "localNumber": "90012345",
+          "localNumber": "11221122",
           "__typename": "PhoneNumber"
         },
         "field2": {
@@ -14,7 +14,7 @@
           "field2": "mr.test@telia.no",
           "field3": {
             "field0": "47",
-            "localNumber": "90012345",
+            "localNumber": "11221122",
             "__typename": "PhoneNumber"
           },
           "__typename": "ProductUser"
@@ -26,7 +26,7 @@
             "field2": "mr.test@telia.no",
             "field3": {
               "countryCode": "47",
-              "localNumber": "90012345",
+              "localNumber": "11221122",
               "__typename": "PhoneNumber"
             },
             "__typename": "ProductUser"
@@ -49,7 +49,7 @@
         "field0": "PRIVATE",
         "field1": {
           "countryCode": "47",
-          "localNumber": "90012345",
+          "localNumber": "11221122",
           "__typename": "PhoneNumber"
         },
         "field2": {
@@ -58,7 +58,7 @@
           "field2": "mr.test@telia.no",
           "field3": {
             "field0": "47",
-            "field1": "90012345",
+            "field1": "11221122",
             "__typename": "PhoneNumber"
           },
           "__typename": "ProductUser"
@@ -70,7 +70,7 @@
             "field2": "mr.test@telia.no",
             "field3": {
               "countryCode": "47",
-              "localNumber": "90012345",
+              "localNumber": "11221122",
               "__typename": "PhoneNumber"
             },
             "__typename": "ProductUser"
@@ -92,7 +92,7 @@
         "field0": "PRIVATE",
         "field1": {
           "countryCode": "47",
-          "localNumber": "90012345",
+          "localNumber": "11221122",
           "__typename": "PhoneNumber"
         },
         "field2": {
@@ -101,7 +101,7 @@
           "field2": "mr.test2@telia.no",
           "field3": {
             "field0": "47",
-            "field1": "90012345",
+            "field1": "11221122",
             "__typename": "PhoneNumber"
           },
           "__typename": "ProductUser"
@@ -113,7 +113,7 @@
             "field2": "mr.test@telia.no",
             "field3": {
               "countryCode": "47",
-              "localNumber": "90012345",
+              "localNumber": "11221122",
               "__typename": "PhoneNumber"
             },
             "__typename": "ProductUser"

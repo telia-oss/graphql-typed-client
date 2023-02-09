@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Telia.GraphQL.Client.Models;
+namespace Telia.LinqToGraphQLToModel.Models;
 
 internal class ChainLinkArgument
 {

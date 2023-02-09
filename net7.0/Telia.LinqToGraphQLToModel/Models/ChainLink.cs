@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Telia.GraphQL.Client.Models;
+namespace Telia.LinqToGraphQLToModel.Models;
 
 internal class ChainLink
 {

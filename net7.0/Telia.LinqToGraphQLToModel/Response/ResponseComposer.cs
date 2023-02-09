@@ -3,10 +3,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using Telia.GraphQL.Client;
-
-namespace Telia.LinqToGraphQL.Response;
-
+namespace Telia.LinqToGraphQLToModel.Response;
 internal class ResponseComposer<TQueryType, TReturn>
 {
     Expression<Func<TQueryType, TReturn>> selector;

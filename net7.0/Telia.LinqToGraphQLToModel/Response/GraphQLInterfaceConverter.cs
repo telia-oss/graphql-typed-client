@@ -4,9 +4,9 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using Telia.GraphQL.Schema.Attributes;
+using Telia.LinqToGraphQLToModel.Schema.Attributes;
 
-namespace Telia.LinqToGraphQL.Response;
+namespace Telia.LinqToGraphQLToModel.Response;
 
 public class GraphQLInterfaceConverter : GraphQLObjectConverter
 {

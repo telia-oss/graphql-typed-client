@@ -1,9 +1,8 @@
 ﻿using SystemLibrary.Common.Net;
 
-using Telia.GraphQL;
-using Telia.LinqToGraphQL.LinqToGraphql.Schema;
+using Telia.LinqToGraphQLToModel.Tests.LinqToGraphql.Schema;
 
-namespace Telia.LinqToGraphQL.LinqToGraphql.Queries;
+namespace Telia.LinqToGraphQLToModel.Tests.LinqToGraphql.Queries;
 
 public class CountryQueries : GraphQLQuery<CountrySchema>
 {

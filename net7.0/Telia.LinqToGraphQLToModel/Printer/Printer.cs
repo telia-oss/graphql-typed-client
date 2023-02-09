@@ -2,9 +2,7 @@
 
 using SystemLibrary.Common.Net.Extensions;
 
-using Telia.GraphQL.Client;
-
-namespace GraphQLParser;
+namespace Telia.LinqToGraphQLToModel.GraphQLParser;
 
 public class Printer
 {
