@@ -1,4 +1,3 @@
-node_modules/
 packages/
 obj/
 bin/
@@ -6,8 +5,8 @@ dist/
 
 App_Data/
 TestResults/
-**/*Artifacts/results/
-*report-github.md
+BenchmarkDotNet.Artifacts/
+artifacts/
 
 
 **/*.graphql
@@ -16,8 +15,10 @@ TestResults/
 .vs/
 .idea/
 
+*.suo
 *.user
 *.log
+*.userprefs
 
 # Visual Studio Mac
 ._Telia.Web.sln
