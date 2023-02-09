@@ -1,4 +1,4 @@
-![](net4.6/media/icon.png)
+![](../net4.6/media/icon.png)
 
 # C# expressions to GraphQL to C# Models
 
