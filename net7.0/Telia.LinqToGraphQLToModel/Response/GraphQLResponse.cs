@@ -11,6 +11,10 @@ public class GraphQLResponse
 public class GraphQLResponse<T>
 {
     public T Data { get; }
+
+    //NOTE: Errors are just "there", parsed from the response, but they are ignored as of now,
+    // Real exceptions on the protocol is up to the callee to respond to
+    // Will do something with actual graphql error responses eventually...
     public IEnumerable<GraphQLError> Errors { get; }
 
     public GraphQLResponse(T value, IEnumerable<GraphQLError> errors)
