@@ -8,6 +8,11 @@
 		<Configurations>Release</Configurations>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>none</DebugType>
+		<NoWarn>1701;1702;CS8600;CS8616;CS8618</NoWarn>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.13.4" />
 		<PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.4" />
@@ -15,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Telia.LinqToGraphQLToModel\Telia.LinqToGraphQLToModel.csproj" />
+		<ProjectReference Include="..\Telia.LinqToGraphQLToModel\Telia.LinqToGraphQLToModel.csproj" />
 	</ItemGroup>
 
 </Project>

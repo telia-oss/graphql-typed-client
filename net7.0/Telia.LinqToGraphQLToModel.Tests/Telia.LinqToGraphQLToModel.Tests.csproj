@@ -1,58 +1,63 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-    <Configurations>Release</Configurations>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<Configurations>Release</Configurations>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="GraphqlResponseToModels\Assets\countries-response.txt" />
-    <None Remove="GraphqlResponseToModels\Assets\country-collection-with-countries-response.txt" />
-    <None Remove="LinqToGraphql\Assets\Query_Select_Enum_Custom_Serialization.txt" />
-    <None Remove="LinqToGraphql\Assets\Query_Select_Enum_Default_Serialization.txt" />
-    <None Remove="LinqToGraphql\Assets\Select_Countries_Without_Filter_Returns_GraphQl.txt" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>none</DebugType>
+		<NoWarn>1701;1702;CS8600;CS8616;CS8618</NoWarn>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_Enum_Default_Serialization.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_Enum_Custom_Serialization.txt" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="GraphqlResponseToModels\Assets\countries-response.txt" />
+		<None Remove="GraphqlResponseToModels\Assets\country-collection-with-countries-response.txt" />
+		<None Remove="LinqToGraphql\Assets\Query_Select_Enum_Custom_Serialization.txt" />
+		<None Remove="LinqToGraphql\Assets\Query_Select_Enum_Default_Serialization.txt" />
+		<None Remove="LinqToGraphql\Assets\Select_Countries_Without_Filter_Returns_GraphQl.txt" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="GraphqlResponseToModels\Assets\country-collection-with-countries-response.txt" />
-    <EmbeddedResource Include="GraphqlResponseToModels\Assets\countries-response.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Select_Countries_Without_Filter_Returns_GraphQl.txt" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_Enum_Default_Serialization.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_Enum_Custom_Serialization.txt" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="LinqToGraphql\Assets\Select_Countries_With_Filter_Returns_GraphQl.txt" />
-    <EmbeddedResource Include="GraphqlResponseToModels\Assets\subscription-response-missing-last-property-localnumber.txt" />
-    <EmbeddedResource Include="GraphqlResponseToModels\Assets\subscription-response-full.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Multiple_Child_Objects_With_Multiple_Variables.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Multiple_Nested_Child_Objects_With_Inline_Variables.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Multiple_Child_Objects_With_Multiple_Inline_Variables.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Properties.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Multiple_Child_Objects.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_List_Of_Anonymous_Type.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_Multiple_One_Scalar.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_Scalar_Array.txt" />
-    <EmbeddedResource Include="LinqToGraphql\Assets\Query_With_Scalar.txt" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="GraphqlResponseToModels\Assets\country-collection-with-countries-response.txt" />
+		<EmbeddedResource Include="GraphqlResponseToModels\Assets\countries-response.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Select_Countries_Without_Filter_Returns_GraphQl.txt" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
-    <PackageReference Include="coverlet.collector" Version="3.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="LinqToGraphql\Assets\Select_Countries_With_Filter_Returns_GraphQl.txt" />
+		<EmbeddedResource Include="GraphqlResponseToModels\Assets\subscription-response-missing-last-property-localnumber.txt" />
+		<EmbeddedResource Include="GraphqlResponseToModels\Assets\subscription-response-full.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Multiple_Child_Objects_With_Multiple_Variables.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Multiple_Nested_Child_Objects_With_Inline_Variables.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Multiple_Child_Objects_With_Multiple_Inline_Variables.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Properties.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Object_With_Multiple_Child_Objects.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_List_Of_Anonymous_Type.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_Multiple_One_Scalar.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_Select_Scalar_Array.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Query_With_Scalar.txt" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Telia.LinqToGraphQLToModel\Telia.LinqToGraphQLToModel.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
+		<PackageReference Include="coverlet.collector" Version="3.2.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Telia.LinqToGraphQLToModel\Telia.LinqToGraphQLToModel.csproj" />
+	</ItemGroup>
 </Project>

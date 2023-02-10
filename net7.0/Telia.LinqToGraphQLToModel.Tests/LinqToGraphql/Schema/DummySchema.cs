@@ -10,7 +10,7 @@ enum TestEnum
 }
 
 [GraphQLType("SimpleInterface")]
-interface SimpleInterface
+interface ISimpleInterface
 {
     [GraphQLField("test", "Int!")]
     int Test { get; set; }
@@ -23,7 +23,7 @@ interface SimpleInterface
 class DummySchema
 {
     [GraphQLField("simpleInterface", "SimpleInterface")]
-    public SimpleInterface SimpleInterface { get; set; }
+    public ISimpleInterface SimpleInterface { get; set; }
 
     [GraphQLField("testEnum", "TestEnum")]
     public TestEnum TestEnum { get; set; }
@@ -48,7 +48,7 @@ class DummySchema
 }
 
 [GraphQLType("SimpleObject")]
-class SimpleObject : SimpleInterface
+class SimpleObject : ISimpleInterface
 {
     [GraphQLField("test", "Int")]
     public int Test { get; set; }
@@ -73,7 +73,7 @@ class SimpleObject : SimpleInterface
 class ComplexObject
 {
     [GraphQLField("simpleInterface", "SimpleInterface")]
-    public SimpleInterface SimpleInterface { get; set; }
+    public ISimpleInterface SimpleInterface { get; set; }
 
     [GraphQLField("test", "Int")]
     public int Test { get; set; }
