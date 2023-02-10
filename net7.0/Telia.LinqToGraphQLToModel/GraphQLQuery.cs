@@ -5,7 +5,7 @@ using GraphQLParser.AST;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-using Telia.LinqToGraphQLToModel.GraphQLParser;
+using Telia.GraphQLPrinter;
 using Telia.LinqToGraphQLToModel.Response;
 
 namespace Telia.LinqToGraphQLToModel;

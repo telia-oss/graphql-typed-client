@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DependencyBin\" />
+    <ProjectReference Include="..\Telia.GraphQLPrinter\Telia.GraphQLPrinter\Telia.GraphQLPrinter.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Telia.LinqToGraphQLToModel">

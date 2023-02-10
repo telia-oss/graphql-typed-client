@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 
-using GraphQLParser;
 using GraphQLParser.AST;
 
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using Telia.GraphQLPrinter;
 using Telia.GraphQLSchemaToCSharp.Config;
 
 namespace Telia.GraphQLSchemaToCSharp.DefinitionHandlers;

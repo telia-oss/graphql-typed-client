@@ -2,7 +2,9 @@
 
 using SystemLibrary.Common.Net.Extensions;
 
-namespace Telia.LinqToGraphQLToModel.GraphQLParser;
+using Telia.GraphQLPrinter.Models;
+
+namespace Telia.GraphQLPrinter;
 
 public class Printer
 {
@@ -84,8 +86,8 @@ public class Printer
     {
         if (collection == null) return "";
 
-        collection = collection?.Where(e => e.Is()); 
-        
+        collection = collection?.Where(e => e.Is());
+
         try
         {
             if (collection.IsNot()) return "";
