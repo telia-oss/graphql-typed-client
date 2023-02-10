@@ -182,6 +182,38 @@ public class DummySchemaTests : BaseTestClass
         IsEqualIgnoreWhitespace(graphql, expected);
     }
 
+    [TestMethod]
+    public void Query_Select_Enum_Default_Serialization()
+    {
+        var q = new GraphQLQuery<DummySchema>();
+
+        var graphql = q.Query(e => new
+        {
+            testEnum = e.Object.TestEnumFilter(TestEnum.TEST1)
+        });
+
+        var expected = GetExpected(nameof(Query_Select_Enum_Default_Serialization));
+
+        IsEqualIgnoreWhitespace(graphql, expected);
+    }
+
+    [TestMethod]
+    public void Query_Select_Enum_Custom_Serialization()
+    {
+        var q = new GraphQLQuery<DummySchema>();
+
+        var custom = new Newtonsoft.Json.JsonSerializerSettings();
+
+        var graphql = q.Query(e => new
+        {
+            testEnum = e.Object.TestEnumFilter(TestEnum.TEST1)
+        }, custom);
+
+        var expected = GetExpected(nameof(Query_Select_Enum_Custom_Serialization));
+
+        IsEqualIgnoreWhitespace(graphql, expected);
+    }
+
     string GetExpected(string fileName)
     {
         return Assemblies.GetEmbeddedResource("LinqToGraphql/Assets", fileName + ".txt");

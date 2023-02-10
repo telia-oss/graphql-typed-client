@@ -59,6 +59,9 @@ class SimpleObject : SimpleInterface
     [GraphQLField("testEnum", "TestEnum")]
     public TestEnum TestEnum { get; set; }
 
+    [GraphQLField("testEnumFilter", "TestEnumFilter")]
+    public TestEnum TestEnumFilter([GraphQLArgument("x", "TestEnum!")] TestEnum x) { throw new InvalidOperationException(); }
+
     [GraphQLField("testWithParams", "TestWithParams")]
     public int TestWithParams([GraphQLArgument("x", "Float!")] float x) { throw new InvalidOperationException(); }
 
