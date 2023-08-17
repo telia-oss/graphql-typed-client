@@ -29,27 +29,30 @@ namespace Telia.GraphQL.Client
         private static void EnsureCachedTypes(Type queryType)
         {
             var fullQueryName = queryType.FullName;
-            if (typeBindings.ContainsKey(fullQueryName))
+            lock (typeBindings)
             {
-                return;
-            }
-
-            var queryTypeDictionary = new Dictionary<string, Type>();
-            var typesWithGraphQLTypeAttribute =
-                from t in queryType.Assembly.GetTypes()
-                let attribute = t.GetCustomAttribute<GraphQLTypeAttribute>(false)
-                where attribute != null
-                select new { Type = t, Attribute = attribute };
-
-            foreach (var typeWithAttribute in typesWithGraphQLTypeAttribute)
-            {
-                if (!queryTypeDictionary.ContainsKey(typeWithAttribute.Attribute.Name))
+                if (typeBindings.ContainsKey(fullQueryName))
                 {
-                    queryTypeDictionary.Add(typeWithAttribute.Attribute.Name, typeWithAttribute.Type);
+                    return;
                 }
-            }
 
-            typeBindings.Add(fullQueryName, queryTypeDictionary);
+                var queryTypeDictionary = new Dictionary<string, Type>();
+                var typesWithGraphQLTypeAttribute =
+                    from t in queryType.Assembly.GetTypes()
+                    let attribute = t.GetCustomAttribute<GraphQLTypeAttribute>(false)
+                    where attribute != null
+                    select new { Type = t, Attribute = attribute };
+
+                foreach (var typeWithAttribute in typesWithGraphQLTypeAttribute)
+                {
+                    if (!queryTypeDictionary.ContainsKey(typeWithAttribute.Attribute.Name))
+                    {
+                        queryTypeDictionary.Add(typeWithAttribute.Attribute.Name, typeWithAttribute.Type);
+                    }
+                }
+
+                typeBindings.Add(fullQueryName, queryTypeDictionary);
+            }
         }
 
         public override bool CanConvert(Type objectType)

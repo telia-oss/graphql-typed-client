@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Telia.GraphQL.Client</id>
-    <version>$version$</version>
+    <version>0.3.11</version>
     <title>Strongly typed GraphQL client</title>
     <authors>Telia Norge AS</authors>
     <owners>Telia Norge AS</owners>
@@ -10,12 +10,14 @@
     <projectUrl>https://github.com/telia-oss/graphql-typed-client</projectUrl>
     <iconUrl>https://github.com/telia-oss/graphql-typed-client/raw/master/media/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Strongly typed client used to communicate with GraphQL apis</description>
+    <description>Encoura CLR-specific Strongly typed client used to communicate with GraphQL apis - used for SQL CLRs requires Newtonsoft.JSON 12.0.3 ONLY!</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>GraphQL client</tags>
   </metadata>
   <files>
-    <file src="bin\$configuration$\GraphQLParser.dll" target="lib\net461" />
+    <file src="bin\Debug\GraphQLParser.dll" target="lib\net461" />
+    <file src="bin\Debug\Telia.GraphQL.Client.dll" target="lib\net481" />
 </files>
+
 </package>

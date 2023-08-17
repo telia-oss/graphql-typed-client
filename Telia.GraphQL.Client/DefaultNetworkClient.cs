@@ -31,6 +31,11 @@ namespace Telia.GraphQL
             });
             var data = Encoding.ASCII.GetBytes(json);
 
+            ServicePointManager.SecurityProtocol =
+                           SecurityProtocolType.Tls12 |
+                           SecurityProtocolType.Tls13;
+
+
             request.Method = "POST";
             request.ContentType = "application/json";
             request.ContentLength = data.Length;
