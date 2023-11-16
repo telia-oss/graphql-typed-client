@@ -1,0 +1,77 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQLSchemaToCSharp.Tests.Attributes;
+
+    [GraphQLTypeAttribute("SomeInputObject")]
+    public class SomeInputObject
+    {
+        [GraphQLFieldAttribute("foo", "String!")]
+        public virtual String Foo
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("bar", "String")]
+        public virtual String Bar
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("faz", "Int")]
+        public virtual Int32? Faz
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("zap", "Int!")]
+        public virtual Int32 Zap
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLTypeAttribute("SomeOtherInputObject")]
+    public class SomeOtherInputObject
+    {
+        [GraphQLFieldAttribute("foo", "String!")]
+        public virtual String Foo
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("bar", "String")]
+        public virtual String Bar
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("faz", "Int")]
+        public virtual Int32? Faz
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("zap", "SomeInputObject!")]
+        public virtual SomeInputObject Zap
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nested", "SomeOtherInputObject")]
+        public virtual SomeOtherInputObject Nested
+        {
+            get;
+            set;
+        }
+    }
+}

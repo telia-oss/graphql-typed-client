@@ -1,0 +1,118 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQLSchemaToCSharp.Tests.Attributes;
+
+    [GraphQLTypeAttribute("SomeType")]
+    public class SomeType
+    {
+        [GraphQLFieldAttribute("someType", "Int")]
+        public virtual Int32? SomeTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLTypeAttribute("SomeInputType")]
+    public class SomeInputType
+    {
+        [GraphQLFieldAttribute("someInputType", "Int")]
+        public virtual Int32? SomeInputTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLTypeAttribute("SomeInterfaceType")]
+    public interface SomeInterfaceType
+    {
+        [GraphQLFieldAttribute("someInterfaceImplementationType", "Int")]
+        Int32? SomeInterfaceImplementationTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLTypeAttribute("SomeInterfaceImplementationType")]
+    public class SomeInterfaceImplementationType : SomeInterfaceType
+    {
+        [GraphQLFieldAttribute("someInterfaceImplementationType", "Int")]
+        public virtual Int32? SomeInterfaceImplementationTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLTypeAttribute("SomeAnotherInterfaceImplementationType")]
+    public class SomeAnotherInterfaceImplementationType : SomeInterfaceType
+    {
+        [GraphQLFieldAttribute("someInterfaceImplementationType", "Int")]
+        public virtual Int32? SomeInterfaceImplementationTypeField
+        {
+            get;
+            set;
+        }
+    }
+
+    [GraphQLTypeAttribute("SomeTypeWithMethod")]
+    public class SomeTypeWithMethod
+    {
+        [GraphQLFieldAttribute("someTypeWithMethod", "Int")]
+        public virtual Int32? SomeTypeWithMethodField()
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLFieldAttribute("someTypeWithMethod", "Int")]
+        public virtual Int32? SomeTypeWithMethodField([GraphQLArgumentAttribute("test", "Int")] Int32? test)
+        {
+            throw new InvalidOperationException();
+        }
+    }
+
+    [GraphQLTypeAttribute("SomeInterfaceTypeWithMethod")]
+    public interface SomeInterfaceTypeWithMethod
+    {
+        [GraphQLFieldAttribute("someInterfaceImplementationTypeWithMethod", "Int")]
+        Int32? SomeInterfaceImplementationTypeWithMethodField([GraphQLArgumentAttribute("test", "Int")] Int32? test);
+        [GraphQLFieldAttribute("someInterfaceImplementationTypeWithMethod", "Int")]
+        Int32? SomeInterfaceImplementationTypeWithMethodField([GraphQLArgumentAttribute("test", "Int")] Int32? test);
+    }
+
+    [GraphQLTypeAttribute("SomeAnotherInterfaceImplementationTypeWithMethod")]
+    public class SomeAnotherInterfaceImplementationTypeWithMethod : SomeInterfaceTypeWithMethod
+    {
+        [GraphQLFieldAttribute("someInterfaceImplementationTypeWithMethod", "Int")]
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField()
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLFieldAttribute("someInterfaceImplementationTypeWithMethod", "Int")]
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField([GraphQLArgumentAttribute("test", "Int")] Int32? test)
+        {
+            throw new InvalidOperationException();
+        }
+    }
+
+    [GraphQLTypeAttribute("SomeInterfaceImplementationTypeWithMethod")]
+    public class SomeInterfaceImplementationTypeWithMethod : SomeInterfaceTypeWithMethod
+    {
+        [GraphQLFieldAttribute("someInterfaceImplementationTypeWithMethod", "Int")]
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField()
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLFieldAttribute("someInterfaceImplementationTypeWithMethod", "Int")]
+        public virtual Int32? SomeInterfaceImplementationTypeWithMethodField([GraphQLArgumentAttribute("test", "Int")] Int32? test)
+        {
+            throw new InvalidOperationException();
+        }
+    }
+}

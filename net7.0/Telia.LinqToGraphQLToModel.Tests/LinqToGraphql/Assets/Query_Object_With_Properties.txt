@@ -1,0 +1,11 @@
+﻿{
+    "query": "query Query {
+      field0: object{
+        field0: test
+        __typename
+      }
+      __typename
+    }",
+    "variables": {
+    }
+}

@@ -1,0 +1,35 @@
+﻿type SomeType {
+	someType: Int
+}
+
+input SomeInputType {
+	someInputType: Int
+}
+
+interface SomeInterfaceType {
+	someInterfaceImplementationType: Int
+}
+
+type SomeInterfaceImplementationType implements SomeInterfaceType {
+	someInterfaceImplementationType: Int
+}
+
+type SomeAnotherInterfaceImplementationType implements SomeInterfaceType {
+	someInterfaceImplementationType: Int
+}
+
+type SomeTypeWithMethod {
+	someTypeWithMethod(test: Int): Int
+}
+
+interface SomeInterfaceTypeWithMethod {
+	someInterfaceImplementationTypeWithMethod(test: Int): Int
+}
+
+type SomeAnotherInterfaceImplementationTypeWithMethod implements SomeInterfaceTypeWithMethod {
+	someInterfaceImplementationTypeWithMethod(test: Int): Int
+}
+
+type SomeInterfaceImplementationTypeWithMethod implements SomeInterfaceTypeWithMethod {
+	someInterfaceImplementationTypeWithMethod(test: Int): Int
+}

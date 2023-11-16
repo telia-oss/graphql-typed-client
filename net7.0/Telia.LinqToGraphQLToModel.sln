@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telia.LinqToGraphQLToModel", "Telia.LinqToGraphQLToModel\Telia.LinqToGraphQLToModel.csproj", "{672B4458-FCAC-46B3-87C9-0E377F475067}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telia.LinqToGraphQLToModel.Benchmarks", "Telia.LinqToGraphQLToModel.Benchmarks\Telia.LinqToGraphQLToModel.Benchmarks.csproj", "{B7ADBA87-4E22-4F1B-BE5A-F3ECAA0C8437}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telia.LinqToGraphQLToModel.Tests", "Telia.LinqToGraphQLToModel.Tests\Telia.LinqToGraphQLToModel.Tests.csproj", "{ADA7FD63-47AC-45AB-9767-863D916B5EAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telia.GraphQLPrinter", "Telia.GraphQLPrinter\Telia.GraphQLPrinter\Telia.GraphQLPrinter.csproj", "{A1D2CC2F-BE22-404E-A742-F39E7598C4F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{672B4458-FCAC-46B3-87C9-0E377F475067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{672B4458-FCAC-46B3-87C9-0E377F475067}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7ADBA87-4E22-4F1B-BE5A-F3ECAA0C8437}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7ADBA87-4E22-4F1B-BE5A-F3ECAA0C8437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADA7FD63-47AC-45AB-9767-863D916B5EAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADA7FD63-47AC-45AB-9767-863D916B5EAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1D2CC2F-BE22-404E-A742-F39E7598C4F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1D2CC2F-BE22-404E-A742-F39E7598C4F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8390EF5-99C5-4938-94B2-E1202956C91C}
+	EndGlobalSection
+EndGlobal
