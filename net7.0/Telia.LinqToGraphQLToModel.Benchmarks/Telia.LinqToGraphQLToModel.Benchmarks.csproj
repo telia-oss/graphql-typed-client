@@ -16,7 +16,7 @@
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.13.4" />
 		<PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.4" />
-		<PackageReference Include="SystemLibrary.Common.Net" Version="6.6.1.4" />
+		<PackageReference Include="SystemLibrary.Common.Net" Version="6.11.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
