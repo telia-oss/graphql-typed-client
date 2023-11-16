@@ -75,7 +75,7 @@ public class Printer
 
     string Indent(string input)
     {
-        if (input == null || (input.Length == 1 && input == "")) return null;
+        if (input == null || input == "") return null;
 
         return "  " + input.Replace(Environment.NewLine, Environment.NewLine + "  ");
     }
