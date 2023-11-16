@@ -298,12 +298,11 @@ public class Printer
     string PrintListValue(GraphQLListValue node)
     {
         IEnumerable<string> collection = node.Values?.Select(Print);
+
+        if (collection == null) return "[]";
+
         var val = "[" + Join(collection, ", ") + "]";
 
-        if (val == "{}")
-        {
-            return "null";
-        }
         return val;
     }
 
