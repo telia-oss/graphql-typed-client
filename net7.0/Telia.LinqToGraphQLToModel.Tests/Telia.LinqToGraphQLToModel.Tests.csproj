@@ -16,6 +16,7 @@
 	<ItemGroup>
 		<None Remove="GraphqlResponseToModels\Assets\countries-response.txt" />
 		<None Remove="GraphqlResponseToModels\Assets\country-collection-with-countries-response.txt" />
+		<None Remove="LinqToGraphql\Assets\Mutate_Country_Returns_Id.txt" />
 		<None Remove="LinqToGraphql\Assets\Query_Select_Enum_Custom_Serialization.txt" />
 		<None Remove="LinqToGraphql\Assets\Query_Select_Enum_Default_Serialization.txt" />
 		<None Remove="LinqToGraphql\Assets\Select_Countries_Without_Filter_Returns_GraphQl.txt" />
@@ -29,6 +30,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="GraphqlResponseToModels\Assets\country-collection-with-countries-response.txt" />
 		<EmbeddedResource Include="GraphqlResponseToModels\Assets\countries-response.txt" />
+		<EmbeddedResource Include="LinqToGraphql\Assets\Mutate_Country_Returns_Id.txt" />
 		<EmbeddedResource Include="LinqToGraphql\Assets\Select_Countries_Without_Filter_Returns_GraphQl.txt" />
 	</ItemGroup>
 

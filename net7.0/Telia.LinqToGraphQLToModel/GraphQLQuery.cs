@@ -45,6 +45,11 @@ public class GraphQLQuery<TQueryRoot>
         return CreateOperation<TQueryRoot, TSelector, string>(selector, OperationType.Query, null, querySerializerSettings);
     }
 
+    public string Mutate<TSelector>(Expression<Func<TQueryRoot, TSelector>> selector, JsonSerializerSettings querySerializerSettings = null)
+    {
+        return CreateOperation<TQueryRoot, TSelector, string>(selector, OperationType.Mutation, null, querySerializerSettings);
+    }
+
     /// <summary>
     /// Create a graphql query that is passed into your callback function, the second parameter, which then returns the response 'as is', which this method will serialize into C# models
     /// </summary>
@@ -78,6 +83,11 @@ public class GraphQLQuery<TQueryRoot>
     public TSelector Query<TSelector>(Expression<Func<TQueryRoot, TSelector>> selector, Func<string, string> onSendGraphQl, JsonSerializerSettings querySerializerSettings = null)
     {
         return CreateOperation<TQueryRoot, TSelector, TSelector>(selector, OperationType.Query, onSendGraphQl, querySerializerSettings);
+    }
+
+    public TSelector Mutate<TSelector>(Expression<Func<TQueryRoot, TSelector>> selector, Func<string, string> onSendGraphQl, JsonSerializerSettings querySerializerSettings = null)
+    {
+        return CreateOperation<TQueryRoot, TSelector, TSelector>(selector, OperationType.Mutation, onSendGraphQl, querySerializerSettings);
     }
 
     internal TResult CreateOperation<TType, TSelector, TResult>(Expression<Func<TType, TSelector>> selector, OperationType operationType, Func<string, string> onSendGraphQl = null, JsonSerializerSettings querySerializerSettings = null)

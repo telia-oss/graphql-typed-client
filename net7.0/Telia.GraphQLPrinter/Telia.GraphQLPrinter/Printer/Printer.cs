@@ -1,7 +1,5 @@
 ﻿using GraphQLParser.AST;
 
-using SystemLibrary.Common.Net.Extensions;
-
 using Telia.GraphQLPrinter.Models;
 
 namespace Telia.GraphQLPrinter;
@@ -77,7 +75,7 @@ public class Printer
 
     string Indent(string input)
     {
-        if (input.IsNot()) return null;
+        if (input == null || (input.Length == 1 && input == "")) return null;
 
         return "  " + input.Replace(Environment.NewLine, Environment.NewLine + "  ");
     }
@@ -86,11 +84,11 @@ public class Printer
     {
         if (collection == null) return "";
 
-        collection = collection?.Where(e => e.Is());
+        collection = collection?.Where(e => e != null && e != "");
 
         try
         {
-            if (collection.IsNot()) return "";
+            if (collection == null) return "";
 
             return string.Join(separator ?? "", collection);
         }
@@ -300,7 +298,13 @@ public class Printer
     string PrintListValue(GraphQLListValue node)
     {
         IEnumerable<string> collection = node.Values?.Select(Print);
-        return "[" + Join(collection, ", ") + "]";
+        var val = "[" + Join(collection, ", ") + "]";
+
+        if (val == "{}")
+        {
+            return "null";
+        }
+        return val;
     }
 
     string PrintName(GraphQLName name)
@@ -481,8 +485,7 @@ public class Printer
 
     string Wrap(string start, string maybeString, string end = "")
     {
-
-        if (maybeString.Is()) return start + maybeString + end;
+        if (maybeString != null && maybeString != "") return start + maybeString + end;
 
         return null;
     }
