@@ -122,6 +122,7 @@ public class GraphQLQuery<TQueryRoot>
 
         var query = printer.Print(operationDefinition);
 
+ 
         var temp = new GraphQLQueryData(query, variableValues);
 
         string graphqlQuery;
@@ -151,8 +152,12 @@ public class GraphQLQuery<TQueryRoot>
         var response = onSendGraphQl(graphqlQuery);
 
         if (response.IsNot()) return default;
-        
-        var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse>(response);
+
+        var graphQlResponse = JsonConvert.DeserializeObject<GraphQLResponse>(response, new JsonSerializerSettings()
+        {
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+        });
 
         if (graphQlResponse?.Data == null) return default;
 

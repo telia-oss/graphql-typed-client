@@ -1,0 +1,70 @@
+﻿{
+    "data": {
+        "field0": {
+            "field0": null,
+            "field1": {
+                "field0": [],
+                "__typename": "CallPricesCollection"
+            },
+            "field2": {
+                "field0": "PRIVATE",
+                "__typename": "AccountData"
+            },
+            "field3": null,
+            "__typename": "SubscriptionData"
+        },
+        "field1": {
+            "field0": [
+                {
+                    "countryCode": "DNK",
+                    "productOfferingDescription": "A",
+                    "smsPrice": 1.5,
+                    "mmsPrice": 11,
+                    "__typename": "CallPrices"
+                },
+                {
+                    "countryCode": "DNK",
+                    "productOfferingDescription": "B",
+                    "smsPrice": 1.5,
+                    "mmsPrice": 10,
+                    "__typename": "CallPrices"
+                },
+                {
+                    "countryCode": "DNK",
+                    "productOfferingDescription": "C",
+                    "smsPrice": 1.5,
+                    "mmsPrice": 12,
+                    "__typename": "CallPrices"
+                }
+            ],
+            "__typename": "CallPricesCollection"
+        },
+        "__typename": "Query"
+    },
+    "errors": [
+        {
+            "message": "INVALID_ARGUMENT1: A long error with json inside string: a4c74e95-b386-4803-a137-a0c7015fe91c | [{\"@type\":\"type.test.com\", \"errorMessage\":\"INVALID_DATA\"}]",
+            "errorType": "REMOTE",
+            "data": null,
+            "errorInfo": null,
+            "locations": [
+                {
+                    "line": 1,
+                    "column": 1,
+                }
+            ]
+        },
+           {
+            "message": "INVALID_ARGUMENT2: A long error with json inside string: a4c74e95-b386-4803-a137-a0c7015fe91c | [{\"@type\":\"type.test.com\", \"errorMessage\":\"INVALID_DATA\"}]",
+            "errorType": "REMOTE",
+            "data": null,
+            "errorInfo": null,
+            "locations": [
+                {
+                    "line": 2,
+                    "column": 2,
+                }
+            ]
+        }
+    ]
+}

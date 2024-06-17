@@ -1,7 +1,10 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
+using SystemLibrary.Common.Net.Extensions;
 
 namespace Telia.LinqToGraphQLToModel.Response;
 internal class ResponseComposer<TQueryType, TReturn>
@@ -68,8 +71,7 @@ internal class ResponseComposer<TQueryType, TReturn>
                 return Expression.Convert(
                     Expression.Constant(
                         this.GetValueFrom(model, this.context.GetBindingPath(node), node.Type)), node.Type);
-            } 
-
+            }
             return base.VisitMethodCall(node);
         }
 
@@ -86,7 +88,7 @@ internal class ResponseComposer<TQueryType, TReturn>
 
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
-            if (node.Parameters.Count == 1)
+            if (node.Parameters?.Count == 1)
             {
                 this.lambdaParameter = node.Parameters.First();
                 this.context.AddModelToParameterBinding(this.lambdaParameter, this.response);
@@ -94,7 +96,7 @@ internal class ResponseComposer<TQueryType, TReturn>
 
             var lambda = base.VisitLambda(node);
 
-            if (node.Parameters.Count == 1)
+            if (node.Parameters?.Count == 1)
             {
                 this.context.RemoveModelToParameterBinding(node.Parameters.First());
             }
@@ -167,10 +169,10 @@ internal class ResponseComposer<TQueryType, TReturn>
             return token.ToObject(returnType, JsonSerializer.Create(new JsonSerializerSettings()
             {
                 Converters = new List<JsonConverter>()
-                {
-                    new GraphQLInterfaceConverter(typeof(TQueryType)),
-                    new GraphQLObjectConverter()
-                },
+            {
+                new GraphQLInterfaceConverter(typeof(TQueryType)),
+                new GraphQLObjectConverter()
+            },
             }));
         }
 
@@ -258,6 +260,20 @@ internal class ResponseComposer<TQueryType, TReturn>
             if (t.IsValueType)
                 return Activator.CreateInstance(t);
 
+            if(t.IsGenericType && !t.IsListOrArray() &&
+                !t.IsGenericParameter && 
+                !t.IsGenericTypeDefinition)
+            {
+                if(t.Inherits(typeof(IEnumerable)))
+                {
+                    var ienumerableType = t.GetFirstGenericType();
+
+                    var emptyEnumerable = typeof(List<>).MakeGenericType(ienumerableType);
+
+                    return Activator.CreateInstance(emptyEnumerable);
+                }
+            }
+            
             return null;
         }
     }
