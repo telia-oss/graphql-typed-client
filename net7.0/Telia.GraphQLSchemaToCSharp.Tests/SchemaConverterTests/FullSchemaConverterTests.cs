@@ -10,7 +10,37 @@ namespace Telia.GraphQLSchemaToCSharp.Tests;
 public class FullSchemaConverterTests
 {
     [TestMethod]
-    public void Convert_Simple_Schema_To_Models_Success()
+    public void Convert_Simple_GraphQl_Schema_To_Models_Success()
+    {
+        /*
+            NOTE: the simple graphql is pushed to git
+         */
+        var graphqlFileData = Assemblies.GetEmbeddedResource("_LocalTestFiles", "ModelsSimple.graphql");
+
+        var converter = new SchemaConverter();
+
+        var code = converter.Convert<GraphQLTypeAttribute, GraphQLFieldAttribute, GraphQLArgumentAttribute>(graphqlFileData, "Test");
+
+        var folder = AppDomain.CurrentDomain.BaseDirectory;
+        var directory = new DirectoryInfo(folder).Parent.Parent.Parent;
+
+        var outputPath = directory.FullName + "\\_LocalTestFiles\\Output.cs";
+
+        File.WriteAllText(outputPath, code);
+
+        Assert.IsTrue(code != null && code.Length > 100, "Output was empty");
+
+        Assert.IsTrue(code.Contains("namespace "), "missing namespaces");
+
+        Assert.IsTrue(code.Contains("public class "), "missing public class");
+
+        Assert.IsTrue(code.Contains(nameof(GraphQLFieldAttribute)), "missing GraphQLFieldAttribute");
+
+        // NOTE: Recompile after test run to verify that output is compilable
+    }
+
+    [TestMethod]
+    public void Convert_GraphQl_Schema_To_Models_Success()
     {
         /*
             NOTE: .graphql file is not pushed to github
