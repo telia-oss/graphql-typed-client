@@ -5,6 +5,8 @@ using GraphQLParser.AST;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
+using SystemLibrary.Common.Net;
+
 using Telia.GraphQLPrinter;
 using Telia.LinqToGraphQLToModel.Response;
 
@@ -121,7 +123,6 @@ public class GraphQLQuery<TQueryRoot>
         };
 
         var query = printer.Print(operationDefinition);
-
  
         var temp = new GraphQLQueryData(query, variableValues);
 
@@ -144,10 +145,11 @@ public class GraphQLQuery<TQueryRoot>
 
         if(onSendGraphQl == null)
         {
-            return (TResult)(object)graphqlQuery;
-        }
+            if(typeof(TResult) == SystemType.StringType)
+                return (TResult)(object)graphqlQuery;
 
-        var composer = new ResponseComposer<TType, TSelector>(selector, context);
+            return default;
+        }
 
         var response = onSendGraphQl(graphqlQuery);
 
@@ -160,6 +162,8 @@ public class GraphQLQuery<TQueryRoot>
         });
 
         if (graphQlResponse?.Data == null) return default;
+
+        var composer = new ResponseComposer<TType, TSelector>(selector, context);
 
         return (TResult)(object)composer.Compose(graphQlResponse.Data);
     }
