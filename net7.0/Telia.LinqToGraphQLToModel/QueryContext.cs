@@ -77,7 +77,9 @@ internal class QueryContext
 
     internal bool ContainsBinding(Expression node)
     {
-        return this.bindings.ContainsKey(node);
+        if (node == null) return false;
+
+        return this.bindings?.ContainsKey(node) == true;
     }
 
     internal void AddModelToParameterBinding(ParameterExpression parameterExpression, JToken response)
