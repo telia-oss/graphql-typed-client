@@ -1,0 +1,14 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQLSchemaToCSharp.Tests.Attributes;
+
+    [GraphQLTypeAttribute("SomeEnumType")]
+    public enum SomeEnumType
+    {
+        Value1,
+        Value2,
+        Value3
+    }
+}

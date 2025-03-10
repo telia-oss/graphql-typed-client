@@ -7,9 +7,9 @@
 
 - No changes has been done since previous commit
 
-#### .NET 7 version aka: Linq (Expressions) to GraphQl to C# Models
-- The .net 7 version is in folder "net7.0"
-- No Vsix nor Nuget package, simply clone, build, copy the output dll file for reuse
-- Dependency on HttClient is also freed, its up to the callee how request are sent
+#### .NET 7 and .NET 9 versions, aka Linq (Expressions) to GraphQl to C# Models
+- Versions are found in their respective folder
+- There's no VSIX nor a Nuget package, simply clone, rebuild and copy the dll's from the bin folders for reuse
+- Dependency on HttpClient is removed, it is up to callee how requests are sent
 
 

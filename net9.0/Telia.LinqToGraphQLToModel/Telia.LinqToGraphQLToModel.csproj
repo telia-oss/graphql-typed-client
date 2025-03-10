@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<Configurations>Release</Configurations>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>none</DebugType>
+		<NoWarn>1701;1702;CS8600;CS8616;CS8618</NoWarn>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="GraphQL-Parser" Version="9.5.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="System.Text.Json" Version="9.0.2" />
+		<PackageReference Include="SystemLibrary.Common.Net" Version="8.3.0.3" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Telia.GraphQLPrinter\Telia.GraphQLPrinter\Telia.GraphQLPrinter.csproj" />
+	</ItemGroup>
+</Project>

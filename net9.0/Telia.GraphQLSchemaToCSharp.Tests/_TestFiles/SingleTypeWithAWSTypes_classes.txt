@@ -1,0 +1,122 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQLSchemaToCSharp.Tests.Attributes;
+
+    [GraphQLTypeAttribute("Query")]
+    public class Query
+    {
+        [GraphQLFieldAttribute("date", "AWSDate!")]
+        public virtual DateTime Date
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableDate", "AWSDate")]
+        public virtual DateTime? NullableDate
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("time", "AWSTime!")]
+        public virtual TimeSpan Time
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableTime", "AWSTime")]
+        public virtual TimeSpan? NullableTime
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("timestamp", "AWSTimestamp!")]
+        public virtual Int32 Timestamp
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableTimestamp", "AWSTimestamp")]
+        public virtual Int32? NullableTimestamp
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("email", "AWSEmail!")]
+        public virtual String Email
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableEmail", "AWSEmail")]
+        public virtual String NullableEmail
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("json", "AWSJSON!")]
+        public virtual String Json
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableJson", "AWSJSON")]
+        public virtual String NullableJson
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("url", "AWSURL!")]
+        public virtual String Url
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableUrl", "AWSURL")]
+        public virtual String NullableUrl
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("phone", "AWSPhone!")]
+        public virtual String Phone
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullablePhone", "AWSPhone")]
+        public virtual String NullablePhone
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("ipAddress", "AWSIPAddress!")]
+        public virtual String IpAddress
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableIPAddress", "AWSIPAddress")]
+        public virtual String NullableIpAddress
+        {
+            get;
+            set;
+        }
+    }
+}

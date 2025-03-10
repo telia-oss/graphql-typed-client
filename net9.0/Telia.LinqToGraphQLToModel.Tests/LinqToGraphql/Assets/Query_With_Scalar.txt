@@ -1,0 +1,13 @@
+﻿{
+    "query": "query Query($var_0: Float!) {
+        field0: test
+        field1: object{
+            field0: testWithParams(x: $var_0)
+            __typename
+        }
+        __typename
+    }",
+    "variables": {
+        "var_0": 0.5
+    }
+}

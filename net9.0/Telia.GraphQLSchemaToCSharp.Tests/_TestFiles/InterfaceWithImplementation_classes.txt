@@ -1,0 +1,61 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQLSchemaToCSharp.Tests.Attributes;
+
+    [GraphQLTypeAttribute("TestInterface")]
+    public interface TestInterface
+    {
+        [GraphQLFieldAttribute("field", "string")]
+        string Field
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("fieldWithParam", "Int!")]
+        Int32 FieldWithParam([GraphQLArgumentAttribute("param", "Int!")] Int32 param);
+    }
+
+    [GraphQLTypeAttribute("TestInterfaceImplementation1")]
+    public class TestInterfaceImplementation1 : TestInterface
+    {
+        [GraphQLFieldAttribute("field", "string")]
+        public virtual string Field
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("fieldWithParam", "Int!")]
+        public virtual Int32 FieldWithParam([GraphQLArgumentAttribute("param", "Int!")] Int32 param)
+        {
+            throw new InvalidOperationException();
+        }
+    }
+
+    [GraphQLTypeAttribute("TestInterfaceImplementation2")]
+    public class TestInterfaceImplementation2 : TestInterface
+    {
+        [GraphQLFieldAttribute("field", "string")]
+        public virtual string Field
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("fieldWithParam", "Int!")]
+        public virtual Int32 FieldWithParam([GraphQLArgumentAttribute("param", "Int!")] Int32 param)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [GraphQLFieldAttribute("field2", "string")]
+        public virtual string Field2
+        {
+            get;
+            set;
+        }
+    }
+}

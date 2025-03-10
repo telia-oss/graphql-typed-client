@@ -1,0 +1,75 @@
+﻿{
+	"data": {
+		"field0": {
+			"field0": [{
+					"name": "Diego Garcia",
+					"countryCode": "DG",
+					"operators": [],
+					"__typename": "Country"
+				},
+				{
+					"name": "Malawi",
+					"countryCode": "MW",
+					"operators": null,
+					"__typename": "Country"
+				},
+				{
+					"name": "Namibia",
+					"countryCode": "NA",
+					"operators": [{
+							"name": "Black",
+							"__typename": "Operator"
+						},
+						{
+							"name": "White",
+							"__typename": "Operator"
+						}
+					],
+					"__typename": "Country"
+				},
+				{
+					"name": "Guinea",
+					"countryCode": "GN",
+					"operators": [{
+							"name": "Red",
+							"__typename": "Operator"
+						},
+						{
+							"name": "Blue",
+							"__typename": "Operator"
+						}
+					],
+					"__typename": "Country"
+				},
+				{
+					"name": "Kirgisistan",
+					"countryCode": "KG",
+					"operators": [{
+						"name": "Orange",
+						"__typename": "Operator"
+					}],
+					"__typename": "Country"
+				},
+				{
+					"name": "Frankrike",
+					"countryCode": "FR",
+					"operators": [{
+							"name": "Yellow1",
+							"__typename": "Operator"
+						},
+						{
+							"name": "Yellow2",
+							"__typename": "Operator"
+						},
+						{
+							"name": "Yellow3",
+							"__typename": "Operator"
+						}
+					],
+					"__typename": "Country"
+				}
+			]
+		},
+		"__typename": "Query"
+	}
+}

@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <Configurations>Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="_LocalTestFiles\Models.graphql" />
+    <None Remove="_LocalTestFiles\ModelsSimple.graphql" />
+    <None Remove="_TestFiles\InputType_classes.txt" />
+    <None Remove="_TestFiles\InputType_schema.txt" />
+    <None Remove="_TestFiles\InterfaceWithImplementation_classes.txt" />
+    <None Remove="_TestFiles\InterfaceWithImplementation_schema.txt" />
+    <None Remove="_TestFiles\NestedInputObjectType_classes.txt" />
+    <None Remove="_TestFiles\NestedInputObjectType_schema.txt" />
+    <None Remove="_TestFiles\SingleEnumType_classes.txt" />
+    <None Remove="_TestFiles\SingleEnumType_schema.txt" />
+    <None Remove="_TestFiles\SingleTypeWithAWSTypes_classes.txt" />
+    <None Remove="_TestFiles\SingleTypeWithAWSTypes_schema.txt" />
+    <None Remove="_TestFiles\SingleTypeWithParametersInProps_classes.txt" />
+    <None Remove="_TestFiles\SingleTypeWithParametersInProps_schema.txt" />
+    <None Remove="_TestFiles\SingleTypeWithScalarProps_classes.txt" />
+    <None Remove="_TestFiles\SingleTypeWithScalarProps_schema.txt" />
+    <None Remove="_TestFiles\TypesWithCollidingFieldAndTypeNames_classes.txt" />
+    <None Remove="_TestFiles\TypesWithCollidingFieldAndTypeNames_schema.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="_LocalTestFiles\ModelsSimple.graphql" />
+    <EmbeddedResource Include="_LocalTestFiles\Models.graphql" />
+    <EmbeddedResource Include="_TestFiles\InputType_classes.txt" />
+    <EmbeddedResource Include="_TestFiles\InputType_schema.txt" />
+    <EmbeddedResource Include="_TestFiles\InterfaceWithImplementation_classes.txt" />
+    <EmbeddedResource Include="_TestFiles\InterfaceWithImplementation_schema.txt" />
+    <EmbeddedResource Include="_TestFiles\NestedInputObjectType_classes.txt" />
+    <EmbeddedResource Include="_TestFiles\NestedInputObjectType_schema.txt" />
+    <EmbeddedResource Include="_TestFiles\SingleEnumType_classes.txt" />
+    <EmbeddedResource Include="_TestFiles\SingleEnumType_schema.txt" />
+    <EmbeddedResource Include="_TestFiles\SingleTypeWithAWSTypes_classes.txt" />
+    <EmbeddedResource Include="_TestFiles\SingleTypeWithAWSTypes_schema.txt" />
+    <EmbeddedResource Include="_TestFiles\SingleTypeWithParametersInProps_classes.txt" />
+    <EmbeddedResource Include="_TestFiles\SingleTypeWithParametersInProps_schema.txt" />
+    <EmbeddedResource Include="_TestFiles\SingleTypeWithScalarProps_classes.txt" />
+    <EmbeddedResource Include="_TestFiles\SingleTypeWithScalarProps_schema.txt" />
+    <EmbeddedResource Include="_TestFiles\TypesWithCollidingFieldAndTypeNames_classes.txt" />
+    <EmbeddedResource Include="_TestFiles\TypesWithCollidingFieldAndTypeNames_schema.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.8.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.8.2" />
+    <PackageReference Include="SystemLibrary.Common.Net" Version="8.3.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Telia.GraphQLSchemaToCSharp\Telia.GraphQLSchemaToCSharp.csproj" />
+  </ItemGroup>
+</Project>
