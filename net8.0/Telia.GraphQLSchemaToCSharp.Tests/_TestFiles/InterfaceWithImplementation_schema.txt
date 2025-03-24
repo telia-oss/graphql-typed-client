@@ -1,0 +1,15 @@
+﻿interface TestInterface {
+  field: string
+  fieldWithParam(param: Int!): Int!
+}
+
+type TestInterfaceImplementation1 implements TestInterface {
+  field: string
+  fieldWithParam(param: Int!): Int!
+}
+
+type TestInterfaceImplementation2 implements TestInterface {
+  field: string
+  fieldWithParam(param: Int!): Int!
+  field2: string
+}

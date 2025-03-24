@@ -1,0 +1,14 @@
+﻿input SomeInputObject {
+  foo: String!
+  bar: String
+  faz: Int
+  zap: Int!
+}
+
+input SomeOtherInputObject {
+  foo: String!
+  bar: String
+  faz: Int
+  zap: SomeInputObject!
+  nested: SomeOtherInputObject
+}

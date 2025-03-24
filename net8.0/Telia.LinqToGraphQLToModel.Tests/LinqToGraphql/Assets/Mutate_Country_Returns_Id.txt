@@ -1,0 +1,14 @@
+﻿{
+	"query":"mutation Mutation($var_0: CountryMutateInput) {
+			field0: Country(input: $var_0){
+			id
+			__typename
+		}
+		__typename
+	}",
+	"variables": {
+		"var_0": {
+			"id":694,"name":"Sweden","countryCode":"SE"
+		}
+	}
+}

@@ -1,0 +1,5 @@
+﻿enum SomeEnumType {
+	Value1
+	Value2
+	Value3
+}

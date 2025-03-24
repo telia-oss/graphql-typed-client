@@ -1,0 +1,136 @@
+﻿namespace Test
+{
+    using System;
+    using System.Collections.Generic;
+    using Telia.GraphQLSchemaToCSharp.Tests.Attributes;
+
+    [GraphQLTypeAttribute("Query")]
+    public class Query
+    {
+        [GraphQLFieldAttribute("nonNullableInteger", "Int!")]
+        public virtual Int32 NonNullableInteger
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableInteger", "Int")]
+        public virtual Int32? NullableInteger
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nonNullableId", "ID!")]
+        public virtual String NonNullableId
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableId", "ID")]
+        public virtual String NullableId
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nonNullableFloat", "Float!")]
+        public virtual Single NonNullableFloat
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableFloat", "Float")]
+        public virtual Single? NullableFloat
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nonNullableBoolean", "Boolean!")]
+        public virtual Boolean NonNullableBoolean
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableBoolean", "Boolean")]
+        public virtual Boolean? NullableBoolean
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nonNullableString", "String!")]
+        public virtual String NonNullableString
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nullableString", "String")]
+        public virtual String NullableString
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("listOfNullableStrings", "[String]")]
+        public virtual IEnumerable<String> ListOfNullableStrings
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("listOfNonNullableString", "[String!]")]
+        public virtual IEnumerable<String> ListOfNonNullableString
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("listOfNullableIntegers", "[Int]")]
+        public virtual IEnumerable<Int32? > ListOfNullableIntegers
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("listOfNonNullableIntegers", "[Int!]")]
+        public virtual IEnumerable<Int32> ListOfNonNullableIntegers
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nonNullableListOfNullableIntegers", "[Int]!")]
+        public virtual IEnumerable<Int32? > NonNullableListOfNullableIntegers
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nonNullableListOfNonNullableIntegers", "[Int!]!")]
+        public virtual IEnumerable<Int32> NonNullableListOfNonNullableIntegers
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nonNullableListOfNullableString", "[String]!")]
+        public virtual IEnumerable<String> NonNullableListOfNullableString
+        {
+            get;
+            set;
+        }
+
+        [GraphQLFieldAttribute("nonNullableListOfNonNullableString", "[String!]!")]
+        public virtual IEnumerable<String> NonNullableListOfNonNullableString
+        {
+            get;
+            set;
+        }
+    }
+}

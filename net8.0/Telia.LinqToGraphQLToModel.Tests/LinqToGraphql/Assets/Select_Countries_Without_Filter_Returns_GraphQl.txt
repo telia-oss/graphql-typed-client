@@ -1,0 +1,11 @@
+﻿{
+	"query": "query Query{
+	field0:countryCollection 
+		{
+			field0:countries{
+				countryCode name operators{name price __typename} __typename
+			} __typename
+		} __typename
+	}",
+	"variables": {}
+}
